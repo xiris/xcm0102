@@ -1,0 +1,718 @@
+SOURCE: https://champman0102.net/viewtopic.php?t=2659&start=125
+TITLE: CM Scout Intrinsic and Attributes Intrinsic Value - Page 6 - Championship Manager 2001/2002 Forums
+
+CM Scout Intrinsic and Attributes Intrinsic Value - Page 6 - Championship Manager 2001/2002 Forums 
+
+Championship Manager 2001/2002 Forums 
+
+Keeping the Game Alive 
+
+Skip to content 
+
+Quick links 
+
+Donations 
+
+FAQ 
+
+Login 
+
+Register 
+
+Forums Downloads Downloads Tools 
+
+CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Moderator: Patch Team 
+
+Post Reply 
+
+Print view 
+
+148 posts 
+Previous 
+
+1 
+
+2 
+
+3 
+
+4 
+
+5 
+
+6 
+
+finrod799 Hot Prospect for the Future Posts: 131 Joined: Sun Nov 02, 2025 1:32 pm Has thanked: 29 times Been thanked: 98 times 
+
+Re: CM Scout Intrinsic 
+
+Quote 
+
+Post by finrod799 » Thu Nov 06, 2025 9:28 am 
+
+MadScientist wrote: Sun Mar 07, 2021 5:28 pm Im releasing the latest version of my weight set. Compared to my previous one (from old forum), this has much increased weights for physical and mental atts, and for the main skills of each position. Also, I decided to give bigger weight for one-on-ones of strikers (as i have a feeling its a very important att, but not proved). 
+
+To use my weight set, copy and paste text below in notepad, save as .txt file, and then import it into the tool weight set section and click Apply: 
+
+Code: Select all 
+
+MadScientist_13Mar2021
+ GK D DM M AM A WB
+
+Anticipation 1000 11000 7000 250 20 1150 1000
+Creativity 0 0 2000 40000 45000 10 2000
+Crossing 0 0 0 10 2500 0 55000
+Decisions 1200 600 400 5000 100 90 500
+Dribbling 0 0 2000 40000 52000 14000 22000
+Finishing 0 0 5 5000 30000 60000 15
+Heading 0 15000 12500 5 5 25000 500
+Long Shots 0 0 2000 10000 7500 1000 1250
+Marking 0 15000 1250 100 0 0 1250
+Off The Ball 0 0 100 18300 35000 65000 550
+Passing 7500 3500 15000 60000 25000 1000 10000
+Penalties 0 0 0 1 1 10 0
+Positioning 12000 65000 55000 3000 0 0 55000
+Tackling 2500 25000 20000 2000 100 85 25000
+Throw Ins 0 0 0 0 0 0 12500
+Handling 60000 0 0 0 0 0 0
+One On Ones 30000 0 0 10 850 5000 0
+Reflexes 30000 0 0 0 0 0 0
+
+Acceleration 6000 4000 2000 18300 5000 12500 7000
+Agility 25000 0 0 0 0 0 0
+Balance 1 525 750 1500 225 850 285
+Corners 0 0 0 1 1 0 0
+Flair 0 0 0 50 5000 12500 20
+Injury Proneness 3000 300 300 300 200 300 300
+Jumping 25000 20000 10000 200 80 18000 2000
+Natural Fitness 50 200 2100 3000 4500 800 8000
+Pace 250 15000 7500 1000 25000 15000 15000
+Set Pieces 0 0 0 1 1 0 0
+Stamina 5 350 3200 3250 5000 350 12000
+Strength 1500 15000 15000 1200 50 3000 2900
+Technique 4 8 100 25000 5000 200 1000
+Work Rate 3 2500 10000 20000 22000 2500 18000
+
+Adaptability 200 500 750 1000 1000 1000 350
+Aggression 0 8000 30000 2000 2 1 15000
+Ambition 0 0 0 0 0 0 0
+Bravery 16000 16000 16000 5000 30 12000 1000
+Consistency 30000 25000 5000 25000 3000 4000 5000
+Determination 6000 1500 1500 18300 22000 12000 2000
+Dirtiness 300 100 50 3 2 2 20
+Important Matches 30000 25000 5000 20000 3000 5000 5000
+Influence 500 160 155 150 3 50 10
+Loyality 250 300 300 500 750 1000 200
+Pressure 30000 1500 1500 3000 2000 5500 1500
+Professionalism 9000 4500 4000 8000 4000 500 2000
+Sportsmanship 0 0 0 0 0 0 0
+Teamwork 30 100 2500 25000 850 0 10000
+Temperament 2000 2500 2500 2000 1250 250 1250
+Versatility 0 1250 3000 1500 4000 0 4000 
+
+Note: the 'D' column is intended for central defenders only. For wide right and left defenders (full backs and wing backs), use the values from the 'WB' column. 
+
+Note: For wingers and advanced midfielders, use the AM value. 
+
+Note: I like to use this weight set combined with the following filters: 
+
+-Age above 23 for positions that require positioning (GK, DC and DMC) because i found that the match engine code gives a big penalty to positioning in players younger than 24 (and the younger he is, the bigger the penalty). 
+-work rate above 6 except for GKs 
+-adaptability, professionalism, temperament, all above 6 
+
+Note: I gave big weight to creativity as im assuming you are going to use the creativity bug fix patch when you play the game 
+
+EDIT: I updated this weight set again as of 13 march 2021 above (added bigger heading for DCs and overall tweaks especially of MCs and SCs). You need to copypaste and reimport it again in the tool to use it. 
+Hi all, 
+
+Returning huge fan of CM 01/02. apart from playing in 2001 I was returning like in 2006 then 2009.There were not so many tools back then like basic editors or CMScout or CMAgent. Now back again and first of all thank you all for impresive work with patches, tools, databases, startekit ... wow ... 
+
+Now catching up again and reading. After founding out the threads about Intrinsic value finally the mistery about game engine is more clear why some players which are looking great are underperforming and some garbish players are stars based on how Intrinsic values are working. 
+
+Going back to your weights. I've started my favorite path to glory picking up team in conference div all the way up to premier legue and champions league. 
+
+In pre- game editor I've created perfect AM Messi and perfect F Ronaldo (both starting like 15 years of old) based on this thread 
+viewtopic.php?t=4251&hilit=ranges+125&start=50 
+
+Its seems for me that "freaks" with maximazed 3-5 key attributes (plus I put max on mental ones for them) with completely neglecting all others are working like charm form me.Both after stating the game showed CM rating around 72-74 and slow slowly increasing as the progress via games and training. Your initial weights are working better for me to grab some other freaks on free transfer usually 16-20 old young players. Your initial weighs are more focused on extremes like only couple of attributes matters. Later I found this update with put some more weight and flatting the distribution of rating and the in games results were not as good as before. 
+
+Based on initial weights teams of young freaks have crazy performance like 1 game lost and 1 game drawn in a season loosing max 8 goals. Beating in cups almost all PRM league teams. Even age handicap seems not to be a big deal like 18's old DC blasting with game rating 8.93 having 4-5 average tackles per game though all season. 
+
+One funny thing about GK. I get on free transfer some 18 old random danish GK with rating of around 78. But it was beginning of using your rating and I made mistake. His GK rating was 49, 78 rating was for Defender ... Average handling and crazy positioning. After 4 seasons he is still my GK with like season rating close to 9.00 saving all penalties in seasons and conceding like 8 goals max. 
+
+For defenders like positioning is the king but i found that agression and bravery also are very important. Tackling seems to be less important. Pace also seems irrelevant. Posisition and anticipation vs pace like one or our former polish national star was saying "Better to stand still wise then run fast like a fool" 
+
+Thanks again! 
+
+Top 
+
+Sky18akavenator Official Challenge Team Posts: 444 Joined: Tue Mar 07, 2023 7:51 pm Has thanked: 1153 times Been thanked: 179 times 
+
+Re: CM Scout Intrinsic 
+
+Quote 
+
+Post by Sky18akavenator » Thu Nov 06, 2025 3:03 pm 
+
+finrod799 wrote: Thu Nov 06, 2025 9:28 am 
+
+MadScientist wrote: Sun Mar 07, 2021 5:28 pm 
+Hi all, 
+
+Returning huge fan of CM 01/02. apart from playing in 2001 I was returning like in 2006 then 2009.There were not so many tools back then like basic editors or CMScout or CMAgent. Now back again and first of all thank you all for impresive work with patches, tools, databases, startekit ... wow ... 
+
+Now catching up again and reading. After founding out the threads about Intrinsic value finally the mistery about game engine is more clear why some players which are looking great are underperforming and some garbish players are stars based on how Intrinsic values are working. 
+
+Going back to your weights. I've started my favorite path to glory picking up team in conference div all the way up to premier legue and champions league. 
+
+In pre- game editor I've created perfect AM Messi and perfect F Ronaldo (both starting like 15 years of old) based on this thread 
+viewtopic.php?t=4251&hilit=ranges+125&start=50 
+
+Its seems for me that "freaks" with maximazed 3-5 key attributes (plus I put max on mental ones for them) with completely neglecting all others are working like charm form me.Both after stating the game showed CM rating around 72-74 and slow slowly increasing as the progress via games and training. Your initial weights are working better for me to grab some other freaks on free transfer usually 16-20 old young players. Your initial weighs are more focused on extremes like only couple of attributes matters. Later I found this update with put some more weight and flatting the distribution of rating and the in games results were not as good as before. 
+
+Based on initial weights teams of young freaks have crazy performance like 1 game lost and 1 game drawn in a season loosing max 8 goals. Beating in cups almost all PRM league teams. Even age handicap seems not to be a big deal like 18's old DC blasting with game rating 8.93 having 4-5 average tackles per game though all season. 
+
+One funny thing about GK. I get on free transfer some 18 old random danish GK with rating of around 78. But it was beginning of using your rating and I made mistake. His GK rating was 49, 78 rating was for Defender ... Average handling and crazy positioning. After 4 seasons he is still my GK with like season rating close to 9.00 saving all penalties in seasons and conceding like 8 goals max. 
+
+For defenders like positioning is the king but i found that agression and bravery also are very important. Tackling seems to be less important. Pace also seems irrelevant. Posisition and anticipation vs pace like one or our former polish national star was saying "Better to stand still wise then run fast like a fool" 
+
+Thanks again! 
+Welcome back to the best game ever! Also a "returni" since 2y ago... maybe 3, not sure, times goes by very quickly. 
+Very interesting your findings. 
+You can design your own weights and use them on intrinsic, you know? 
+If u are interested and need help let me know. 
+If u do so, share your weights, curious to see what it "finds" on my saves. 
+
+Cheers 
+
+Top 
+
+guiluismelo Update Team (Coach) Posts: 63 Joined: Mon Dec 21, 2020 9:48 pm Has thanked: 32 times Been thanked: 28 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by guiluismelo » Thu Nov 27, 2025 5:09 pm 
+
+I've been using CM Scout for some years now and always worked fine but out of curiosity I decided to test CM Scout Intrinsic in a new save. Maybe it's not the right topic to do it but I'll just do a quick overview and differences between the two Scouts. In CM Scout Intrinsic I'm using the values posted here by MadScientist. 
+
+The app it self is Scout Intrinsic is newer, more intuitive, better looking than the CM Scout and in general is better to interact with but I find the options you have in CM Scout more complete, especially with contracts . You can see more details of it, use filters to see players with a release clause and etc. In the other hand in the Intrinsic Scout you have more information about the player, like the stats not only in the game but other values as the intrinsic and in match and about the position he plays better. 
+
+One thing I noticed is CM Scout seems to be more aligned with the game in what is considered a good or bad player. Like, if you get a player with high scout rating in CM Scout and tries to sell him after more clubs are interested than the ones from Scout intrinsic. 
+
+Last but not least, probably there is a reason wrote right here in this topic that I didn't read, or remember, but Scout Intrinsic seems to give much higher ratings for defenders and goalkeepers than strikers and middle fields. It seems more equal in CM Scout. 
+
+In the top 50 players from Scout Intrinsic 25 are GK, 16 DC while just 3 middle fielders (2 defensive and one central midfield, none offensive) and 6 strikers (I'm considering Strikers and Forwards together). The first offensive middle to apear is in the 58th position. In CM Scout is 10 GK, 7 DC, 16 middle fielders (there is defensive, central and offensive ones) and 8 strikers. 
+
+After this long post, witch one to use? I, personally, will be probably using both to find my players as both are good tools. If I had to chose one, I would probably stick to CM Scout as I use it for longer and I am way more adapted to it. 
+
+Top 
+
+Fodster First Team Player Posts: 2792 Joined: Thu Nov 26, 2020 12:36 am Has thanked: 1605 times Been thanked: 909 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by Fodster » Thu Nov 27, 2025 5:44 pm 
+
+Good post, I have tried the Intrinsic scout, but thought there is too much info, never really understood the intrinsic values, so will always stick to Cm Scout, and I mainly use the PA of regens and sometime scout ratings 
+
+Top 
+
+finrod799 Hot Prospect for the Future Posts: 131 Joined: Sun Nov 02, 2025 1:32 pm Has thanked: 29 times Been thanked: 98 times 
+
+Re: Which setting for CM scout inrinsic 
+
+Quote 
+
+Post by finrod799 » Tue Dec 09, 2025 7:52 pm 
+
+MadScientist wrote: Sun Aug 07, 2022 8:40 pm It depends. 
+
+In game: displays the values as they are displayed in game (1 to 20) 
+
+Intrinsic: useful to know the strengths and weaknesses of a player (-125 to +125). Usually remain static throughout the player career (unless he isnt in general training or the att is experience-related). Doesn't take CA into account. 
+
+In match: displays the values approximatelly as seen by the match engine (0 to 45). Better to evaluate current attribute skill because takes CA into account and isnt clamped to 20 as the in game. 
+
+The normalized versions just map it to 1-20 range based on the player with the highest att in the world at that moment. 
+This!!! I'm glad I've managed to dig to this sentence. Now looking on CM source code everything makes sense. Rating is based on this normalized version that means that is fluctuating between saves a lot thus the population is changing. I could not understand why I buy player and after 2-3 saves his rating is dropping by 2-3 points although he is playing very well and other stats are even improving due to training. His normalized intrinsic version was down due the population was changing and even small change due to high weight in rating like Finishing for strikers like 30 000 was dragging him down. Many thanks! 
+
+Top 
+
+leonm987 Youth Team Player Posts: 17 Joined: Fri Feb 16, 2024 3:17 pm Has thanked: 3 times Been thanked: 1 time 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by leonm987 » Thu Dec 18, 2025 11:31 am 
+
+Hi, 
+
+Im new to using this tool. I have input MadScientists parameters and the 4th best defender with a rating 65.67 is Mark Campbell from Burnley? He looks awful though. CA of 60 and PA of 84. Only 19 years old. Why is he so high above players like Ruben Dias and Timber? 
+
+not sure how to post a pic here? 
+Thanks 
+
+Top 
+
+leonm987 Youth Team Player Posts: 17 Joined: Fri Feb 16, 2024 3:17 pm Has thanked: 3 times Been thanked: 1 time 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by leonm987 » Thu Dec 18, 2025 11:39 am 
+
+Or does this only work for the original 68 DB and not the Oct 2024 db based on the 68 one? Thanks 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by samsami » Thu Dec 18, 2025 11:51 am 
+
+leonm987 wrote: Thu Dec 18, 2025 11:31 am Hi, 
+
+Im new to using this tool. I have input MadScientists parameters and the 4th best defender with a rating 65.67 is Mark Campbell from Burnley? He looks awful though. CA of 60 and PA of 84. Only 19 years old. Why is he so high above players like Ruben Dias and Timber? 
+
+not sure how to post a pic here? 
+Thanks 
+CA and PA are less important than his attributes - at least those that are considered essential for a defender. 
+
+What his CA and PA tell you is that he will improve quite a bit as he gets older. 
+
+Top 
+
+leonm987 Youth Team Player Posts: 17 Joined: Fri Feb 16, 2024 3:17 pm Has thanked: 3 times Been thanked: 1 time 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by leonm987 » Thu Dec 18, 2025 12:19 pm 
+
+Great thanks. So just take the value it spits out as their playability now? i.e. a 19 year old amr with a rating of 70 will play better than a 27 year old amr with a rating of 60? I'm new to this. lol 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by samsami » Thu Dec 18, 2025 12:57 pm 
+
+leonm987 wrote: Thu Dec 18, 2025 12:19 pm Great thanks. So just take the value it spits out as their playability now? i.e. a 19 year old amr with a rating of 70 will play better than a 27 year old amr with a rating of 60? I'm new to this. lol 
+Yes, the scout rating is what matters. Only the young defenders get a penalty until they are 24. 
+
+Top 
+
+leonm987 Youth Team Player Posts: 17 Joined: Fri Feb 16, 2024 3:17 pm Has thanked: 3 times Been thanked: 1 time 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by leonm987 » Thu Dec 18, 2025 1:12 pm 
+
+One more question. I have Cristiano Ronaldos regen, CA of 134, PA of 199 and his value in this model is 61. Will it always stay 61 or will it increase as his attributes and CA increase? 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by samsami » Thu Dec 18, 2025 1:58 pm 
+
+leonm987 wrote: Thu Dec 18, 2025 1:12 pm One more question. I have Cristiano Ronaldos regen, CA of 134, PA of 199 and his value in this model is 61. Will it always stay 61 or will it increase as his attributes and CA increase? 
+The big gap between CA and PA means he will get better every year. 
+
+And as his attributes increase his scouting percentage will increase to reflect how good he is. 
+
+Top 
+
+ThiagoBFiorenza Hot Prospect for the Future Posts: 116 Joined: Fri Feb 19, 2021 3:34 pm Has thanked: 141 times Been thanked: 80 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by ThiagoBFiorenza » Fri Dec 19, 2025 5:43 pm 
+
+samsami wrote: Thu Dec 18, 2025 12:57 pm 
+
+leonm987 wrote: Thu Dec 18, 2025 12:19 pm Great thanks. So just take the value it spits out as their playability now? i.e. a 19 year old amr with a rating of 70 will play better than a 27 year old amr with a rating of 60? I'm new to this. lol 
+Yes, the scout rating is what matters. Only the young defenders get a penalty until they are 24. 
+
+Hello samsami! 
+
+But how significant is this penalty? 
+
+Could you represent this penalty numerically? For example, a defender with a positioning of 20, if he's young, drops to 13... something like that? 
+
+Sometimes it seems like an almost irrelevant penalty. I've had many young defenders on my teams who were very good! 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by samsami » Fri Dec 19, 2025 6:00 pm 
+
+ThiagoBFiorenza wrote: Fri Dec 19, 2025 5:43 pm 
+
+samsami wrote: Thu Dec 18, 2025 12:57 pm 
+
+leonm987 wrote: Thu Dec 18, 2025 12:19 pm Great thanks. So just take the value it spits out as their playability now? i.e. a 19 year old amr with a rating of 70 will play better than a 27 year old amr with a rating of 60? I'm new to this. lol 
+Yes, the scout rating is what matters. Only the young defenders get a penalty until they are 24. 
+
+Hello samsami! 
+
+But how significant is this penalty? 
+
+Could you represent this penalty numerically? For example, a defender with a positioning of 20, if he's young, drops to 13... something like that? 
+
+Sometimes it seems like an almost irrelevant penalty. I've had many young defenders on my teams who were very good! 
+To be honest, I don't know. MadScientist can tell you, though. 
+
+Top 
+
+Russta VIP Posts: 236 Joined: Tue Nov 24, 2020 9:38 pm Has thanked: 223 times Been thanked: 203 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by Russta » Fri Dec 19, 2025 10:50 pm 
+
+I'm quite interested in what age penalties might exist outside of the well documented positioning penalty for defenders under 24. I really do believe it's a thing based upon my experience and how I like to field very young squads. 
+
+Working off the stat weightings, I've had players who were really disappointing and getting outplayed by "worse" players that were 8+ years older. I've also seen players get hugely better season after season despite their stats not changing particularly much and their stat weighting actually going down due to relativity. Of course, it's hard to see if this is purely age based or not because every season the game gets easier and easier due to the update teams work getting undone by retirements. 
+
+One idea I had recently to test this is to: 
+
+Have a young squad and save at the start of the season. 
+
+Play all the games, note down where you finish, all your first team end of season stats etc. Possibly limit it to only league games for extra consistency. 
+
+Edit all your players to add 5 years of age to them. 
+
+Reload that save, play it through again, note the same stats, compare. 
+There are obviously flaws to this idea and only have a single season isn't a great data set but I do think it would be worthwhile. 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by samsami » Sat Dec 20, 2025 7:46 am 
+
+Here's an interesting thread about positional penalties. This one does give exact numbers: viewtopic.php?p=11861#p11861 
+
+Top 
+
+Russta VIP Posts: 236 Joined: Tue Nov 24, 2020 9:38 pm Has thanked: 223 times Been thanked: 203 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by Russta » Sat Dec 20, 2025 9:24 am 
+
+samsami wrote: Sat Dec 20, 2025 7:46 am Here's an interesting thread about positional penalties. This one does give exact numbers: viewtopic.php?p=11861#p11861 
+This isn't quite what I was talking about. I do love that post though and it's been insanely helpful to me in tweaking my players and formations over the years. I enjoy playing 3-1-3-3 with my 3x CMs all having forward arrows to AM but found those three midfielders always under performed. Between that post and utilising CM Scout Intrinsic I know that I want to buy an AM who has just as good value as playing CM (or vice versa, though they tend to be rarer) and re-train them accordingly. 
+
+But yeah, the point I was making was talking about the actual Positioning stat rather than the positional penalties as per that thread. We know that defenders under 24 get their best stat artificially lowered by the match engine. Do Strikers get Finishing or Off The Ball or Pace penalised if they're under 24? Do midfielders get their Passing penalised under 24? Or is it 23 or 22 for them? That kind of thing. 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by samsami » Sat Dec 20, 2025 10:51 am 
+
+Russta wrote: Sat Dec 20, 2025 9:24 am 
+
+samsami wrote: Sat Dec 20, 2025 7:46 am Here's an interesting thread about positional penalties. This one does give exact numbers: viewtopic.php?p=11861#p11861 
+This isn't quite what I was talking about. I do love that post though and it's been insanely helpful to me in tweaking my players and formations over the years. I enjoy playing 3-1-3-3 with my 3x CMs all having forward arrows to AM but found those three midfielders always under performed. Between that post and utilising CM Scout Intrinsic I know that I want to buy an AM who has just as good value as playing CM (or vice versa, though they tend to be rarer) and re-train them accordingly. 
+
+But yeah, the point I was making was talking about the actual Positioning stat rather than the positional penalties as per that thread. We know that defenders under 24 get their best stat artificially lowered by the match engine. Do Strikers get Finishing or Off The Ball or Pace penalised if they're under 24? Do midfielders get their Passing penalised under 24? Or is it 23 or 22 for them? That kind of thing. 
+Only defenders as far as I know. 
+
+Top 
+
+guiluismelo Update Team (Coach) Posts: 63 Joined: Mon Dec 21, 2020 9:48 pm Has thanked: 32 times Been thanked: 28 times 
+
+Re: CM Scout Intrinsic 
+
+Quote 
+
+Post by guiluismelo » Wed Jan 07, 2026 3:36 pm 
+
+MadScientist wrote: Sun Mar 07, 2021 5:04 pm For each attribute with value v and weight w we calculate the weighted value k as 
+k = (v / 20) * w 
+Then we summarize all the weighted values and divide by the sum of the weights. 
+Below the sample for two attributes. 
+
+Code: Select all 
+
+k = v * w
+Passing 9 18/20 10
+Long Shots 1 5/20 4
+_______________________________________________
+ 10 / 14 = 0.71 * 100 = 71% 
+
+Note: for Dirtiness and Injury Proneness if real value is v we use 21 - v as v in the formula because а smaller value is better for these attributes. 
+There is a lot of talk here about the weights itself but I didn't see anything about this formula. What values does it uses? In game? In match? Values over 20 are considered? 
+
+I decided I would create my own sets of weights. I used MadScientist as a base and looked into the CM official document, I few posts about what matter for every position, and some of my own logical thoughts and what I need in that positions, for example, I thought more of AM as AML and AMR, in the sides, than in the middle as it was done by MadScientist. 
+
+And to test it against ScoutIntrinsic I did in excel this formula to see if it give me the same result. It doesn't. Doesn't matter what set of weight I use, the result of this is always waaaaay higher than what is shown in ScoutInstrisic. For example, a striker, with my weights using the formula should be 91,99. It is shown as 78,77%. MadScientist the difference is even higher. With the formula his scout should be higher than with my weights, 96,23. And in ScoutIntrinsic it is 72,98%. 
+
+Is there anything else ScoutIntrinsic considers that is not in the formula? Is there a more accurate way to make the calculus? Someone understands how the Scout makes the calculus and could provide a best explanation? Thanks all 
+
+Top 
+
+Fodster First Team Player Posts: 2792 Joined: Thu Nov 26, 2020 12:36 am Has thanked: 1605 times Been thanked: 909 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by Fodster » Wed Jan 07, 2026 7:14 pm 
+
+I have used this tool, couldn't get my head around it to be honest at the start, but understood it when relaying the info, I obtained back to my save game. I still use it regular, and have a search around after most summer updates 
+
+I was under the impression the original tool release provided a foundation for calculating player ratings based on the game's hidden "intrinsic" attributes. Which were of course determined by the developer. From my knowledge and testing, anyone can add/save/edit their own custom weightings deviating from the "foundations" initially set out. Hence why MadScientist is showing as higher as he increased weights for physical and mental stats, including required skills for each position, which I am assuming the developer didn't do 
+
+I think the beauty of the tool is that the end result provided/shown by someone else doesn't really matter, it all boils down to your own personal weighting requirements 
+
+Top 
+
+guiluismelo Update Team (Coach) Posts: 63 Joined: Mon Dec 21, 2020 9:48 pm Has thanked: 32 times Been thanked: 28 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by guiluismelo » Wed Jan 07, 2026 8:44 pm 
+
+I get the part of everyone testing their own weights and getting different results. It's exactly what I'm doing. I cut it out from the quote in the other post but MadScientist posted that formula as the base to calculate the ratings and I quote him now "For reference, this is the post from the old forum where vfilatov explained how the CM Scout Intrinsic tool calculates the player rating (%) based on the weight set, I thought it was important reposting it here:" 
+
+That's why I tried to replicate that formula, it was supposed to be the base for the calculating the player rating and it doesn't match what I see in Scout. In the end, it doesn't even matter (miss you Chester), I'm just curious and trying to understand the math behind it. 
+
+Edit: with the help of finrod799 I figured it out. It uses the in match normalized attributes. That's why I was having a different result, I was using the in match attributes. 
+
+Top 
+
+finrod799 Hot Prospect for the Future Posts: 131 Joined: Sun Nov 02, 2025 1:32 pm Has thanked: 29 times Been thanked: 98 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by finrod799 » Sun Mar 01, 2026 5:32 pm 
+
+Question for benchmarking ? 
+
+CA = 100 
+Intrinsic = -128 
+Minimum total: -128/5 + 100/20 + 10 = -10,6 = -11 
+
+In many tools when <0 = 0 or 1. In game you see 1 but sometimes I'm not sure it shows "-". 
+
+Until like intrinsic -75 when then number crosses 0. When I pass to statistical model <0 then 0 then basically he sees 0 to 45 (when CA is 200) everything between -128/-75 is then for model the same, but clearly you can see the results are changing in these range. 
+
+So I think makes no difference how visually engine sees this for model I should add negative values as well ? 
+
+Top 
+
+ThiagoBFiorenza Hot Prospect for the Future Posts: 116 Joined: Fri Feb 19, 2021 3:34 pm Has thanked: 141 times Been thanked: 80 times 
+
+Re: CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Quote 
+
+Post by ThiagoBFiorenza » Mon Apr 13, 2026 8:10 pm 
+
+I believe so. To know which attributes are worse than 0. In real life it would be impossible for a player to have negative attributes. However, in a game with as many bugs as CM0102, yes, it is possible. So the best thing is to always show the real value of the game. 
+
+Top 
+Post Reply 
+
+Print view 
+
+Display: All posts 1 day 7 days 2 weeks 1 month 3 months 6 months 1 year Sort by: Author Post time Subject Direction: Ascending Descending 
+148 posts 
+Previous 
+
+1 
+
+2 
+
+3 
+
+4 
+
+5 
+
+6 
+
+Return to “Tools” 
+
+Jump to 
+
+The Website 
+
+↳   Announcements 
+
+↳   New Signings 
+
+↳   Awards 
+
+↳   Hall of Fame 
+
+↳   Awards 
+
+↳   Members 
+
+↳   Stories 
+
+Downloads 
+
+↳   Downloads 
+
+↳   Background Packs 
+
+↳   Colour Schemes 
+
+↳   Commentary Files 
+
+↳   Databases 
+
+↳   Documentation 
+
+↳   Fonts 
+
+↳   Game 
+
+↳   Menubars 
+
+↳   Patches 
+
+↳   Tactics 
+
+↳   Tactic Packs 
+
+↳   Tools 
+
+Technical Support, Tutorials & FAQs 
+
+↳   Technical Support, Tutorials & FAQs 
+
+↳   Tutorials 
+
+The Office 
+
+↳   Scouting and Research 
+
+↳   Africa 
+
+↳   Asia 
+
+↳   Europe 
+
+↳   North, Central America & Caribbean 
+
+↳   Oceania 
+
+↳   South America 
+
+↳   Free Players and Staff 
+
+↳   Histories 
+
+↳   Research 
+
+Championship Managers Club 
+
+↳   Data Updates 
+
+↳   General 
+
+↳   Graphics 
+
+↳   Network Games 
+
+↳   Official Challenges 
+
+↳   Patches 
+
+↳   Stories 
+
+↳   Tactics 
+
+↳   Talents, Tips and Training 
+
+↳   Other Championship Managers 
+
+CM 01/02 Interactive 
+
+↳   Championship Managers League 
+
+↳   CM Forums United 
+
+↳   Dream Team League 
+
+↳   Trillionaires Toys 
+
+The Community 
+
+↳   Football 
+
+↳   Gaming 
+
+↳   General Chat 
+
+↳   Other Sports 
+
+↳   Soccer Manager 
+
+↳   TV & Films 
+
+Archives 
+
+↳   Archives 
+
+Forums 
+
+All times are UTC+01:00 
+
+Delete cookies 
+
+Powered by phpBB ® Forum Software © phpBB Limited 
+
+Privacy | Terms

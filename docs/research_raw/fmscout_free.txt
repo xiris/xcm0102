@@ -1,0 +1,215 @@
+SOURCE: https://www.fmscout.com/a-championship-manager-0102-free-download.html
+TITLE: Championship Manager 01/02 - Free Download | FM Scout
+
+Championship Manager 01/02 - Free Download | FM Scout 
+
+FMSCOUT 
+Search 
+
+Follow @fmscout 
+
+5107 online 
+
+TotD : 
+
+FM26 Live Editor 
+
+Sign In 
+
+× 
+
+On FM Scout you can chat about Football Manager in real time since 2011. Here are 10 reasons to join ! 
+
+Home › Downloads › CM 01/02 Downloads ↓ 
+
+Download Now 
+Downloads: 1075797 / Size: 277.0 MB / Added: 2012-01-29 
+
+In January 2009, Eidos - the company that holds the rights to the name 'Championship Manager 2001/2002 Season' announced that they would be making the game a legally free download and available only from their website. 
+
+In order for the game to run correctly, you will need to burn the downloaded files onto a blank CD/DVD. You may also opt to 'mount' the game; see below for details. 
+
+Once you have done that, only then will you be able to download and install the data updates, patches and other tools offered at champman0102.co.uk . 
+
+Important : We recommend getting and applying the latest official patch v3.9.68 ; it should help with errors in modern day computers. 
+
+About Championship Manager 2001/2002 
+This final update to Championship Manager 3 series was, and still is, one of the most popular editions to date. It was also the first title to make a short trip onto console. 
+
+A vastly-improved match engine, commentary and computer manager intelligence was added in addition to a new scouting feature giving the ability to get in-depth analysis on your opposition including their key players and team tactics throughout the season. CM 01/02 also built on the previous games realism, implementing the new EU-regulated transfer system, introduced in real world football in September 2001. 
+
+It also featured an attribute masking mode, whereby players could only see information about footballers he or she would realistically know about. So in order to find complete sets of stats about other potential stars, a manager would need to scout that player, team or region and when detailed profiles and histories for more than 100,000 players, managers, and coaches are included, that makes for an immense search. 
+
+Managers could begin to make notes on players in the game, approach the governing bodies to appeal against bans imposed on their stars and send injured ones away for surgery giving players an increased 
+
+How to install CM without disk 
+
+Get a free optical disc emulator such as WinCDEmu and install it 
+
+Get a free file archiver tool such as 7-Zip and install it, if you can't extract .zip archives 
+
+Extract the .zip file you downloaded 
+
+Mount an image using WinCDEmu 
+
+You'll get a new virtual drive in My Computer, the CM0102 one 
+
+Open it and start the 'autorun' file 
+
+Credits 
+Championship Manager - Official website 
+
+Download Now 
+Downloads: 1075797 / Size: 277.0 MB / Added: 2012-01-29 
+About Stam 
+I started FM Scout for fun in the distant 2004. I'm proud of how this place has grown into a vibrant community and I try my best to improve it every year. Husband and father of two. 
+
+Your content on FM Scout 
+We are always looking for quality content creators, capable of producing insightful articles. Being published here means more exposure and recognition for you. 
+Do YOU have what it takes? 
+Scouting: Essential Lists 
+
+FM26 Best Wonderkids & U21 Talents 
+Top Free Agents on FM 2026 
+Absolute Best Coaches in FM26 
+FM 2026 Must-Sign Bargain Players 
+The FMSCOUT Newsletter 
+Sign up to receive our best Football Manager updates to your email every week. 
+
+Discussion: CM 01/02 - Free Download 
+
+41 comments have been posted so far. 
+
+SirTAVARES • 4 months ago 
+still broken here 
+
+Stam • 4 months ago 
+@zeze1986: Sorted, try again. 
+
+zeze1986 • 4 months ago 
+The download link is broken. 
+
+Kevlar201 • 1 year ago 
+What do I need to open the file once I've downloaded it on to my phone? 
+
+bdj88 • 2 years ago 
+I just downloaded this. Game works fine but when I want to save, I get an error that says v3.9.60zipdir..cpp 797 and unable to write data to disk. Any idea what to do please? 
+
+Stam • 2 years ago 
+Updated the download link. 
+
+msal84 • 2 years ago 
+link not found 
+
+Nauro778 • 2 years ago 
+Not Found 
+
+The requested URL was not found on this server. 
+
+SirWalter73 • 2 years ago 
+Getting the same error message as plav123. Any ideas on how to download? 
+
+plav123 • 2 years ago 
+download link not working - any way around this? 
+
+"The requested URL was not found on this server." 
+
+qRy99 • 2 years ago 
+Link not working again. 
+
+houstybhoy88 • 3 years ago 
+Hi folks, download not working for me on Windows 10 machine, any idea's? 
+
+fotohok • 3 years ago 
+I can't download Cm01/02 
+
+lari.gogoasa • 3 years ago 
+Download link not working. And have one question: How can I install it on Windows 11? 
+
+cheeko7 • 3 years ago 
+download link nopt working 
+3 
+
+HurkaDurk69 • 3 years ago 
+and it doesn't work, again. this time it is getting the game to run 
+
+HurkaDurk69 • 3 years ago 
+@Stam doesn't work for me 
+
+nevermind, it finally worked 
+
+mooman2012 • 4 years ago 
+Any where to get CM03/04 
+1 
+
+Stam • 4 years ago 
+@ Soms : Try right-click on the download button and then select "Save link as". 
+
+Soms • 4 years ago 
+Cant start download... 
+1 
+
+champaz • 5 years ago 
+to fix the "not enough space" error after first install of game, change compatibility options by right clicking the shortcut you should have put up on your homescreen 
+
+noursleiman • 5 years ago 
+Game was working perfectly well. Then I downloaded the patch and the new March 2020 data and it just cuts out. Anything I can do? 
+
+WhiteMamba • 5 years ago 
+Hello guys! I installed it and when I try to play a NEW GAME it tells me that I haven't enough space, what can I do? 
+
+Mizuno39 • 6 years ago 
+Hi my game keeps crashing on 02.01.02 any thing I can do to fix this please 
+
+Stokesy501 • 6 years ago 
+Hi could someone help with the download of this, I keep trying to download the programs to make this game work but it says "you dont have any apps to open this program" I'm using a Samsung tablet , sorry not very good on computers/tablets etc 
+
+1 
+
+2 
+
+> 
+
+>> 
+
+Latest Video 
+
+The UNSTOPPABLE Rock SOLID FM26 Tactic | Football Manager 2026 Best Tactics 1 Jan The BEST BUYS For Every Budget In FM26 1 Jan GOALS GALORE for UNSTOPPABLE FM26 Tactic | Football Manager 2026 Best Tactics 1 Jan 5 HUGE Mistakes You MUST Avoid In FM26 | Football Manager 2026 Tutorial 1 Jan 
+
+Top Content 
+FM 2026 Wonderkids 
+The ultimate list of the best wonderkids with our recommendation ratings 
+Genie Scout 26 
+World's best scout utility returns for FM26 
+FM26 Best Free Agents 
+Preliminary list of top players without contract when starting FM 2026 
+FM26 Best Coaches 
+Highest rated coaches to get 5 stars in all training areas 
+
+Latest Updates 
+
+FM26 Increase Realism Megapack by Daveincid 
+FM26 2025-26 Real Fixture & Results [15-5-2026] 
+AFC Leagues for FM26 by MasterIgor v26.9 (men only) 
+OFC Leagues for FM26 by MasterIgor v26.1 (men only) 
+CONMEBOL Leagues for FM26 by MasterIgor v26.2 (men only) 
+CAF Leagues for FM26 by MasterIgor v26.4 (men only) 
+
+Follow Us 
+
+YouTube 
+Subscribe to our channel for insightful videos 
+
+Facebook Page 
+Like the most popular FM fansite page 
+
+Twitter 
+Follow the largest fansite 
+
+Facebook Group 
+Join our discussion group 
+
+FMS Chat – 
+Stam 
+hey, just wanted to let you know that we have a fb style chat for our members. login or sign up to start chatting. 
+↑

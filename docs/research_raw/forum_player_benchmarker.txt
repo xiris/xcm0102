@@ -1,0 +1,852 @@
+SOURCE: https://champman0102.net/viewtopic.php?t=6425
+TITLE: PlayerBenchmarker - Championship Manager 2001/2002 Forums
+
+PlayerBenchmarker - Championship Manager 2001/2002 Forums 
+
+Championship Manager 2001/2002 Forums 
+
+Keeping the Game Alive 
+
+Skip to content 
+
+Quick links 
+
+Donations 
+
+FAQ 
+
+Login 
+
+Register 
+
+Forums Downloads Downloads Tools 
+
+PlayerBenchmarker 
+
+Moderator: Patch Team 
+
+Post Reply 
+
+Print view 
+
+214 posts 
+Page 1 of 9 
+
+Jump to page: 
+
+1 
+
+2 
+
+3 
+
+4 
+
+5 
+
+… 
+
+9 
+
+Next 
+
+agevak Patch Team Posts: 127 Joined: Fri Jul 26, 2024 7:34 pm Has thanked: 13 times Been thanked: 170 times 
+
+PlayerBenchmarker 
+
+Quote 
+
+Post by agevak » Sat Oct 12, 2024 6:23 pm 
+
+I play CM series since 90s and always ask myself a question: which attributes are really important and at which degree. 
+This forum is a great resource, but even here I've failed to find enough information about this article. Many people discuss this important aspect, but usually don't provide any reasoning. 
+However, here are awesome tools for patching, editing and benchmarking the game. So I've decided to finally get real proven knowledge of what the attributes are about right from the game itself... 
+So, now on we have a tool for benchmarking player attributes. It's based on CM0102 Tactics Benchmarker, it allows editing attributes for a bunch of players (grouped by positions) and run them to play several seasons in Greek league. 
+Then it aggregates the results and appends average values to a file. Thus, we can analyze the outcome to see which attributes are more important and which are useless. 
+The tool is raw (say alpha version) but since I don't have time to polish it and make it more user-friendly, decided to release it as is. Here is a link to GitHub: https://github.com/agevak/CM0102PlayerBenchmarker 
+There is a readme file describing how to use it. Source is available, so anybody can modify it as he likes. 
+Here I publish the results of my testing. Reader is encouraged to perform his own tests. 
+
+Testing base. 
+1) Used CM version is the one from CM0102 Tactics Benchmarker v1.1 with most critical patches applied via Nick's patcher (fix of creativity, positioning and marking bugs). 
+2) Took the PAS Giannina club as it was in the CM0102 Tactics Benchmarker v1.1. 
+3) Split all players into the categories explained below. The program edited position values for each player accordingly (e.g. for "attacking midfielder" set Midfield, Attacking Midfielder and Center values to 20) in order to avoid positional penalties (which made Versatility attribute useless BTW). 
+4) Set for all players Natural Fitness to 20 and Injury Proneness to 1 (though CM0102 Tactics Benchmarker v1.1 says that injuries are disabled, but just in case). 
+5) Used mostly my own tactics ( https://github.com/agevak/CM0102Tactics ... usters.tct ), but sometimes (e.g. for GK testing) used weak default 4-4-2 tactic. 
+6) Run 40–100 seasons per test. The program captures only these stats (IMO, everything else is not important in the end of the day): 
+- Average Goals Scored per season, 
+- Average Goals Conceded per season, 
+- Average Points earned per season. 
+7) I've concentrated on the team's Goals Scored and Goals Conceded only, didn't play any attention on players' stats. Points earned always correlated with scored and conceded goals very tightly. 
+
+Captain Spoiler 
+The only thing useful for captain is Influence. Good captain helps a lot, and it's not difficult to find 1 player with 18-20 influence, so just have such one in your squad and select him to be a captain. Simple attributes Spoiler 
+"Simple" attributes are those which are not affected by Current Ability. The effect of such an attribute falls in one of these categories: 
+1) Linear. Say Pace of 5 vs 1 leads to +1 more goal scored, 10 vs 1 - to +2 goals, 15 vs 1 - 10 +3, 20 vs 1 - to +4. Not necessary a perfectly linear effect, but somewhat close to it. 
+Bright example: Pace. 
+2) Penalty. Low values lead to a big penalty, while very high values provide no to little pros over average values. 
+Bright example: technique and work rate for attacking midfielders. 
+3) Bonus. Average values don't give advantage over low ones, but only high values do. 
+Bright example: Jumping for forwards. 
+I've tested simple attributes mostly in 20 vs 1 scenario, didn't play much with values in the middle. Only noticed the abovementioned examples. Natural fitness and Injury Proneness 
+These 2 attributes work exactly as regular player can expect. So I will not mention them further, please just keep them in mind. Their effect is very high for all positions. Natural Fitness of 1 is deadly even for GK. 
+
+Creativity and Passing Spoiler 
+Creativity gives no effect without great passing. Don't know the exact formula, but as a rule of thumb: assume Creativity = Min(Creativity, Passing). 
+If Creativity is not in the list of important attributes for some position, then it doesn't give any improve, even if Passing does. 
+There is an in match effect of high Creativity (even if not supported by high Passing) - huge amount of passes. However, this effect doesn't really help to score more goals by team neither to concede less. Super tacklers Spoiler 
+These things help to make huge amount of tackle attempts in matches: 
+1) Aggression and Bravery (only work together, not separately) 
+2) Tackling (also improves tackle success rate) 
+3) Positioning 
+However, among these things, the only useful one for the team (to concede fewer goals and often to score more as well) is the Positioning. GK Spoiler 
+In decreasing order of importance (order inside a group is random): 
+1) Handling. 
+2) Aggression. 
+Agility (seems to have "penalty" effect with a milestone around 12). 
+Jumping. 
+Positioning. 
+3) Work rate. 
+Reflexes (very specific, see below). 
+Negative effect attributes (i.e. the lower, the better): 
+1) Anticipation (slight effect). 
+Handling and Reflexes intrinsic must sum up to 0-20 (usually very close to 0, but some very lucky GKs has up to 20), otherwise (if modified via save editor) game will correct them to be so. Handling is much preferred over Reflexes. 
+Best GK in ODB is David Dei with his Handling intrinsic around 45 and Reflexes around -25. DC Spoiler 
+DC without arrow. 
+Most important: 
+1) Positioning 
+About 2 times less important: 
+2) Marking 
+Less important: 
+3) Jumping (effect is not "bonus") 
+4) Stamina 
+Strength 
+5) Dirtiness (the lower, the better of course) 
+Other simple attributes also affect, but each of them separately affects very slightly. Other ability-dependent attributes are completely useless. 
+Marking makes sense only for players who having Man marking instruction. If marking is Zonal or None, Marking is completely useless. 
+In my experience of tactics benchmarking, Man marking instruction is the best for DCs, but not for others. Thus, put Marking attribute on 2nd place for DC. Winger Spoiler 
+DL or DR without arrow. 
+With arrow, the situation is mostly similar, though attacking attributes become more important. 
+In decreasing order of importance (order inside a group is random): 
+1) Dribbling (to score more) 
+Positioning (to concede less) 
+Technique (to score more, effect is "penalty", with value >= 10 penalty becomes close to zero) 
+Teamwork (mostly for scoring) 
+2) Stamina 
+Passing (Creativity doesn't help, even for ML/MR -> AML/AMR) 
+3) Determination 
+Pace 
+Off The Ball (to score more) 
+4) Jumping 
+Workrate (to concede less) 
+No other attribute makes significant effect alone. 
+For more attacking winger positions (like ML/MR with arrow to AML/AMR) I didn't make much testing, but there is definitely a difference, at least noticed that Positioning becomes useless. DMC Spoiler 
+DMC without arrow. 
+In decreasing order of importance (order inside a group is random): 
+1) Positioning (to both score more and concede less) 
+2) Agility (mostly to concede less) 
+Determination (to score more) 
+Off The Ball (to score more) 
+Dribbling (to score more) 
+Passing (to score more) 
+3) Professionalism 
+Aggression 
+Creativity 
+Slight effect: 
+4) Sportsmanship (to conceded less) 
+Technique (to score more) 
+No other attribute makes significant effect alone. AMC Spoiler 
+MC with arrow to AMC. 
+In decreasing order of importance (order inside a group is random): 
+1) Technique (to score more, effect is "penalty", with value >= 15 penalty becomes close to zero) 
+Workrate (to concede less, effect is "penalty", with value >= 10 penalty becomes close to zero) 
+Positioning (mostly to concede less, but to score more also) 
+2) Dribbling (to score more) 
+3) Passing (to score more) 
+Off the ball (to score more) 
+Creativity (to score more) 
+3) Pace 
+Jumping 
+Determination 
+Flair (to score more) 
+4) Consistency 
+Important matches 
+Professionalism 
+Strength 
+No other attribute makes significant effect alone. 
+Effect of Off The Ball becomes smaller when using great FCs. AM->FC Spoiler 
+AMC with arrow to FC. 
+In decreasing order of importance (order inside a group is random): 
+1) Off the ball 
+2) Technique (to score more, effect is "penalty", with value >= 15 penalty becomes close to zero) 
+Jumping ("bonus" effect, value <= 10 provides no bonus) 
+Dribbling (to score more) 
+Positioning (to both score more and concede less) 
+Passing (Creativity doesn't help) 
+3) Pace (to both score more and concede less, "linear" effect) 
+Workrate (to both score more and concede less) 
+Stamina 
+4) Flair 
+Professionalism (mostly to concede less) 
+Heading (to score more) 
+Teamwork 
+Very slight effect: 
+5) Acceleration 
+Agility 
+Aggression and Bravery 
+Balance 
+Determination 
+Sportsmanship 
+Strength 
+No other attribute makes significant effect alone. All simply attributes together 20 vs 1 make effect comparable to Technique 15 vs 1. FC Spoiler 
+FC without arrow. 
+In decreasing order of importance (order inside a group is random): 
+1) Jumping ("bonus" effect) 
+Off the ball 
+2) Determination 
+Heading 
+Passing 
+Technique 
+Work rate 
+3) Consistency 
+Important matches 
+Flair 
+Pace 
+Professionalism 
+Sportsmanship 
+Stamina 
+Strength 
+Jumping 20 is much better than 18, while 15 is slightly better than 1. 
+All (or most) other simple attributes also have progressive effect. 
+Ability dependent attributes (expect for Off The Ball) require big increase (+60..+80 intrinsic) to make effect similar to 10 -> 20 transition from a simple attribute. Conclusion 
+Attributes are quite sophisticated and this is one of the reasons why we love CM so much. 
+I encourage you to perform tests on your own, because I believe there are many aspects which I've missed. Spoiler 
+Big surprise is that Finishing, Tackling and Crossing have no effect at all. This is probably a bug in the game. Or maybe they are used in some specific relation with other attributes (like Creativity with Passing). 
+
+Top 
+
+redgreenblue Youth Team Player Posts: 10 Joined: Tue Nov 24, 2020 9:48 pm Has thanked: 1 time Been thanked: 6 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by redgreenblue » Fri Dec 20, 2024 9:40 am 
+
+This is amazing stuff, if your conclusion about finishing is correct its mind-blowing! 
+
+Top 
+
+necromancer135 Posts: 2 Joined: Wed Sep 22, 2021 11:39 pm Has thanked: 1 time 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by necromancer135 » Fri Feb 07, 2025 3:03 pm 
+
+and where is about the no arrow midfielder, could you please try to analyse them 
+
+Top 
+
+ebfatz Social Media Team Posts: 2001 Joined: Tue Jan 21, 2020 11:25 pm Has thanked: 442 times Been thanked: 886 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by ebfatz » Sat Feb 08, 2025 8:27 pm 
+
+I knew Finishing was almost irrelevant for strikers but didn't think the same could be said for tackling in defenders. 
+
+Find me on X, BlueSky, Facebook, Instagram and YouTube. 
+Search : TheEbFatz 
+
+Back to back champman0102.net Premier League Predictions Champion! , 2023/24 and 2024/25 
+Top 
+
+declauvaarden Posts: 1 Joined: Sun Mar 19, 2023 4:32 pm 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by declauvaarden » Sun Apr 13, 2025 1:41 pm 
+
+I totally agree – David DeI is hands down the best goalkeeper in the game. I'm glad someone managed to see this also. 
+
+agevak – I really liked your post, and I wanted to ask: have you maybe made a small list of top players by position? Like a top 3 or top 5? I’m still not too sure how to figure that out myself using this tool, so I’d really appreciate any tips or a quick ranking if you’ve got one. Thanks in advance! 
+
+Top 
+
+agevak Patch Team Posts: 127 Joined: Fri Jul 26, 2024 7:34 pm Has thanked: 13 times Been thanked: 170 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by agevak » Fri Apr 18, 2025 4:27 pm 
+
+I just searched according to the found criteria. Don't recall if had some specific top 5, I think it will depend on random rolls during new game generation, and of course it will depend a lot on which DB you use. And to search you need to use CMScoutIntrinsic, because CMScout will show cosmetic values. 
+What I recall from my play on original DB, there were very few really awesome players among the known super stars. Namely I hunted only for these 3: Nesta, Samuel, Veira. All the other really tops were low reputation players. some even from Serie D. And won CL and everything with them. 
+
+Top 
+
+phil1369 Youth Team Player Posts: 9 Joined: Thu Jan 11, 2024 3:01 pm Has thanked: 2 times Been thanked: 3 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by phil1369 » Sun Apr 20, 2025 12:17 am 
+
+This thread has made me pick up the game again., thank you. 
+
+I'm trying to understand some of the words used and how to apply them practically. 
+
+When searching for a player based on your findings, do you think there needs to be a good attribute number for all of the skills listed or just some - obviously based on your ranking/order. 
+
+For example if a midfielder has good technique, work rate, positioning and passing but low dribbling would they still be good players or do all those numbers need to be a certain level? 
+
+On that subject, what is a "good" number - high intrinsics work best, but what level would a player be with 15 for the important skills - top division level? 
+
+Top 
+
+Fodster First Team Player Posts: 2792 Joined: Thu Nov 26, 2020 12:36 am Has thanked: 1605 times Been thanked: 909 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Fodster » Tue Apr 22, 2025 4:36 am 
+
+phil1369 wrote: Sun Apr 20, 2025 12:17 am When searching for a player based on your findings, do you think there needs to be a good attribute number for all of the skills listed or just some - obviously based on your ranking/order. 
+
+For example if a midfielder has good technique, work rate, positioning and passing but low dribbling would they still be good players or do all those numbers need to be a certain level? 
+
+On that subject, what is a "good" number - high intrinsics work best, but what level would a player be with 15 for the important skills - top division level? 
+Its probably worth having a read of some of the other threads on the forum, these links below should help/give you more of an understanding: 
+
+viewtopic.php?t=4251 
+viewtopic.php?t=2659 
+
+Top 
+
+Sky18akavenator Official Challenge Team Posts: 444 Joined: Tue Mar 07, 2023 7:51 pm Has thanked: 1153 times Been thanked: 179 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Sky18akavenator » Fri May 23, 2025 11:11 am 
+
+Hi Agevak! 
+Great work! Congrats! 
+
+I just found yesterday this post. There are some findings that for me are a bit mind blowing. 
+I am creating a Weight to use in Scout Intrinsic with your findings, and after try it out on my saves. I believe it will work very good, just a bit hard to understand why finishing not important to SC. Like, Tsigalko freak stats explanations are all: very high Finishing and Off the Ball. 
+
+I have some doubts tho: 
+- I was checking and bm.exe file doesnt has the Creativity unlock patch neither Positioning clamp Marking. It was this one that you used right? 
+- For what I read you used benchmark v1.1, so you used Tapani mini-greek DB, not ODB, right? 
+Or did you manage to change DB, and use in fact ODB? 
+I dont know if there is a big difference between mini-greek DB and ODB, but there are at least some, because PAS Giannina, at least, was edited, and players are not the same. Dont know if their atts were also edited. 
+Even so, I think that it doesnt matters, because what you did, it doesnt matters the DB. It matters what match engine "decides". Right? What do you think? 
+In TBL the better tct are with less than 11 players on overview screen. But in full mode they dont work. So, it doesnt means that better on TBL = better on full mode. 
+
+As match engine will use Reflexes att to calculate Creativity, didnt you observe nothing strange about Reflexes att influence on your conclusions? Also, I dont know, but if Creativity is not unlocked, how does it has a relation with Passing? I know probably you dont know the answer, I am just "thinking/writing to myself"... like, not logical, you know? What do you think about it? 
+
+Top 
+
+agevak Patch Team Posts: 127 Joined: Fri Jul 26, 2024 7:34 pm Has thanked: 13 times Been thanked: 170 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by agevak » Fri May 30, 2025 1:40 pm 
+
+phil1369 wrote: Sun Apr 20, 2025 12:17 am When searching for a player based on your findings, do you think there needs to be a good attribute number for all of the skills listed or just some - obviously based on your ranking/order. 
+
+For example if a midfielder has good technique, work rate, positioning and passing but low dribbling would they still be good players or do all those numbers need to be a certain level? 
+My results followed the law of diminishing utility. E.g. made 1 attrbiute = 20, got +5 goal difference, then made 1 extra attribute = 20, got +2 goal difference. 
+
+About lower/higher divisions - only tested in the same division (mini Greek league). 
+
+Top 
+
+agevak Patch Team Posts: 127 Joined: Fri Jul 26, 2024 7:34 pm Has thanked: 13 times Been thanked: 170 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by agevak » Fri May 30, 2025 1:46 pm 
+
+Sky18akavenator wrote: Fri May 23, 2025 11:11 am Hi Agevak! 
+Great work! Congrats! 
+
+I just found yesterday this post. There are some findings that for me are a bit mind blowing. 
+I am creating a Weight to use in Scout Intrinsic with your findings, and after try it out on my saves. I believe it will work very good, just a bit hard to understand why finishing not important to SC. Like, Tsigalko freak stats explanations are all: very high Finishing and Off the Ball. 
+
+I have some doubts tho: 
+- I was checking and bm.exe file doesnt has the Creativity unlock patch neither Positioning clamp Marking. It was this one that you used right? 
+- For what I read you used benchmark v1.1, so you used Tapani mini-greek DB, not ODB, right? 
+Or did you manage to change DB, and use in fact ODB? 
+I dont know if there is a big difference between mini-greek DB and ODB, but there are at least some, because PAS Giannina, at least, was edited, and players are not the same. Dont know if their atts were also edited. 
+Even so, I think that it doesnt matters, because what you did, it doesnt matters the DB. It matters what match engine "decides". Right? What do you think? 
+In TBL the better tct are with less than 11 players on overview screen. But in full mode they dont work. So, it doesnt means that better on TBL = better on full mode. 
+
+As match engine will use Reflexes att to calculate Creativity, didnt you observe nothing strange about Reflexes att influence on your conclusions? Also, I dont know, but if Creativity is not unlocked, how does it has a relation with Passing? I know probably you dont know the answer, I am just "thinking/writing to myself"... like, not logical, you know? What do you think about it? 
+I've applied major fix patches (including Creativity, Positioning and Marking fixes) on benchmark v1.1 executable. Used mini-Greek DB, right. 
+Don't understand about "with less than 11 players". 
+About finishing - this is the fact in benchmark results. Tsigalko is still very good player because of high Jumping, Off the ball, Determination, etc. 
+
+Top 
+
+Sky18akavenator Official Challenge Team Posts: 444 Joined: Tue Mar 07, 2023 7:51 pm Has thanked: 1153 times Been thanked: 179 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Sky18akavenator » Sat May 31, 2025 4:27 pm 
+
+I've applied major fix patches (including Creativity, Positioning and Marking fixes) on benchmark v1.1 executable. Used mini-Greek DB, right. 
+Don't understand about "with less than 11 players". 
+About finishing - this is the fact in benchmark results. Tsigalko is still very good player because of high Jumping, Off the ball, Determination, etc. 
+Hi Avegak, thanks for your answer, got it! 
+
+To clearfy what I meant with less than 11 players overview tct on TBL, I meant, for example: tactic 21421 from kvlz, has only 9 players on overview screen because 2 midfielders are hidden in the "back" of 2 other midfielders. These kind of tct perform very well on TLB, but they dont on full mode game, or in other kind of benchmarks, like OTL benchmark. 
+But for example, 41221 CamF tct, that is top1 on OTL Benchmark performs well (not fantastic, but quite well) on TBL benchmark, and in full mode game. 
+So, I dont know what to think about these different results (match engine is very strange, I would say). I think, in other words, I was asking: do you, or anyone, uses these findings about players on Scout Intrinsic (for example) and is able to find great players that "always" perform well? 
+Because best tct that are working well for mini-greek DB on TBL, dont work on full mode game, so, are these "best players mini-greek DB" working well? Did u already experience these findings on your saves and it is working? 
+
+I am reading what I wrote and it doesnt seems very clear... sorry, not english native... I tried to re-write but I think it got even worst... I hope u get what I mean. 
+
+Cheers 
+
+Top 
+
+agevak Patch Team Posts: 127 Joined: Fri Jul 26, 2024 7:34 pm Has thanked: 13 times Been thanked: 170 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by agevak » Sun Jun 01, 2025 2:43 pm 
+
+That test was done on CM benchamarker executable v1.1 with the a_benchamrk.sav save file (which is built from mini-Greek league). No tests done on anything else. That save file was modified in terms of players' positions and attributes only. 
+
+I'm currently working on new benchmarkers, will try to check this stuff too. 
+
+Top 
+
+Sky18akavenator Official Challenge Team Posts: 444 Joined: Tue Mar 07, 2023 7:51 pm Has thanked: 1153 times Been thanked: 179 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Sky18akavenator » Mon Jun 02, 2025 10:07 am 
+
+agevak wrote: Sun Jun 01, 2025 2:43 pm That test was done on CM benchamarker executable v1.1 with the a_benchamrk.sav save file (which is built from mini-Greek league). No tests done on anything else. That save file was modified in terms of players' positions and attributes only. 
+
+I'm currently working on new benchmarkers, will try to check this stuff too. 
+Hi Avegak, thank you for your answer and hard work. 
+If I can help you in any way dont hesitate to tell me. 
+
+Regards 
+
+Top 
+
+nbccb369 Youth Team Player Posts: 29 Joined: Mon Sep 25, 2023 11:12 pm Has thanked: 23 times Been thanked: 3 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by nbccb369 » Wed Jun 04, 2025 2:55 am 
+
+thank for the advise, what about MC without arrow? I'm wondering if it would be the same for DMC too 
+Last edited by nbccb369 on Wed Jun 04, 2025 3:10 am, edited 1 time in total. 
+
+Top 
+
+nbccb369 Youth Team Player Posts: 29 Joined: Mon Sep 25, 2023 11:12 pm Has thanked: 23 times Been thanked: 3 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by nbccb369 » Wed Jun 04, 2025 3:04 am 
+
+ebfatz wrote: Sat Feb 08, 2025 8:27 pm I knew Finishing was almost irrelevant for strikers but didn't think the same could be said for tackling in defenders. 
+However, he mentioned for Super tacklers 
+2) Tackling (also improves tackle success rate) 
+
+I'm still confusing 
+
+Much appreciate if you could enlighten me. Thanks. 
+
+Top 
+
+Sky18akavenator Official Challenge Team Posts: 444 Joined: Tue Mar 07, 2023 7:51 pm Has thanked: 1153 times Been thanked: 179 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Sky18akavenator » Wed Jun 04, 2025 11:29 am 
+
+nbccb369 wrote: Wed Jun 04, 2025 3:04 am 
+
+ebfatz wrote: Sat Feb 08, 2025 8:27 pm I knew Finishing was almost irrelevant for strikers but didn't think the same could be said for tackling in defenders. 
+However, he mentioned for Super tacklers 
+2) Tackling (also improves tackle success rate) 
+
+I'm still confusing 
+
+Much appreciate if you could enlighten me. Thanks. 
+Hi nbccb369, 
+
+I think what ebfatz wanted to say is that "we all" considered Finishing the most important att for SC, but it comes out that no. Jumping is the most important. He says "irrelevant" but of course, if u have 1 SC with 20 Jump and 10 Finish, and another 20 Jump and 20 Finish (considering all other atts similar), the 2nd one will, in same conditions, score more. 
+
+And thats the case for DCs (not super tacklers/DCs in general): most important is positioning, marking, etc, but tackling is not on the list (thats what ebfatz comment). 
+
+Then, it comes the most difficult part: my interpretation is that "inside" DCs category, if u want a super tackler, u need to have DCs most important atts, and then, so that it is a super tackle, the ones mentioned in that category. Saying it other way: we need to add DCs atts to supertacklers ones. 
+
+If for instance u want a supertackler DM, u need to look for DMCs and supertackers atts combination. 
+
+Top 
+
+Walkinshaw Youth Team Player Posts: 28 Joined: Tue Feb 25, 2025 8:35 am Has thanked: 4 times Been thanked: 14 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Walkinshaw » Wed Jun 04, 2025 4:10 pm 
+
+Yeah I am not so sure about this. I've read a lot on the CA15 and Intrinsic pages over the years. 
+
+This would make that all redundant about finishing being irrelevant. We had huge discussions just on the finishing attribute itself and that Finishing/off the ball were the 2 most important stats with people doing their reports and tests on it. 
+
+Why even have finishing attribute there then....... For me the most important attribute for a striker in real life is finishing. 
+
+Jumping being more important is just stupid if it is true. This game is suppose to mimic real life. So Jumping really goes along with heading and I don't see many goals being scored with the feet while jumping. 
+
+This whole post if true shuts down most of the stuff we have know about the game and tools like CM Scout Intrinsic have some holes then. 
+
+I'd like to hear what madscientist and those others who have spent a lot of time within the code to confirm some of this. I still cant believe some of it. 
+
+Almost makes what I have know before about picking players on certain attributes worthless. 
+
+Top 
+
+Sky18akavenator Official Challenge Team Posts: 444 Joined: Tue Mar 07, 2023 7:51 pm Has thanked: 1153 times Been thanked: 179 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Sky18akavenator » Thu Jun 05, 2025 11:20 am 
+
+Walkinshaw wrote: Wed Jun 04, 2025 4:10 pm Yeah I am not so sure about this. I've read a lot on the CA15 and Intrinsic pages over the years. 
+
+This would make that all redundant about finishing being irrelevant. We had huge discussions just on the finishing attribute itself and that Finishing/off the ball were the 2 most important stats with people doing their reports and tests on it. 
+
+Why even have finishing attribute there then....... For me the most important attribute for a striker in real life is finishing. 
+
+Jumping being more important is just stupid if it is true. This game is suppose to mimic real life. So Jumping really goes along with heading and I don't see many goals being scored with the feet while jumping. 
+
+This whole post if true shuts down most of the stuff we have know about the game and tools like CM Scout Intrinsic have some holes then. 
+
+I'd like to hear what madscientist and those others who have spent a lot of time within the code to confirm some of this. I still cant believe some of it. 
+
+Almost makes what I have know before about picking players on certain attributes worthless. 
+I can understand what you say but it is important to appreciate @agevak (sorry @agevak , I was typing wrong your nick, only now I noticed...) effort and work on this. He did all the tests and shared it with us, It is a statiscal analysis/result. 
+Just like TBL. And of course we also question TBL results because some tct are very good on that test but they dont perform in full mode game. 
+Maybe that can also happen with these results because match engine is impredictable. Nobody really understands it and yes, lot of things are just stupid on match engine. 
+Also, positioning/marking bug was only patched a few years ago. Creativity but I think more years ago, but even so, most of managers probably play cm without patching it, so we cannot compare results we achieve with non-patched exe file with these ones that agevak achieved by his analysis. 
+
+In my opinion, most of agevak conclusions are aligned with my own. I always struggle with GK, MC without arrow, and AMCs. So, I will give it a try and test with these results. 
+
+Maybe we all should test Jumping in SCs and then share our results. I will do it. 
+
+I agree that it would be very interesting to have opinion from MadScientist, Scemoka, CamF, and others 
+
+Top 
+
+Sky18akavenator Official Challenge Team Posts: 444 Joined: Tue Mar 07, 2023 7:51 pm Has thanked: 1153 times Been thanked: 179 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Sky18akavenator » Thu Jun 05, 2025 11:54 am 
+
+Walkinshaw wrote: Wed Jun 04, 2025 4:10 pm This whole post if true shuts down most of the stuff we have know about the game and tools like CM Scout Intrinsic have some holes then. 
+About this I make separate post because I want to take the opportunity to make some questions to @agevak 
+
+Firstly, I think you @Walkinshaw are confusing these results with cmscout intrinsic. cmscout intrinsic is a tool created by Vladimir Filatov (not sure his nick in forum) where he defined some weights based on his experience playing. It shows the intrinsic values (not the cosmetics ones as within the game) what is an advantage, but players rating are set by the weights. 
+MadScientist worked on the weights and shared with us some different weights, that will define ratings different from the default Filatov created. 
+Neither of these weights are "universally" correct. For some positions neither one of these weights satisfies me, so I created my owns. For some postions I think I got it, but for others I didnt... always searching for better results kkkk 
+
+Agevak conclusions are not in conflict with CA15 or Intrinsic tool. At least not in my POV. 
+I already created weight for Intrinsic based on agevak findings, but now comes my questions @agevak : 
+- I set weights accordingly to your list of priorities. For example, DCs: Positioning firstly (100), and 2 times less marking (50), but then, from marking to jump, I only considered 10pts of difference. In some others only 5pts. I kept a total of 300pts for all atts within all positions, so that ratings within positions are leveled (maybe I am wrong, but if totals are not equal, Intrinsic will overate AMs, for example, and best ratings will be full of AMs, and for instance, DCs, will be with low ratings. Of course I can filter by position, but this way, I think, I can understand in general, how good is a player regardless position). 
+Do you think 10/5 pts difference across atts its good, or it should be more/less? 
+- as @nbccb369 pointed out confusion about supertacklers, its a bit confusing when joining it with defenders or dms, and I am struggling with weight setting, firstly because I dont know the "difference" of points I should set and also dont know the priority of importance within the position. 
+Can you share some more info about this and your opinion how can I set the weight? Like, I think its advantage for everyone to have weight where DCs and DMs are supertacklers, so, should I use only atts you refered in supertacklers, should I combine DC+supertacklers, and DM+supertacklers, if yes, how should I combine, or did you already considered it when you defined DC and DM priorities? 
+
+Thank you in advance and again, congrats for your effort and sharing results. 
+
+Regards 
+
+Top 
+
+agevak Patch Team Posts: 127 Joined: Fri Jul 26, 2024 7:34 pm Has thanked: 13 times Been thanked: 170 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by agevak » Sat Jun 07, 2025 8:32 pm 
+
+I'm working now on automated benchmarker which tests every attribute for every position and saves scored&conceded goals with value 1, 20 and some intermediate values. Based on this, I'll create formulas (with weights). After that will test them (see how precise it will predict clubs' league positions) and share. If formulas will show high precision, going to build a new CMScout as well. 
+
+Top 
+
+agevak Patch Team Posts: 127 Joined: Fri Jul 26, 2024 7:34 pm Has thanked: 13 times Been thanked: 170 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by agevak » Sat Jun 07, 2025 8:45 pm 
+
+About "supertacklers": only Positioning and Marking (if marking is set to "man") really matter. Tackling, Aggresion, Bravery only increase (drastically) tackles per match and tackles success %. But tackles are just cosmetic numbers, they don't lead to less conceded goals nor to more scored goals. 
+This conclusion is made according to benchmarking, nothing else. Obviously it contradicts with real life and common sense. 
+
+About finishing... 
+According to benchmarking. Finish is completely useless. It doesn't increase scored goals regardless of Off the ball. 
+I.e. with low off the ball, raising Finishing changes nothing. With high Off the ball, raising Finish also changes nothing. This is a combination I've tried. Unless there is some other magic combination, there is a bug in the game. 
+
+Last year I've digged into disassembly and found 2 functions, located nearby each other, very similar functions. One of them uses Heading and another one uses Finishing. 
+Patching conditional jumps in the Heading one lead to many scored goals with records like "goal!!! wonderful via header by Crespo..." comments (wording is different, I just state the idea). 
+However, similar patch of the Finishing function changed nothing. 
+I've failed to find the bug, but I think it exists. 
+
+Top 
+
+Sky18akavenator Official Challenge Team Posts: 444 Joined: Tue Mar 07, 2023 7:51 pm Has thanked: 1153 times Been thanked: 179 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Sky18akavenator » Sun Jun 08, 2025 5:15 pm 
+
+agevak wrote: Sat Jun 07, 2025 8:45 pm About "supertacklers": only Positioning and Marking (if marking is set to "man") really matter. Tackling, Aggresion, Bravery only increase (drastically) tackles per match and tackles success %. But tackles are just cosmetic numbers, they don't lead to less conceded goals nor to more scored goals. 
+This conclusion is made according to benchmarking, nothing else. Obviously it contradicts with real life and common sense. 
+
+About finishing... 
+According to benchmarking. Finish is completely useless. It doesn't increase scored goals regardless of Off the ball. 
+I.e. with low off the ball, raising Finishing changes nothing. With high Off the ball, raising Finish also changes nothing. This is a combination I've tried. Unless there is some other magic combination, there is a bug in the game. 
+
+Last year I've digged into disassembly and found 2 functions, located nearby each other, very similar functions. One of them uses Heading and another one uses Finishing. 
+Patching conditional jumps in the Heading one lead to many scored goals with records like "goal!!! wonderful via header by Crespo..." comments (wording is different, I just state the idea). 
+However, similar patch of the Finishing function changed nothing. 
+I've failed to find the bug, but I think it exists. 
+Not sure if I understood last part about: "patching conditional jumps in the heading one". Can you please explain again/other words? 
+
+And if u need some help with repetitive testings or something similar, I do have some free time where I can do it/help. 
+
+Top 
+
+agevak Patch Team Posts: 127 Joined: Fri Jul 26, 2024 7:34 pm Has thanked: 13 times Been thanked: 170 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by agevak » Tue Jun 10, 2025 12:49 pm 
+
+Thank you for support. 
+I meant I've tried to patch functions to always return success result. E.g. if player heads/shoots the ball, he will always do it perfectly good. For heading it helped to score a lot of headers, but for finishing it did not. 
+
+Top 
+
+Rudi Assauer Hot Prospect for the Future Posts: 106 Joined: Thu Jan 14, 2021 9:55 am Has thanked: 115 times Been thanked: 79 times 
+
+Re: PlayerBenchmarker 
+
+Quote 
+
+Post by Rudi Assauer » Tue Jun 10, 2025 5:46 pm 
+
+Did you do a big testing on determination? 
+
+Top 
+Post Reply 
+
+Print view 
+
+Display: All posts 1 day 7 days 2 weeks 1 month 3 months 6 months 1 year Sort by: Author Post time Subject Direction: Ascending Descending 
+214 posts 
+Page 1 of 9 
+
+Jump to page: 
+
+1 
+
+2 
+
+3 
+
+4 
+
+5 
+
+… 
+
+9 
+
+Next 
+
+Return to “Tools” 
+
+Jump to 
+
+The Website 
+
+↳   Announcements 
+
+↳   New Signings 
+
+↳   Awards 
+
+↳   Hall of Fame 
+
+↳   Awards 
+
+↳   Members 
+
+↳   Stories 
+
+Downloads 
+
+↳   Downloads 
+
+↳   Background Packs 
+
+↳   Colour Schemes 
+
+↳   Commentary Files 
+
+↳   Databases 
+
+↳   Documentation 
+
+↳   Fonts 
+
+↳   Game 
+
+↳   Menubars 
+
+↳   Patches 
+
+↳   Tactics 
+
+↳   Tactic Packs 
+
+↳   Tools 
+
+Technical Support, Tutorials & FAQs 
+
+↳   Technical Support, Tutorials & FAQs 
+
+↳   Tutorials 
+
+The Office 
+
+↳   Scouting and Research 
+
+↳   Africa 
+
+↳   Asia 
+
+↳   Europe 
+
+↳   North, Central America & Caribbean 
+
+↳   Oceania 
+
+↳   South America 
+
+↳   Free Players and Staff 
+
+↳   Histories 
+
+↳   Research 
+
+Championship Managers Club 
+
+↳   Data Updates 
+
+↳   General 
+
+↳   Graphics 
+
+↳   Network Games 
+
+↳   Official Challenges 
+
+↳   Patches 
+
+↳   Stories 
+
+↳   Tactics 
+
+↳   Talents, Tips and Training 
+
+↳   Other Championship Managers 
+
+CM 01/02 Interactive 
+
+↳   Championship Managers League 
+
+↳   CM Forums United 
+
+↳   Dream Team League 
+
+↳   Trillionaires Toys 
+
+The Community 
+
+↳   Football 
+
+↳   Gaming 
+
+↳   General Chat 
+
+↳   Other Sports 
+
+↳   Soccer Manager 
+
+↳   TV & Films 
+
+Archives 
+
+↳   Archives 
+
+Forums 
+
+All times are UTC+01:00 
+
+Delete cookies 
+
+Powered by phpBB ® Forum Software © phpBB Limited 
+
+Privacy | Terms

@@ -1,0 +1,630 @@
+SOURCE: https://champman0102.net/viewtopic.php?t=2659&start=50
+TITLE: CM Scout Intrinsic and Attributes Intrinsic Value - Page 3 - Championship Manager 2001/2002 Forums
+
+CM Scout Intrinsic and Attributes Intrinsic Value - Page 3 - Championship Manager 2001/2002 Forums 
+
+Championship Manager 2001/2002 Forums 
+
+Keeping the Game Alive 
+
+Skip to content 
+
+Quick links 
+
+Donations 
+
+FAQ 
+
+Login 
+
+Register 
+
+Forums Downloads Downloads Tools 
+
+CM Scout Intrinsic and Attributes Intrinsic Value 
+
+Moderator: Patch Team 
+
+Post Reply 
+
+Print view 
+
+148 posts 
+Previous 
+
+1 
+
+2 
+
+3 
+
+4 
+
+5 
+
+6 
+
+Next 
+
+Dermotron Update Team (Director) Posts: 8120 Joined: Tue Jan 21, 2020 11:08 am Has thanked: 2135 times Been thanked: 2450 times 
+
+Questions & Comments That Don't Warrant a Thread 
+
+Quote 
+
+Post by Dermotron » Tue Apr 19, 2022 7:45 pm 
+
+ajra21 wrote: Tue Apr 19, 2022 7:39 pm I'm sorry, where do I find the "hidden tab" and when you mean "broken down", what do you mean? 
+If you click into the player it has a Hidden tab with breakdown by position 
+
+Top 
+
+ajra21 Hot Prospect for the Future Posts: 145 Joined: Sun Feb 27, 2022 2:17 am Has thanked: 2 times Been thanked: 13 times 
+
+Questions & Comments That Don't Warrant a Thread 
+
+Quote 
+
+Post by ajra21 » Tue Apr 19, 2022 7:49 pm 
+
+Dermotron wrote: Tue Apr 19, 2022 7:45 pm 
+
+ajra21 wrote: Tue Apr 19, 2022 7:39 pm I'm sorry, where do I find the "hidden tab" and when you mean "broken down", what do you mean? 
+If you click into the player it has a Hidden tab with breakdown by position 
+Sorry, of course. 
+
+What do those percentages mean? Is the highest percentage indicative of where the player plays best? 
+
+Top 
+
+Deleted User 86 
+
+Questions & Comments That Don't Warrant a Thread 
+
+Quote 
+
+Post by Deleted User 86 » Tue Apr 19, 2022 8:00 pm 
+
+Usually, but not 100% 
+The percentage tells you what position his attributes are best for, but there is a value from 1-20 for each side/centre and for each position GK-FWD. That determines where a player plays best. 
+
+So someone who the game says is a D/DM R/C might actually have 15 for D and 20 for DM as well as 15 for C and 20 for R. They will be best as a DM R and worst as a DC no mater what the attributes say. 
+
+So where do you find this ? Several ways, but the GK editor will tell you. 
+
+Top 
+
+arsenalDB Youth Team Player Posts: 13 Joined: Sun Nov 21, 2021 12:12 am Has thanked: 1 time Been thanked: 3 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by arsenalDB » Wed Jun 15, 2022 2:30 am 
+
+I would like to ask a question about the filter function about the app. 
+if i input "18" into the finishing, what does it mean? 
+does it filter out the in game value? intrinic value? in match value? 
+i had tries to filter out player with both finishing and movement> 18, but i did not get haaland from the result. 
+
+Top 
+
+MadScientist Patch Team Posts: 283 Joined: Sun Apr 19, 2020 6:25 pm Has thanked: 682 times Been thanked: 234 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by MadScientist » Thu Jun 16, 2022 5:44 pm 
+
+arsenalDB wrote: Wed Jun 15, 2022 2:30 am I would like to ask a question about the filter function about the app. 
+if i input "18" into the finishing, what does it mean? 
+does it filter out the in game value? intrinic value? in match value? 
+i had tries to filter out player with both finishing and movement> 18, but i did not get haaland from the result. 
+It filter out the in_match normalized value 
+
+Top 
+
+nat3s Youth Team Player Posts: 6 Joined: Sat Oct 30, 2021 9:04 am Has thanked: 1 time Been thanked: 1 time 
+
+Intrinsic low CA talents? 
+
+Quote 
+
+Post by nat3s » Sun Jul 31, 2022 2:26 pm 
+
+Hello all, 
+
+Looking for something different which doesn't just involve firing up a game and buying the usual known talents like Tsigalko, Kerr and so on. 
+
+Are there any known beasts with high intrinsic atts that do well right up to the highest levels? 
+
+I have one freak in my current side, unsure if his stats are random though: 
+
+https://imgur.com/671v2TJ 
+
+Loads of goals, assists and dribbles from right wing: 
+
+https://imgur.com/ypbbwkF 
+https://imgur.com/XmxHw2o 
+
+Top 
+
+Xazal Youth Team Player Posts: 17 Joined: Wed Dec 09, 2020 10:24 pm Been thanked: 1 time 
+
+Which setting for CM scout inrinsic 
+
+Quote 
+
+Post by Xazal » Sun Aug 07, 2022 6:09 pm 
+
+As the titel says which CA15 attribute View mode are u guys using? Which one is the most important one?! Im completely confused 
+
+Top 
+
+MadScientist Patch Team Posts: 283 Joined: Sun Apr 19, 2020 6:25 pm Has thanked: 682 times Been thanked: 234 times 
+
+Which setting for CM scout inrinsic 
+
+Quote 
+
+Post by MadScientist » Sun Aug 07, 2022 8:40 pm 
+
+Xazal wrote: Sun Aug 07, 2022 6:09 pm As the titel says which CA15 attribute View mode are u guys using? Which one is the most important one?! Im completely confused 
+It depends. 
+
+In game: displays the values as they are displayed in game (1 to 20) 
+
+Intrinsic: useful to know the strengths and weaknesses of a player (-125 to +125). Usually remain static throughout the player career (unless he isnt in general training or the att is experience-related). Doesn't take CA into account. 
+
+In match: displays the values approximatelly as seen by the match engine (0 to 45). Better to evaluate current attribute skill because takes CA into account and isnt clamped to 20 as the in game. 
+
+The normalized versions just map it to 1-20 range based on the player with the highest att in the world at that moment. 
+
+Top 
+
+Xazal Youth Team Player Posts: 17 Joined: Wed Dec 09, 2020 10:24 pm Been thanked: 1 time 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by Xazal » Sun Aug 07, 2022 9:32 pm 
+
+ty for your answer mate, it confuses me because it give some absolute dogshit players 85+ ratings 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by samsami » Mon Aug 08, 2022 6:54 am 
+
+Xazal wrote: Sun Aug 07, 2022 9:32 pm ty for your answer mate, it confuses me because it give some absolute dogshit players 85+ ratings 
+That's why I recommend you select to view the in-match values . As MadScientist says these reflects the actual current attribute values rather than what you see in-game. 
+Spoiler 
+If you get 85+ values you must be looking at the i intrinsic values which make no sense unless you have read the lengthy and rather complex explanation. 
+
+Top 
+
+Xazal Youth Team Player Posts: 17 Joined: Wed Dec 09, 2020 10:24 pm Been thanked: 1 time 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by Xazal » Mon Aug 08, 2022 6:00 pm 
+
+samsami wrote: Mon Aug 08, 2022 6:54 am 
+
+Xazal wrote: Sun Aug 07, 2022 9:32 pm ty for your answer mate, it confuses me because it give some absolute dogshit players 85+ ratings 
+That's why I recommend you select to view the in-match values . As MadScientist says these reflects the actual current attribute values rather than what you see in-game. 
+Spoiler 
+If you get 85+ values you must be looking at the i intrinsic values which make no sense unless you have read the lengthy and rather complex explanation. 
+
+Hey yea i chose the in match setting. What i meant with the 85+ was it shows me absolute dogshiet players with 85 "scout rating" not the actual player ratings like finishing heading or so. They show up in the top if i look for players. i hope i could explain it in some way 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by samsami » Mon Aug 08, 2022 6:09 pm 
+
+Xazal wrote: Mon Aug 08, 2022 6:00 pm Hey yea i chose the in match setting. What i meant with the 85+ was it shows me absolute dogshiet players with 85 "scout rating" not the actual player ratings like finishing heading or so. They show up in the top if i look for players. i hope i could explain it in some way 
+I don't know which database you use but the latest official database (sorted by rating) doesn't seem to have these. 
+
+I sorted the entire database by scout rating: 
+
+Note that you can pick another weight set by clicking on the scales icon at the top. i used the CM Scout weight set. There's also a weight set by MadScientist, which turns out like this: 
+
+Top 
+
+Xazal Youth Team Player Posts: 17 Joined: Wed Dec 09, 2020 10:24 pm Been thanked: 1 time 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by Xazal » Mon Aug 08, 2022 6:45 pm 
+
+samsami wrote: Mon Aug 08, 2022 6:09 pm 
+
+Xazal wrote: Mon Aug 08, 2022 6:00 pm Hey yea i chose the in match setting. What i meant with the 85+ was it shows me absolute dogshiet players with 85 "scout rating" not the actual player ratings like finishing heading or so. They show up in the top if i look for players. i hope i could explain it in some way 
+I don't know which database you use but the latest official database (sorted by rating) doesn't seem to have these. 
+
+I sorted the entire database by scout rating: 
+
+Note that you can pick another weight set by clicking on the scales icon at the top. i used the CM Scout weight set. There's also a weight set by MadScientist, which turns out like this: 
+
+using the april 2022 database but i played 3 seasons or so on my save. 
+
+https://imgur.com/amISx9i 
+
+this player for example is absolut crap but has a scout rating of 84.39 i dont get why?! thats whats rlly confusing to me 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by samsami » Mon Aug 08, 2022 6:49 pm 
+
+Xazal wrote: Mon Aug 08, 2022 6:45 pm 
+using the april 2022 database but i played 3 seasons or so on my save. 
+
+this player for example is absolute crap but has a scout rating of 84.39 i dont get why?! thats whats rlly confusing to me 
+Can you show me his profile (by clicking on his name you'll see it)? 
+
+Top 
+
+Xazal Youth Team Player Posts: 17 Joined: Wed Dec 09, 2020 10:24 pm Been thanked: 1 time 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by Xazal » Mon Aug 08, 2022 6:53 pm 
+
+samsami wrote: Mon Aug 08, 2022 6:49 pm 
+
+Xazal wrote: Mon Aug 08, 2022 6:45 pm 
+using the april 2022 database but i played 3 seasons or so on my save. 
+
+this player for example is absolute crap but has a scout rating of 84.39 i dont get why?! thats whats rlly confusing to me 
+Can you show me his profile (by clicking on his name you'll see it)? 
+Do you mean the top player Duarte? I wanted to show u Finnegan for example or do you want me to take a screenshot of Finnegan ingame? 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by samsami » Mon Aug 08, 2022 7:02 pm 
+
+Xazal wrote: Mon Aug 08, 2022 6:53 pm 
+
+samsami wrote: Mon Aug 08, 2022 6:49 pm 
+
+Xazal wrote: Mon Aug 08, 2022 6:45 pm 
+using the april 2022 database but i played 3 seasons or so on my save. 
+
+this player for example is absolute crap but has a scout rating of 84.39 i dont get why?! thats whats rlly confusing to me 
+Can you show me his profile (by clicking on his name you'll see it)? 
+Do you mean the top player Duarte? I wanted to show u Finnegan for example or do you want me to take a screenshot of Finnegan ingame? 
+Finnegan, please. And if there's any others you think are crap. I want to see their atts and find out why their rating is so high. 
+
+(Remember that ratings are based only on the attributes that matter for their position. Never mind if they have low scores for attributes they don't need. If you click on a weight set you can actually see which attributes weigh a lot and which don't matter for each position.) 
+
+Top 
+
+Xazal Youth Team Player Posts: 17 Joined: Wed Dec 09, 2020 10:24 pm Been thanked: 1 time 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by Xazal » Mon Aug 08, 2022 7:07 pm 
+
+samsami wrote: Mon Aug 08, 2022 7:02 pm 
+
+Xazal wrote: Mon Aug 08, 2022 6:53 pm 
+
+samsami wrote: Mon Aug 08, 2022 6:49 pm 
+Can you show me his profile (by clicking on his name you'll see it)? 
+Do you mean the top player Duarte? I wanted to show u Finnegan for example or do you want me to take a screenshot of Finnegan ingame? 
+Finnegan, please. And if there's any others you think are crap. I want to see their atts and find out why their rating is so high. 
+
+(Remember that ratings are based only on the attributes that matter for their position. Never mind if they have low scores for attributes they don't need. If you click on a weight set you can actually see which attributes weigh a lot and which don't matter for each position.) 
+
+https://imgur.com/6agY8AR 
+
+My game is in German btw 24 is passing 21 is man marking 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by samsami » Mon Aug 08, 2022 7:21 pm 
+
+I can read German 
+
+Central midfielders mostly need good Passing, plus Creativity, Dribbling, Off the ball and also Technique and Teamwork. 
+
+Passing 24 is extremely high. That does it! That is world class. Plus Technique and Teamwork. The rest is medium. 
+
+i put his scores in my spreadsheet just below my own two central midfielders for comparison 
+
+Look at the weightsets (especially MadScientist's) and you see how important passing is for midfielders. That has the most weight! 
+
+Top 
+
+Xazal Youth Team Player Posts: 17 Joined: Wed Dec 09, 2020 10:24 pm Been thanked: 1 time 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by Xazal » Mon Aug 08, 2022 7:36 pm 
+
+I bought him he is playing a solid 7 in many matches nothing special tho not many assists or so dunno guess ive to figure it out by playing around with it. Bought a player with 23 or so finishing 22 heading but he misses many many chances dunno if he is shooting with his ass or so 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by samsami » Mon Aug 08, 2022 7:44 pm 
+
+Xazal wrote: Mon Aug 08, 2022 7:36 pm I bought him he is playing a solid 7 in many matches nothing special tho not many assists or so dunno guess ive to figure it out by playing around with it. Bought a player with 23 or so finishing 22 heading but he misses many many chances dunno if he is shooting with his ass or so 
+There are things we still don't know. I bought a striker with 23 for finishing. Nothing special. Now I have one with 22 for finishing and he is fantastic. Partly because he has good heading and jumping, though. Give your guy time! 
+
+Top 
+
+HaroldFinch Squad Rotation Player Posts: 1741 Joined: Tue Jun 01, 2021 5:09 pm Has thanked: 192 times Been thanked: 411 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by HaroldFinch » Mon Aug 08, 2022 8:16 pm 
+
+Sometimes you just find combinations that work. For me, if I want a striker that scores loads, I look for Finishing, Off The Ball and Jumping. I have no real idea if these 3 attributes are the most important for strikers (compared to other attributes), but it seems to work for me! 
+
+Top 
+
+Alan_v2 Backup Player Posts: 992 Joined: Sat Nov 27, 2021 3:44 pm Has thanked: 87 times Been thanked: 774 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by Alan_v2 » Mon Aug 08, 2022 8:28 pm 
+
+Finishing and OTB is good enough for me. And if he has truly awful attributes for defensive things then chances are he is a 70-per-season freak. 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by samsami » Mon Aug 08, 2022 8:39 pm 
+
+CM Scout has the following weight set for strikers: 
+Finishing 20, Anticipation 15, Acceleration 14, Pace 13, Off-the-ball 10, Passing 10, etc. 
+
+MadScientist has Off-the-ball 65000, Finishing 60000, Heading 25000, Jumping 18000, Pace 15000, Dribbling 14000, etc. 
+
+If any of you don't know what this means, just say so and I will reply here with the explanation. 
+
+Top 
+
+Nickje Decent Young Player Posts: 67 Joined: Sat Jul 23, 2022 9:20 pm Has thanked: 75 times Been thanked: 25 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by Nickje » Mon Aug 08, 2022 10:22 pm 
+
+I think I understand the first part; finishing 20 and off the ball 10, so finishing is more important/has more weight? 
+But then the second part seems to contradict this? off the ball 65k and finishing only 60k? 
+Sorry for being ignorant 
+
+Top 
+
+samsami Stories Team Posts: 7877 Joined: Fri Feb 14, 2020 11:54 am Has thanked: 6295 times Been thanked: 7369 times 
+
+CM Scout Intrinsic 
+
+Quote 
+
+Post by samsami » Tue Aug 09, 2022 2:42 am 
+
+Nickje wrote: Mon Aug 08, 2022 10:22 pm I think I understand the first part; finishing 20 and off the ball 10, so finishing is more important/has more weight? 
+But then the second part seems to contradict this? off the ball 65k and finishing only 60k? 
+Sorry for being ignorant 
+They are different weightsets, made by different people. So even the experts don't agree about which attribute is most needed for which position. 
+
+The app allows you to use multiple weightsets for comparison. As you can see the second set values Off the Ball and Heading more than the first set. 
+
+Top 
+Post Reply 
+
+Print view 
+
+Display: All posts 1 day 7 days 2 weeks 1 month 3 months 6 months 1 year Sort by: Author Post time Subject Direction: Ascending Descending 
+148 posts 
+Previous 
+
+1 
+
+2 
+
+3 
+
+4 
+
+5 
+
+6 
+
+Next 
+
+Return to “Tools” 
+
+Jump to 
+
+The Website 
+
+↳   Announcements 
+
+↳   New Signings 
+
+↳   Awards 
+
+↳   Hall of Fame 
+
+↳   Awards 
+
+↳   Members 
+
+↳   Stories 
+
+Downloads 
+
+↳   Downloads 
+
+↳   Background Packs 
+
+↳   Colour Schemes 
+
+↳   Commentary Files 
+
+↳   Databases 
+
+↳   Documentation 
+
+↳   Fonts 
+
+↳   Game 
+
+↳   Menubars 
+
+↳   Patches 
+
+↳   Tactics 
+
+↳   Tactic Packs 
+
+↳   Tools 
+
+Technical Support, Tutorials & FAQs 
+
+↳   Technical Support, Tutorials & FAQs 
+
+↳   Tutorials 
+
+The Office 
+
+↳   Scouting and Research 
+
+↳   Africa 
+
+↳   Asia 
+
+↳   Europe 
+
+↳   North, Central America & Caribbean 
+
+↳   Oceania 
+
+↳   South America 
+
+↳   Free Players and Staff 
+
+↳   Histories 
+
+↳   Research 
+
+Championship Managers Club 
+
+↳   Data Updates 
+
+↳   General 
+
+↳   Graphics 
+
+↳   Network Games 
+
+↳   Official Challenges 
+
+↳   Patches 
+
+↳   Stories 
+
+↳   Tactics 
+
+↳   Talents, Tips and Training 
+
+↳   Other Championship Managers 
+
+CM 01/02 Interactive 
+
+↳   Championship Managers League 
+
+↳   CM Forums United 
+
+↳   Dream Team League 
+
+↳   Trillionaires Toys 
+
+The Community 
+
+↳   Football 
+
+↳   Gaming 
+
+↳   General Chat 
+
+↳   Other Sports 
+
+↳   Soccer Manager 
+
+↳   TV & Films 
+
+Archives 
+
+↳   Archives 
+
+Forums 
+
+All times are UTC+01:00 
+
+Delete cookies 
+
+Powered by phpBB ® Forum Software © phpBB Limited 
+
+Privacy | Terms

@@ -1,0 +1,417 @@
+SOURCE: https://en.wikipedia.org/wiki/Championship_Manager
+TITLE: Championship Manager - Wikipedia
+
+Championship Manager - Wikipedia 
+Jump to content 
+
+From Wikipedia, the free encyclopedia 
+
+Video game series 
+This article is about the video game series. For the first game in the series, see Championship Manager (video game) . 
+
+Video game series 
+Championship Manager 
+
+Genre Sports management 
+
+Developers 
+
+Sports Interactive (1992–2004) 
+
+Beautiful Game Studios (2004–2010) 
+
+Publisher Eidos Interactive 
+
+Creator Collyer brothers 
+
+Platforms Amiga , Atari ST , DOS , Windows , Mac OS , Xbox , PlayStation , PlayStation 2 , PlayStation Portable , Xbox 360 
+
+First release Championship Manager 
+September 1992 
+
+Latest release Championship Manager 2011 
+14 October 2010 
+
+Championship Manager was a series of football management simulation video games , the first of which was released in 1992. The Championship Manager brand and game was conceived by brothers Paul and Oliver Collyer . In a scenario typical of many self-made game programming teams in the early days of the industry, the original Championship Manager game was written from their bedroom in Shropshire , England . [ 1 ] The brothers subsequently founded a development company to take the game further, Sports Interactive , and moved to Islington , North London. Championship Manager became the most popular football management sim of the later 1990s and early 2000s, regularly setting sales records. [ 2 ] 
+
+In 2003, Sports Interactive split with Eidos , the publishers of Championship Manager . [ 3 ] Sports Interactive retained the game's database and match engine, producing a new game based on these titled Football Manager . Eidos retained the name and interface, with Beautiful Game Studios taking over the development of Championship Manager . Although the two series initially ran alongside one another, the sales of Championship Manager began to fall below those of Football Manager . The most recent full version of Championship Manager was Championship Manager 2010 , with an iOS mobile game in 2011 the latest game to date released by Eidos. Square Enix Europe , owners of the brand after purchasing Eidos, revived Championship Manager under the title of Champ Man in 2013. They have released five games for iOS and Android handheld systems and mobile phones since then. [ 4 ] 
+
+Beautiful Game Studios 
+[ edit ] 
+Beautiful Game Studios was founded in 2003, [ 5 ] and announced in January 2004 as an internal development team of Eidos Interactive (later renamed Square Enix Europe) that would focus on the development of Championship Manager , after the original developer of the series, Sports Interactive , departed from Eidos Interactive in 2003. [ 6 ] In May 2008, Eidos hired Roy Meredith as general manager . [ 7 ] 
+
+In November 2009, after Eidos Interactive had been acquired by Square Enix and renamed Square Enix Europe, Square Enix announced that Beautiful Game Studios would undergo restructuring to "build a successful commercial future" for the Championship Manager brand. [ 8 ] Around 80% of jobs, including the majority of the internal studio's programming department, were either cut or relocated to Eidos Shanghai , while incumbent general manager Roy Meredith retained his position. [ 8 ] [ 9 ] Despite the significant cuts, it remained operational as a developer. [ 9 ] 
+
+In September 2010, Beautiful Game Studios announced that they had entered into a strategic partnership with Chinese publisher Shanda Games , which granted Shanda Games the Chinese distribution rights of future Championship Manager games. [ 10 ] The partnership grew largely from the then-enlarged Eidos Shanghai's previous work with Shanda Games, as well as long-term communications between Beautiful Game Studios, Eidos Shanghai, and Shanda Games. [ 11 ] The games resulting from this partnership, Championship Manager: World of Football , was announced in July 2011. [ 12 ] 
+
+Championship Manager 
+[ edit ] 
+Main article: Championship Manager (video game) 
+The release of the first version of the game was not an outstanding success, and sales were steady rather than spectacular. Reviews ranged from the encouraging to the dismissive; the original game was written in BASIC , a programming language not well suited to programming high-performance video games. Other limitations included the fact that generated names were used for each team, whereas its key competitors of the time, such as Premier Manager and The Manager , included real players in the game. 
+
+Championship Manager '93 
+[ edit ] 
+Main article: Championship Manager 93/94 
+The release of Championship Manager '93 one year later built on the original game, ported to the C programming language , adding a real life player database and other features. By now Championship Manager had built a large following in the UK. This was reviewed many times around July 1993 from its release in around May 1993. [ citation needed ] 
+
+Championship Manager Italia 
+[ edit ] 
+The Championship Manager '93 / ' 94 engine was the basis for Championship Manager Italia . This was a version that simulated the top two divisions of Italian football ( Serie A and Serie B ). There was also a 1995 seasonal update released for this game. 
+
+Championship Manager '93 data update disks 
+[ edit ] 
+The success of Championship Manager '93 spurred the release of two update disks, the first "contains every transfer, promotion, relegation and manager changes" for the beginning of the '93/'94 season which is known as "The 1993/94 Season Data Up-Date Disk". The update required the original Championship Manager '93 disks, three blank disks and the Championship Manager '93/'94 Season Data Up-Date Disk disk. This was released around September 1993. The second of the two update disks is known as "End of 1994 Season Data Up-Date Disk", which includes all the latest player transfers, all the play-off results, and the end of season player statistics for the season 1993/1994. This was released around the end of season 1993/1994. [ citation needed ] 
+
+Championship Manager 2 
+[ edit ] 
+Main article: Championship Manager 2 
+The success of the franchise lead to the release of Championship Manager 2 in September 1995. The game again included up-to-date squads for each team, added photos of each ground to build an atmosphere of the teams managed or visited, and included an in-match commentary with the voice of Clive Tyldesley . Two seasonal updates followed over the next two years. [ citation needed ] 
+
+Championship Manager 96/97 
+[ edit ] 
+Main article: Championship Manager 96/97 
+Championship Manager 96/97 was released in 1996 and was the first game to feature a non-British league as playable in the standard game, in this case the Italian leagues. It also included several rule changes to reflect the many changes going on in the real life world of football at that time, such as the Bosman ruling . [ citation needed ] 
+
+Championship Manager 97/98 
+[ edit ] 
+Main article: Championship Manager: Season 97/98 
+Released in 1997, this version of the game included nine leagues from around the world, three of which could be run simultaneously, new competition formats to follow those implemented in reality, and many more tactical options. The game remains popular amongst fans of the series, mainly for its simplicity compared to the huge, processor-intensive games that the series has since developed into. [ citation needed ] A fan-made "remake" of the game was released on 1 November 2022. The changes include a fully reworked database for the 1997/98 season, backgrounds, graphical overhaul, 5 leagues, colored attributes and many small tweaks to the match engine and executable. One can also play infinitely, whereas the official version retired the manager after 30 seasons. [ 13 ] [ 14 ] Two further patches have been released. 
+
+Championship Manager 3 
+[ edit ] 
+Main article: Championship Manager 3 
+This was the first of the seasonal updates to Championship Manager 3 . It also included more media involvement, board interaction and improved scouting functions. 
+
+Championship Manager: Season 99/00 
+[ edit ] 
+Main article: Championship Manager: Season 99/00 
+This update saw the American Major League Soccer added to the list of playable leagues. It also added the World Club Championship to the equation. Championship Manager: Season 99/00 received a "Gold" sales award from the Entertainment and Leisure Software Publishers Association (ELSPA), [ 15 ] indicating sales of at least 200,000 copies in the United Kingdom. [ 16 ] 
+
+Championship Manager: Season 00/01 
+[ edit ] 
+Main article: Championship Manager: Season 00/01 
+Ten more playable leagues were introduced for this version, including Australia, Greece, Northern Ireland, Russia and Wales. It was also the first version of the game to come with a data editor - something which has been continued for all subsequent versions. [ citation needed ] 
+
+Championship Manager: Season 01/02 
+[ edit ] 
+Main article: Championship Manager: Season 01/02 
+No new playable leagues were added to this version of Championship Manager (until a patch was later released that added South Korea's K-League to the game) allowing the developers to fine-tune the game's mechanics. Championship Manager 01/02 also contained the fictional players. The game was released as freeware in December 2008. [ 17 ] In April 2002, Sports Interactive took the decision to move away from the PC platform for the first time since Championship Manager 2 , producing a version of Championship Manager 01/02 for the Xbox . The success of the game saw a follow-up, Championship Manager 02/03 released seven months later. 
+
+Championship Manager 4 
+[ edit ] 
+Main article: Championship Manager 4 
+Championship Manager 4 was released on 28 March 2003, and broke all records on its release becoming, at that time, the fastest-selling PC game on its first day of release. Championship Manager 4 included thirty-nine playable leagues, plus four more in its update, Championship Manager: Season 03/04 . On the gameplay side, a top-down view of the match engine was included for the first time a significant shift from the imagination philosophy championed by Sports Interactive previously. 
+
+Despite its high sales, Championship Manager 4 was generally not well received by hardcore fans for several reasons. The game ran quite slowly on computers which had previously had no difficulty in running Championship Manager games. [ citation needed ] The original release contained some functional bugs which in some cases rendered the game farcical—the score in matches could randomly change, and lower division clubs were able to sign superstars with ease. One bug had non-league club Northwich Victoria moving to a stadium with a capacity of 850,000. Sports Interactive used the euphemistic term "Enhancement Packs" to describe patches to fix the bugs in the original release; this term was dropped for future releases. [ citation needed ] 
+
+Championship Manager: Season 03/04 
+[ edit ] 
+Main article: Championship Manager: Season 03/04 
+This was the final Championship Manager game to be developed by Sports Interactive before they were forced to start a new franchise under the name Football Manager . Championship Manager 03/04 ironed out many of the problems seen in Championship Manager 4 and added new features and more new playable leagues to the game. 
+
+Championship Manager 5 
+[ edit ] 
+Main article: Championship Manager 5 
+This was the first version in the series to be developed in-house by Eidos. Both Football Manager 2005 and Championship Manager 5 were to be released in October or November 2004. However, the release date of Championship Manager 5 was put back by Eidos to March 2005, due to the extent of work required to code the game from scratch. This allowed Football Manager 2005 a clear run to establish itself ahead of the release of Championship Manager 5 . 
+
+Championship Manager PSP 
+[ edit ] 
+Championship Manager was released for the PlayStation Portable in December 2005. It was developed by Gusto Games and was the first game in the series to be released on a handheld system. [ 18 ] [ 19 ] 
+
+Championship Manager Online 
+[ edit ] 
+This is the first online version of either Championship Manager or Football Manager , and was launched in UK on 22 February 2005. 
+
+Championship Manager 2006 
+[ edit ] 
+Main article: Championship Manager 2006 
+The follow-up to Championship Manager 5 was released on PC on 31 March 2006 under the name Championship Manager 2006 . This version did little to reverse the growing gap in quality between Championship Manager and Football Manager . Basic features that had been a staple of the latter from over a decade, such as international management, were missing from the boxed version of Championship Manager 2006 . 10 November 2006 saw the arrival of Championship Manager 2006 (with Championship Manager 5 not being ported) on Macintosh. Championship Manager 2007 was planned for release on the Mac OS X platform in 2007. 
+
+Championship Manager 2007 
+[ edit ] 
+Main article: Championship Manager 2007 
+Championship Manager 2007 was released on 13 October 2006. Sales continued to be lower than for Football Manager . 
+
+Championship Manager 2008 
+[ edit ] 
+Main article: Championship Manager 2008 
+Championship Manager 2008 was released on 2 November 2008, with users able to play in a multiplayer mode, with more than one person on an account. Also, users can manage nations and can apply "Club Benefactor", which lets the user have more money, although these additions were added in the previous Championship Manager . Another feature is the addition of more leagues – for example, the Australian League – player tendencies and team talks. 
+
+Championship Manager 2009 Express 
+[ edit ] 
+Main article: Championship Manager 2009 Express 
+
+Championship Manager 2010 
+[ edit ] 
+Main article: Championship Manager 2010 
+Championship Manager 2010 was originally planned for release on 24 April 2009. [ 20 ] Eidos Interactive released the game on 11 September 2009. A fully 3D match engine (using motion-captured movements to provide more than 500 animations per player) was implemented for the first time, and it was announced on February 6 that new English Leagues, the Isthmian , Southern and Northern Premier Leagues would be included in the game, as well as Croatian, Romanian, Irish and Northern Irish Leagues. The German league system was also restructured for this edition, including the 3. Liga and 3 Regionalliga . [ 21 ] The game was released on 11 September with a demo version being available on the website from 14 August. On 18 August, a "pay what you want for Championship Manager 2010 " promotion was announced whereby between 18 August and 10 September a digital copy of the game could be pre-ordered from the Championship Manager store and was available for download on the day of launch, 10 September. Each customer set the price they were willing to pay in addition to a transaction fee. [ 22 ] 
+
+Championship Manager 2011 
+[ edit ] 
+Main article: Championship Manager 2011 
+A version of Championship Manager 2011 was released for iOS . [ 23 ] No later version had been released as of September 2014 [update] . It was followed by a period of three years with no Championship Manager games, although a new game, Championship Manager: World of Football (a collaboration between Beautiful Game Studios and Shanda Games ), was announced by Square Enix in July 2011. [ 24 ] 
+
+Champ Man games (2013–2016) 
+[ edit ] 
+The series was revived as Champ Man from 2013 until 2018, developed by Distinctive Developments. [ 25 ] Championship Manager 13/14 , branded as Champ Man , was released on 15 October 2013 for mobile phones. [ 26 ] A follow up to this game, Champ Man 15 , was released on 18 August 2014 for iOS and Android , Champ Man 16 was released in September 2015. [ 27 ] In 2016, Championship Manager 17 was released. As of 31 May 2018, Square Enix has ceased all game services for all Championship Manager mobile games and removed them from the iOS and Android app stores. [ 28 ] 
+
+See also 
+[ edit ] 
+Football Manager (1982 series) 
+
+References 
+[ edit ] 
+
+^ Hale, Ed. "The Untold History Of The Championship Manager / Football Manager Games" . Retro Collect. Archived from the original on 20 July 2018 . Retrieved 22 August 2013 . 
+
+^ "The Death of Championship Manager – as I saw it" . Sportskeda. 19 December 2011 . Retrieved 22 August 2013 . 
+
+^ "Football Manager boss ends silence on Championship Manager split" . CVG. Archived from the original on 8 December 2014 . Retrieved 22 August 2013 . 
+
+^ "The Official SQUARE ENIX Website" . 
+
+^ Staff (26 November 2009). "Square Enix Restructures Beautiful Game Studios, Cuts Positions" . Gamasutra . Archived from the original on 8 November 2017 . Retrieved 27 August 2019 . 
+
+^ Jenkins, David (30 January 2004). "Eidos Creates Internal Dev Team" . Gamasutra . Archived from the original on 29 October 2017 . Retrieved 27 August 2019 . 
+
+^ "Eidos makes Championship signing" . MCV . 12 May 2008. ISSN 1469-4832 . Retrieved 25 November 2023 . 
+
+^ a b Elliott, Phil (25 November 2009). "Beautiful Game Studios to be restructured" . GamesIndustry.biz . Archived from the original on 22 August 2019 . Retrieved 27 August 2019 . 
+
+^ a b MCV Staff (19 April 2010). "Square Enix comes clean on cuts and closure" . MCV . 
+
+^ Pearson, Dan (7 September 2010). "Championship Manager expands to China" . GamesIndustry.biz . Archived from the original on 18 May 2012 . Retrieved 27 August 2019 . 
+
+^ Orry, James (7 September 2010). "The changing face of Beautiful Game Studios" . VideoGamer.com . Archived from the original on 3 April 2019 . Retrieved 27 August 2019 . 
+
+^ Olivetti, Justin (19 July 2011). "Square Enix invites Championship Manager into the MMO club" . Engadget . Archived from the original on 3 April 2019 . Retrieved 27 August 2019 . 
+
+^ "@cm9798v2: The remake of Championship Manager 1997-98 is finally here. Full rework of the database, graphical overhaul, play with 5 leagues, have colored attributes for the players and enjoy tons of small tweaks🔥Cheers from The #CM9798 V2 Project! Free download: mediafire.com/file/n9bdazcbb…" . X (formerly Twitter) . Retrieved 8 June 2024 . 
+
+^ "The CM9798 V2 Project - Free Download" . 
+
+^ "ELSPA Sales Awards: Gold" . Entertainment and Leisure Software Publishers Association . Archived from the original on 19 March 2009. 
+
+^ Caoili, Eric (26 November 2008). "ELSPA: Wii Fit , Mario Kart Reach Diamond Status In UK" . Gamasutra . Archived from the original on 18 September 2017. 
+
+^ CM Season 01/02 Download Archived 2010-03-05 at the Wayback Machine 
+
+^ "Championship Manager(TM) PSP Out Today" . GamesIndustry.biz . 5 December 2005 . Retrieved 2 October 2020 . 
+
+^ "PSP Review: Championship Manager PSP" . Computer and Video Games . 5 January 2006. Archived from the original on 21 June 2008 . Retrieved 2 October 2020 . 
+
+^ "Championship Manager moves to April kickoff - GameSpot.com" . uk.gamespot.com . Retrieved 27 January 2022 . {{ cite web }} : CS1 maint: deprecated archival service ( link ) 
+
+^ "Croatia & Ireland amongst confirmed leagues added to CM'09 : : Championship Manager" . Archived from the original on 9 February 2009 . Retrieved 7 February 2009 . 
+
+^ "Pay What You Want for Championship Manager 2010" . Archived from the original on 21 August 2009 . Retrieved 19 August 2009 . 
+
+^ "Championship Manager 2011" . iTunes . Archived from the original on 17 October 2010. 
+
+^ "Square Enix announces Championship Manager free-to-play MMO" . Archived from the original on 20 July 2018 . Retrieved 19 July 2011 . 
+
+^ "Champ Man" . www.pocketgamer.com . 6 June 2014 . Retrieved 20 June 2022 . 
+
+^ Cook, Dave (15 October 2013). "Championship Manager 13/14 season update out on iOS and Android now" . VG247 . Retrieved 26 January 2014 . 
+
+^ "Square Enix Releases Champ Man 15 on iOS" . Archived from the original on 11 November 2014 . Retrieved 18 October 2014 . 
+
+^ "Game Service Closure" . Archived from the original on 17 June 2019 . Retrieved 31 May 2018 . 
+
+External links 
+[ edit ] 
+Square Enix' official Championship Manager website Archived 2016-06-11 at the Wayback Machine 
+
+Championship Manager series on MobyGames 
+
+v 
+
+t 
+
+e 
+
+Championship Manager 
+
+Games 
+
+Championship Manager (1992) 
+
+93/94 
+
+2 
+
+96/97 
+
+Season 97/98 
+
+3 
+
+Season 99/00 
+
+Season 00/01 
+
+Season 01/02 
+
+Quiz 
+
+Season 02/03 
+
+4 
+
+Season 03/04 
+
+5 
+
+2006 
+
+2007 
+
+2008 
+
+2009 Express 
+
+2010 
+
+2011 
+
+Companies 
+
+Eidos Interactive 
+
+Square Enix 
+
+Sports Interactive 
+
+v 
+
+t 
+
+e 
+
+Square Enix video game franchises 
+
+Square Enix 
+
+Bravely Default 
+
+Chaos Rings 
+
+Chocobo 
+
+Code Age 
+
+Chrono 
+
+Dragon Quest 
+
+Drakengard 
+
+Final Fantasy 
+
+Front Mission 
+
+Hanjuku Hero 
+
+Itadaki Street 
+
+Kingdom Hearts 
+
+Lord of Vermilion 
+
+Mana 
+
+Million Arthur 
+
+Nier 
+
+Octopath Traveler 
+
+Ogre Battle 
+
+SaGa 
+
+Schoolgirl Strikers 
+
+Star Ocean 
+
+Valkyrie Profile 
+
+Voice of Cards 
+
+The World Ends with You 
+
+Square Enix Europe 
+
+Championship Manager 
+
+Gex 
+
+Just Cause 
+
+Life Is Strange 
+
+Taito 
+
+Arkanoid 
+
+Battle Gear 
+
+Bubble Bobble 
+
+Darius 
+
+Groove Coaster 
+
+Gunslinger Stratos 
+
+Let's Go By Train 
+
+Lufia 
+
+Space Invaders 
+
+Retrieved from " https://en.wikipedia.org/w/index.php?title=Championship_Manager&oldid=1328178183 " 
+
+Categories : 
+Championship Manager 
+
+Eidos Interactive games 
+
+Square Enix franchises 
+
+Multiplayer hotseat games 
+
+Video game franchises 
+
+Video game franchises introduced in 1992 
+
+Association football management video games 
+
+Video games developed in the United Kingdom 
+
+Hidden categories: 
+Webarchive template wayback links 
+
+CS1 maint: deprecated archival service 
+
+CS1: unfit URL 
+
+Articles with short description 
+
+Short description matches Wikidata 
+
+Use dmy dates from October 2024 
+
+All articles with unsourced statements 
+
+Articles with unsourced statements from July 2018 
+
+Articles containing potentially dated statements from September 2014 
+
+All articles containing potentially dated statements 
+
+Search 
+
+Championship Manager 
+
+9 languages Add topic

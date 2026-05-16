@@ -1,0 +1,21 @@
+{
+  "name": "xcm0102",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:missions": "tsx scripts/run-mission-tests.ts",
+    "sim:demo": "tsx src/cli/runSimulation.ts"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "tsx": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  },
+  "dependencies": {
+    "fastify": "^5.8.5"
+  }
+}

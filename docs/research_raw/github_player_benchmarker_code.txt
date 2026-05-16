@@ -1,0 +1,2184 @@
+
+
+===== MainForm.Designer.cs =====
+﻿namespace CM
+{
+    partial class MainForm
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.grbBenchmarking = new System.Windows.Forms.GroupBox();
+            this.pgbBenchmark = new System.Windows.Forms.ProgressBar();
+            this.txtClubName = new System.Windows.Forms.TextBox();
+            this.lblClubName = new System.Windows.Forms.Label();
+            this.txtConcurrentRunsCount = new System.Windows.Forms.TextBox();
+            this.txtRunsCount = new System.Windows.Forms.TextBox();
+            this.lblConcurrentRunsCount = new System.Windows.Forms.Label();
+            this.lblTotalRunCounts = new System.Windows.Forms.Label();
+            this.txtTestName = new System.Windows.Forms.TextBox();
+            this.btnRunBenchmark = new System.Windows.Forms.Button();
+            this.btnConvertExternalFile = new System.Windows.Forms.Button();
+            this.lblTestName = new System.Windows.Forms.Label();
+            this.btnLoadSaveFile = new System.Windows.Forms.Button();
+            this.btnSaveSaveFile = new System.Windows.Forms.Button();
+            this.grbBenchmarking.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // grbBenchmarking
+            // 
+            this.grbBenchmarking.Controls.Add(this.pgbBenchmark);
+            this.grbBenchmarking.Controls.Add(this.txtClubName);
+            this.grbBenchmarking.Controls.Add(this.lblClubName);
+            this.grbBenchmarking.Controls.Add(this.txtConcurrentRunsCount);
+            this.grbBenchmarking.Controls.Add(this.txtRunsCount);
+            this.grbBenchmarking.Controls.Add(this.lblConcurrentRunsCount);
+            this.grbBenchmarking.Controls.Add(this.lblTotalRunCounts);
+            this.grbBenchmarking.Controls.Add(this.txtTestName);
+            this.grbBenchmarking.Controls.Add(this.btnRunBenchmark);
+            this.grbBenchmarking.Controls.Add(this.btnConvertExternalFile);
+            this.grbBenchmarking.Controls.Add(this.lblTestName);
+            this.grbBenchmarking.Location = new System.Drawing.Point(439, 116);
+            this.grbBenchmarking.Name = "grbBenchmarking";
+            this.grbBenchmarking.Size = new System.Drawing.Size(250, 205);
+            this.grbBenchmarking.TabIndex = 0;
+            this.grbBenchmarking.TabStop = false;
+            this.grbBenchmarking.Text = "Benchmarking";
+            // 
+            // pgbBenchmark
+            // 
+            this.pgbBenchmark.Location = new System.Drawing.Point(6, 171);
+            this.pgbBenchmark.Name = "pgbBenchmark";
+            this.pgbBenchmark.Size = new System.Drawing.Size(236, 23);
+            this.pgbBenchmark.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.pgbBenchmark.TabIndex = 10;
+            // 
+            // txtClubName
+            // 
+            this.txtClubName.Location = new System.Drawing.Point(72, 105);
+            this.txtClubName.Name = "txtClubName";
+            this.txtClubName.Size = new System.Drawing.Size(170, 20);
+            this.txtClubName.TabIndex = 9;
+            this.txtClubName.Text = "PAS Giannina";
+            this.txtClubName.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblClubName
+            // 
+            this.lblClubName.AutoSize = true;
+            this.lblClubName.Location = new System.Drawing.Point(6, 108);
+            this.lblClubName.Name = "lblClubName";
+            this.lblClubName.Size = new System.Drawing.Size(60, 13);
+            this.lblClubName.TabIndex = 8;
+            this.lblClubName.Text = "Club name:";
+            // 
+            // txtConcurrentRunsCount
+            // 
+            this.txtConcurrentRunsCount.Location = new System.Drawing.Point(127, 77);
+            this.txtConcurrentRunsCount.Name = "txtConcurrentRunsCount";
+            this.txtConcurrentRunsCount.Size = new System.Drawing.Size(115, 20);
+            this.txtConcurrentRunsCount.TabIndex = 7;
+            this.txtConcurrentRunsCount.Text = "20";
+            this.txtConcurrentRunsCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // txtRunsCount
+            // 
+            this.txtRunsCount.Location = new System.Drawing.Point(99, 50);
+            this.txtRunsCount.Name = "txtRunsCount";
+            this.txtRunsCount.Size = new System.Drawing.Size(143, 20);
+            this.txtRunsCount.TabIndex = 6;
+            this.txtRunsCount.Text = "40";
+            this.txtRunsCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lblConcurrentRunsCount
+            // 
+            this.lblConcurrentRunsCount.AutoSize = true;
+            this.lblConcurrentRunsCount.Location = new System.Drawing.Point(6, 80);
+            this.lblConcurrentRunsCount.Name = "lblConcurrentRunsCount";
+            this.lblConcurrentRunsCount.Size = new System.Drawing.Size(115, 13);
+            this.lblConcurrentRunsCount.TabIndex = 5;
+            this.lblConcurrentRunsCount.Text = "Concurrent runs count:";
+            // 
+            // lblTotalRunCounts
+            // 
+            this.lblTotalRunCounts.AutoSize = true;
+            this.lblTotalRunCounts.Location = new System.Drawing.Point(6, 53);
+            this.lblTotalRunCounts.Name = "lblTotalRunCounts";
+            this.lblTotalRunCounts.Size = new System.Drawing.Size(87, 13);
+            this.lblTotalRunCounts.TabIndex = 4;
+            this.lblTotalRunCounts.Text = "Total runs count:";
+            // 
+            // txtTestName
+            // 
+            this.txtTestName.Location = new System.Drawing.Point(73, 23);
+            this.txtTestName.Name = "txtTestName";
+            this.txtTestName.Size = new System.Drawing.Size(169, 20);
+            this.txtTestName.TabIndex = 3;
+            this.txtTestName.Text = "test";
+            this.txtTestName.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // btnRunBenchmark
+            // 
+            this.btnRunBenchmark.Location = new System.Drawing.Point(167, 142);
+            this.btnRunBenchmark.Name = "btnRunBenchmark";
+            this.btnRunBenchmark.Size = new System.Drawing.Size(75, 23);
+            this.btnRunBenchmark.TabIndex = 2;
+            this.btnRunBenchmark.Text = "Run";
+            this.btnRunBenchmark.UseVisualStyleBackColor = true;
+            this.btnRunBenchmark.Click += new System.EventHandler(this.btnRunBenchmark_Click);
+            // 
+            // btnConvertExternalFile
+            // 
+            this.btnConvertExternalFile.Location = new System.Drawing.Point(6, 142);
+            this.btnConvertExternalFile.Name = "btnConvertExternalFile";
+            this.btnConvertExternalFile.Size = new System.Drawing.Size(127, 23);
+            this.btnConvertExternalFile.TabIndex = 1;
+            this.btnConvertExternalFile.Text = "Convert external file...";
+            this.btnConvertExternalFile.UseVisualStyleBackColor = true;
+            this.btnConvertExternalFile.Visible = false;
+            this.btnConvertExternalFile.Click += new System.EventHandler(this.btnConvertExternalFile_Click_1);
+            // 
+            // lblTestName
+            // 
+            this.lblTestName.AutoSize = true;
+            this.lblTestName.Location = new System.Drawing.Point(6, 26);
+            this.lblTestName.Name = "lblTestName";
+            this.lblTestName.Size = new System.Drawing.Size(60, 13);
+            this.lblTestName.TabIndex = 0;
+            this.lblTestName.Text = "Test name:";
+            // 
+            // btnLoadSaveFile
+            // 
+            this.btnLoadSaveFile.Location = new System.Drawing.Point(448, 39);
+            this.btnLoadSaveFile.Name = "btnLoadSaveFile";
+            this.btnLoadSaveFile.Size = new System.Drawing.Size(127, 23);
+            this.btnLoadSaveFile.TabIndex = 2;
+            this.btnLoadSaveFile.Text = "Load CM save file";
+            this.btnLoadSaveFile.UseVisualStyleBackColor = true;
+            this.btnLoadSaveFile.Click += new System.EventHandler(this.btnLoadSaveFile_Click);
+            // 
+            // btnSaveSaveFile
+            // 
+            this.btnSaveSaveFile.Location = new System.Drawing.Point(448, 68);
+            this.btnSaveSaveFile.Name = "btnSaveSaveFile";
+            this.btnSaveSaveFile.Size = new System.Drawing.Size(127, 23);
+            this.btnSaveSaveFile.TabIndex = 3;
+            this.btnSaveSaveFile.Text = "Save CM save file";
+            this.btnSaveSaveFile.UseVisualStyleBackColor = true;
+            this.btnSaveSaveFile.Click += new System.EventHandler(this.btnSaveSaveFile_Click);
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(729, 1061);
+            this.Controls.Add(this.btnSaveSaveFile);
+            this.Controls.Add(this.btnLoadSaveFile);
+            this.Controls.Add(this.grbBenchmarking);
+            this.Name = "MainForm";
+            this.Text = "PlayerBenchmarker";
+            this.grbBenchmarking.ResumeLayout(false);
+            this.grbBenchmarking.PerformLayout();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+        private System.Windows.Forms.GroupBox grbBenchmarking;
+        private System.Windows.Forms.TextBox txtClubName;
+        private System.Windows.Forms.Label lblClubName;
+        private System.Windows.Forms.TextBox txtConcurrentRunsCount;
+        private System.Windows.Forms.TextBox txtRunsCount;
+        private System.Windows.Forms.Label lblConcurrentRunsCount;
+        private System.Windows.Forms.Label lblTotalRunCounts;
+        private System.Windows.Forms.TextBox txtTestName;
+        private System.Windows.Forms.Button btnRunBenchmark;
+        private System.Windows.Forms.Button btnConvertExternalFile;
+        private System.Windows.Forms.Label lblTestName;
+        private System.Windows.Forms.Button btnLoadSaveFile;
+        private System.Windows.Forms.Button btnSaveSaveFile;
+        private System.Windows.Forms.ProgressBar pgbBenchmark;
+    }
+}
+
+
+
+===== MainForm.cs =====
+﻿using CM.Model;
+using CM.SaveFile;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace CM
+{
+    public partial class MainForm : Form
+    {
+        private const string CM_FOLDER = @"C:\Program Files (x86)\Championship Manager 01-02";
+        private const string BENCH_FOLDER = "Bench";
+        private static readonly string DUPS_FOLDER = Path.Combine("Bench", "Dups");
+        private const string BENCHMARK_RESULT_FILENAME = "benchresult.csv";
+        private static readonly string REPOSITORY_FILENAME = Path.Combine(BENCH_FOLDER, "repository.csv");
+        private static readonly string CM_TACK_TOOL_FILENAME = Path.Combine(BENCH_FOLDER, "tactool.txt");
+
+        private const bool SHOULD_IMPROVE_PLAYERS = false;
+
+        private string saveFilename;
+        private SaveFileParser saveFileParser;
+        private IList<IList<CMStaff>> playersByGroup;
+        private IList<IList<TextBox>> attrTextBoxes;
+
+        public MainForm()
+        {
+            InitializeComponent();
+
+            //LoadSaveFile("a_benchmark.sav", txtClubName.Text);
+        }
+
+        private void LoadSaveFile(string filename, string clubName)
+        {
+            SaveFileParser parser = new SaveFileParser();
+            parser.Load(filename);
+
+            IList<CMStaff> players = parser.Staffs.Where(x => x.Player != null && x.ClubJob != null && string.Equals(x.ClubJob.ShortName, clubName, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+
+        public static bool IsGK(CMPlayer player) => player.Goalkeeper == 20;
+        public static bool IsDC(CMPlayer player) => !IsDLR(player) && player.Defender == 20 && player.CentreSide == 20;
+        public static bool IsDLR(CMPlayer player) => player.Defender == 20 && (player.LeftSide == 20 || player.RightSide == 20);
+        public static bool IsDMC(CMPlayer player) => player.DefensiveMidfielder == 20;// || (player.Midfielder == 20 && player.DefensiveMidfielder >= 15);
+        public static bool IsAMC(CMPlayer player) => player.AttackingMidfielder == 20 || (player.Midfielder == 20 && !IsDMC(player));
+        //public static bool IsAMC(CMPlayer player) => player.Midfielder == 20 && !IsDMC(player);
+        //public static bool IsAMFC(CMPlayer player) => player.AttackingMidfielder == 20 && !IsDMC(player) && !IsAMC(player);// && player.Attacker >= 15;
+        public static bool IsFC(CMPlayer player) => player.Attacker == 20 && !IsDMC(player) && !IsAMC(player);
+
+        private void RunBenchmark()
+        {
+            int n = int.Parse(txtRunsCount.Text);
+            int maxProcesses = int.Parse(txtConcurrentRunsCount.Text);
+            pgbBenchmark.Value = 0;
+            pgbBenchmark.Maximum = n;
+
+            File.Delete(Path.Combine(CM_FOLDER, BENCHMARK_RESULT_FILENAME));
+            Environment.SetEnvironmentVariable("CM3_PREFS", CM_FOLDER);
+            IList<Process> processes = new List<Process>();
+            for (int i = 1; i <= n; i++)
+            {
+                while (processes.Count >= maxProcesses)
+                {
+                    processes = processes.Where(x => !x.HasExited).ToList();
+                    pgbBenchmark.Value = i - 1 - processes.Count;
+                    Application.DoEvents();
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                }
+
+                string dupFolder = Path.GetFullPath(Path.Combine(DUPS_FOLDER, $"{i}"));
+                Directory.CreateDirectory(dupFolder);
+                Environment.SetEnvironmentVariable("CM3_TEMP", dupFolder);
+                processes.Add(Process.Start(new ProcessStartInfo()
+                {
+                    FileName = "cm0102_bm1.1.exe",
+                    Arguments = "-load a_benchmark.sav",
+                    WorkingDirectory = CM_FOLDER
+                    //UseShellExecute = true
+                }));
+                pgbBenchmark.Value = i - processes.Count;
+                Application.DoEvents();
+                Thread.Sleep(TimeSpan.FromSeconds(0.5));
+            }
+
+            // Wait for all CMs to finish.
+            foreach (Process process in processes) process.WaitForExit();
+            pgbBenchmark.Value = n;
+
+            // Move benchmark result file.
+            string inputFilename = Path.Combine(BENCH_FOLDER, txtTestName.Text);
+            try { File.Move(Path.Combine(CM_FOLDER, BENCHMARK_RESULT_FILENAME), inputFilename); } catch { }
+
+            // Add result to repository.
+            ConvertBenchmarkResultToCMTacToolFormat(inputFilename, REPOSITORY_FILENAME, CM_TACK_TOOL_FILENAME, txtTestName.Text, txtClubName.Text);
+        }
+
+        private void ConvertBenchmarkResultToCMTacToolFormat(string inputFilename, string outputFilename, string cmTactToolFilename, string testName, string clubName)
+        {
+            // Parse input file.
+            int playedSum = 0, pointsSum = 0, winSum = 0, drawSum = 0, lossSum = 0, goalForSum = 0, goalAgSum = 0, count = 0;
+            string line;
+            using (StreamReader reader = new StreamReader(inputFilename))
+            {
+                StreamWriter cmTackToolWriter = null;
+                if (cmTactToolFilename != null) cmTackToolWriter = new StreamWriter(cmTactToolFilename);
+                try
+                {
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        if (!line.ToLower().Contains(clubName.ToLower())) continue;
+
+                        // Parse single season result.
+                        string[] tokens = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        int i = tokens.Length - 1;
+                        int points = int.Parse(tokens[i--]);
+                        int goalAg = int.Parse(tokens[i--]);
+                        int goalFor = int.Parse(tokens[i--]);
+                        int loss = int.Parse(tokens[i--]);
+                        int draw = int.Parse(tokens[i--]);
+                        int win = int.Parse(tokens[i--]);
+                        goalAg += int.Parse(tokens[i--]);
+                        goalFor += int.Parse(tokens[i--]);
+                        loss += int.Parse(tokens[i--]);
+                        draw += int.Parse(tokens[i--]);
+                        win += int.Parse(tokens[i--]);
+                        int played = int.Parse(tokens[i--]);
+
+                        // Add to sums.
+                        pointsSum += points;
+                        goalAgSum += goalAg;
+                        goalForSum += goalFor;
+                        lossSum += loss;
+                        drawSum += draw;
+                        winSum += win;
+                        playedSum += played;
+                        count++;
+
+                        // Write single season result to CMTactTool file.
+                        if (cmTackToolWriter != null) cmTackToolWriter.WriteLine($"{testName} {goalFor}-{goalAg} {points} {played} {win}-{draw}-{loss}");
+                    }
+                }
+                finally
+                {
+                    try { cmTackToolWriter.Close(); } catch { }
+                }
+            }
+
+            if (outputFilename != null && count > 0)
+            {
+                // Calculate output.
+                double playedAvg = playedSum / (double)count;
+                double pointsAvg = pointsSum / (double)count;
+                double winAvg = winSum / (double)count;
+                double drawAvg = drawSum / (double)count;
+                double lossAvg = lossSum / (double)count;
+                double goalForAvg = goalForSum / (double)count;
+                double goalAgAvg = goalAgSum / (double)count;
+
+                // Write output.
+                //IList<string> lines = new string[] { "Name For Ag Pts Pld Won Drn Lst" }.ToList();
+                IList<string> lines = new string[] { "Name For Ag Pts" }.ToList();
+                if (File.Exists(outputFilename)) lines = File.ReadAllLines(outputFilename).ToList();
+                int i;
+                for (i = 0; i < lines.Count; i++) if (lines[i].ToLower().StartsWith(clubName.ToLower())) break;
+                if (i == lines.Count) lines.Add("");
+                lines[i] = $"{testName} {goalForAvg:0.00} {goalAgAvg:0.00} {pointsAvg:0.00}";// {playedAvg:0.00}";// {playedAvg};{winAvg};{drawAvg};{lossAvg}";
+                File.WriteAllLines(outputFilename, lines);
+            }
+        }
+
+        private void btnConvertExternalFile_Click_1(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog() { DefaultExt = "csv" })
+            {
+                if (dialog.ShowDialog(this) != DialogResult.OK) return;
+
+                ConvertBenchmarkResultToCMTacToolFormat(dialog.FileName, REPOSITORY_FILENAME, CM_TACK_TOOL_FILENAME, txtTestName.Text, txtClubName.Text);
+            }
+        }
+
+        private void btnRunBenchmark_Click(object sender, EventArgs e)
+        {
+            RunBenchmark();
+        }
+
+        private void btnLoadSaveFile_Click(object sender, EventArgs e)
+        {
+            // Load file.
+            IList<string> filenames = Directory.GetFiles(CM_FOLDER, "*.sav");
+            if (filenames.Count == 0) MessageBox.Show(this, "No save files found at CM folder.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            string filename = filenames.First();
+            if (filenames.Count > 1)
+            {
+                using (OpenFileDialog dialog = new OpenFileDialog() { DefaultExt = "sav", InitialDirectory = CM_FOLDER })
+                {
+                    if (dialog.ShowDialog(this) != DialogResult.OK) return;
+                    filename = dialog.FileName;
+                }
+            }
+            saveFileParser = new SaveFileParser();
+            try
+            {
+                saveFileParser.Load(filename);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Failed to parse CM save file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                saveFileParser = null;
+                return;
+            }
+            if (saveFileParser.Staffs == null)
+            {
+                MessageBox.Show(this, "Save file must be uncompressed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                saveFileParser = null;
+                return;
+            }
+
+            // Impove all players.
+            if (SHOULD_IMPROVE_PLAYERS)
+            {
+                Random rnd = new Random();
+                foreach (CMStaff staff in saveFileParser.Staffs.Where(p => p.Player != null))
+                {
+                    foreach (CMAttribute attr in CMAttribute.LIST)
+                    {
+                        int newVal = attr.GetValue(staff);
+                        if (attr.FieldName == "Dirtiness" || attr.FieldName == "InjuryProneness")
+                            ;
+                        if (attr.FieldName == "Reflexes")
+                            newVal = Math.Max(Math.Min(newVal, -80), newVal - 15);
+                        if (attr.FieldName == "Pace" || attr.FieldName == "Acceleration" || attr.FieldName == "Jumping" || attr.FieldName == "Stamina")
+                            newVal = Math.Max(newVal, rnd.Next(15, 21));
+                        else if (attr.Max == 200) newVal = Math.Min(attr.Max, (int)(Math.Round(newVal * 1.25) + 1e-9));
+                        else if (attr.Max == 20) newVal = Math.Min(attr.Max, (int)(Math.Round(newVal * 1.3) + 1e-9));
+                        else newVal = Math.Min(Math.Max(newVal, 80), newVal + 15);
+                        attr.SetValue(staff, newVal);
+                    }
+                    staff.Player.NaturalFitness = 20;
+                    staff.Player.InjuryProneness = 1;
+                }
+            }
+
+            // Extract club players.
+            IList<CMStaff> players = saveFileParser.Staffs.Where(p => p.Player != null && p.ClubJob != null && string.Equals(p.ClubJob.ShortName, txtClubName.Text, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            if (!players.Any())
+            {
+                MessageBox.Show(this, "No players from specified club found in the CM save file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                saveFileParser = null;
+                return;
+            }
+            saveFilename = filename;
+
+            // Split players on groups by position.
+            playersByGroup = new List<IList<CMStaff>>();
+            // GK.
+            IList<CMStaff> group = new List<CMStaff>();
+            playersByGroup.Add(group);
+            for (int i = players.Count - 1; i >= 0; i--) if (IsGK(players[i].Player))
+            {
+                    group.Add(players[i]);
+                    players.RemoveAt(i);
+            }
+            // DC.
+            group = new List<CMStaff>();
+            playersByGroup.Add(group);
+            for (int i = players.Count - 1; i >= 0; i--) if (IsDC(players[i].Player))
+                {
+                    CMPlayer p = players[i].Player;
+                    p.Defender = 20;
+                    p.DefensiveMidfielder = p.Midfielder = p.AttackingMidfielder = p.Attacker = p.WingBack = p.FreeRole = 1;
+                    p.CentreSide = 20;
+                    p.LeftSide = p.RightSide = 1;
+                    group.Add(players[i]);
+                    players.RemoveAt(i);
+                }
+            // DLR.
+            group = new List<CMStaff>();
+            playersByGroup.Add(group);
+            for (int i = players.Count - 1; i >= 0; i--) if (IsDLR(players[i].Player))
+                {
+                    CMPlayer p = players[i].Player;
+                    p.Defender = p.DefensiveMidfielder = p.Midfielder = p.AttackingMidfielder = p.WingBack = 20;
+                    p.Sweeper = p.Attacker = p.FreeRole = 1;
+                    p.CentreSide = 1;
+                    p.LeftSide = p.RightSide = 20;
+                    group.Add(players[i]);
+                    players.RemoveAt(i);
+                }
+            // DMC.
+            group = new List<CMStaff>();
+            playersByGroup.Add(group);
+            for (int i = players.Count - 1; i >= 0; i--) if (IsDMC(players[i].Player))
+                {
+                    CMPlayer p = players[i].Player;
+                    p.DefensiveMidfielder = p.Midfielder = 20;
+                    p.Sweeper = p.Defender = p.AttackingMidfielder = p.Attacker = p.WingBack = p.FreeRole = 1;
+                    p.CentreSide = 20;
+                    p.LeftSide = p.RightSide = 1;
+                    group.Add(players[i]);
+                    players.RemoveAt(i);
+                }
+            // AMC.
+            group = new List<CMStaff>();
+            playersByGroup.Add(group);
+            for (int i = players.Count - 1; i >= 0; i--) if (IsAMC(players[i].Player))
+                {
+                    CMPlayer p = players[i].Player;
+                    p.AttackingMidfielder = p.Midfielder = 20;
+                    p.Sweeper = p.Defender = p.DefensiveMidfielder = p.Attacker = p.WingBack = p.FreeRole = 1;
+                    p.CentreSide = 20;
+                    p.LeftSide = p.RightSide = 1;
+                    group.Add(players[i]);
+                    players.RemoveAt(i);
+                }
+            /*// AMFC.
+            group = new List<CMStaff>();
+            playersByGroup.Add(group);
+            for (int i = players.Count - 1; i >= 0; i--) if (IsAMFC(players[i].Player))
+                {
+                    CMPlayer p = players[i].Player;
+                    p.AttackingMidfielder = p.Attacker = 20;
+                    p.Sweeper = p.Defender = p.DefensiveMidfielder = p.Midfielder = p.WingBack = p.FreeRole = 1;
+                    p.CentreSide = 20;
+                    p.LeftSide = p.RightSide = 1;
+                    group.Add(players[i]);
+                    players.RemoveAt(i);
+                }*/
+            // FC.
+            group = new List<CMStaff>();
+            playersByGroup.Add(group);
+            for (int i = players.Count - 1; i >= 0; i--) if (IsFC(players[i].Player))
+                {
+                    CMPlayer p = players[i].Player;
+                    p.Attacker = 20;
+                    p.Sweeper = p.Defender = p.DefensiveMidfielder = p.Midfielder = p.AttackingMidfielder = p.WingBack = p.FreeRole = 1;
+                    p.CentreSide = 20;
+                    p.LeftSide = p.RightSide = 1;
+                    group.Add(players[i]);
+                    players.RemoveAt(i);
+                }
+
+            //
+            SuspendLayout();
+            int yStep = 20;
+            int xStep = 50;
+            // Attribute names.
+            int x = 5;
+            int y = 5 + yStep;
+            foreach (CMAttribute attr in CMAttribute.LIST)
+            {
+                Label label = new Label()
+                {
+                    Parent = this,
+                    Text = attr.DisplayName,
+                    AutoSize = true,
+                    Location = new Point(x, y)
+                };
+                if (attr.Min < 0) label.BackColor = SystemColors.ControlDark;
+                Controls.Add(label);
+                y += yStep;
+            }
+            // Group headers.
+            x = 100;
+            y = 5;
+            for (int i = 0; i < playersByGroup.Count; i++)
+            {
+                string name = "GK";
+                if (i == 1) name = "DC";
+                else if (i == 2) name = "DLR";
+                else if (i == 3) name = "DMC";
+                else if (i == 4) name = "AMC";
+                //else if (i == 5) name = "AMFC";
+                else if (i == 5) name = "FC";
+                Label label = new Label()
+                {
+                    Parent = this,
+                    Text = $"{name} {playersByGroup[i].Count}",
+                    AutoSize = true,
+                    Location = new Point(x, y)
+                };
+                Controls.Add(label);
+                x += xStep;
+            }
+            // Attributes.
+            attrTextBoxes = new List<IList<TextBox>>();
+            x = 100;
+            for (int i = 0; i < playersByGroup.Count; i++)
+            {
+                attrTextBoxes.Add(new List<TextBox>());
+                y = 5 + yStep;
+                foreach (CMAttribute attr in CMAttribute.LIST)
+                {
+                    IList<int> values = playersByGroup[i].Select(p => attr.GetValue(p)).ToList();
+                    TextBox textBox = new TextBox()
+                    {
+                        Parent = this,
+                        Text = values.Min() == values.Max() ? values.First().ToString() : "",
+                        TextAlign = HorizontalAlignment.Right,
+                        Location = new Point(x, y),
+                        Size = new Size(40, 15)
+                    };
+                    textBox.TextChanged += txtAttr_TextChanged;
+                    attrTextBoxes.Last().Add(textBox);
+                    textBox.SuspendLayout();
+                    Controls.Add(textBox);
+                    y += yStep;
+                }
+                x += xStep;
+            }
+            ResumeLayout();
+            PerformLayout();
+        }
+
+        private void btnSaveSaveFile_Click(object sender, EventArgs e)
+        {
+            if (saveFileParser == null) return;
+
+            // Validate values.
+            bool allValid = true;
+            for (int i = 0; i < playersByGroup.Count; i++)
+            {
+                for (int j = 0; j < CMAttribute.LIST.Length; j++)
+                {
+                    CMAttribute attr = CMAttribute.LIST[j];
+                    TextBox textBox = attrTextBoxes[i][j];
+                    if (string.IsNullOrWhiteSpace(textBox.Text)) continue;
+                    if (!int.TryParse(textBox.Text, out int val) || !(attr.Min <= val && val <= attr.Max))
+                    {
+                        allValid = false;
+                        textBox.ForeColor = Color.Red;
+                    }
+                    else textBox.ForeColor = Color.Black;
+                }
+            }
+            if (!allValid)
+            {
+                MessageBox.Show(this, "Invalid attribute value.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Apply values.
+            for (int i = 0; i < playersByGroup.Count; i++)
+            {
+                for (int j = 0; j < CMAttribute.LIST.Length; j++)
+                {
+                    CMAttribute attr = CMAttribute.LIST[j];
+                    TextBox textBox = attrTextBoxes[i][j];
+                    if (string.IsNullOrWhiteSpace(textBox.Text)) continue;
+                    int val = int.Parse(textBox.Text);
+                    foreach (CMStaff player in playersByGroup[i]) attr.SetValue(player, val);
+                }
+            }
+
+            // Save to file.
+            IList<CMStaff> players = new List<CMStaff>();
+            foreach (IList<CMStaff> group in playersByGroup) players = players.Concat(group).ToList();
+            if (SHOULD_IMPROVE_PLAYERS) players = saveFileParser.Staffs;
+            saveFileParser.Save(saveFilename, players);
+
+            for (int i = 0; i < playersByGroup.Count; i++) for (int j = 0; j < CMAttribute.LIST.Length; j++) attrTextBoxes[i][j].Font = new Font(attrTextBoxes[i][j].Font, FontStyle.Regular);
+        }
+
+        private void txtAttr_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            textBox.Font = new Font(textBox.Font, FontStyle.Bold);
+        }
+    }
+}
+
+
+===== Model/CMAttribute.cs =====
+﻿using System;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+namespace CM.Model
+{
+    public class CMAttribute
+    {
+        public static readonly CMAttribute[] LIST = new CMAttribute[]
+        {
+            new CMAttribute("Acceleration", null, AttributeRangeType._1_20), // 0
+            new CMAttribute("Aggression", null, AttributeRangeType._1_20), // 1
+            new CMAttribute("Agility", null, AttributeRangeType._1_20), // 2
+            new CMAttribute("Anticipation", null, AttributeRangeType._sbyte), // 3
+            new CMAttribute("Balance", null, AttributeRangeType._1_20), // 4
+            new CMAttribute("Bravery", null, AttributeRangeType._1_20), // 5
+            new CMAttribute("Creativity", null, AttributeRangeType._sbyte), // 6
+            new CMAttribute("Crossing",          null, AttributeRangeType._sbyte), // 7
+            new CMAttribute("Decisions",         null, AttributeRangeType._sbyte), // 8
+            new CMAttribute("Determination", null, AttributeRangeType._1_20), // 9 
+            new CMAttribute("Dribbling",         null, AttributeRangeType._sbyte), // 10
+            new CMAttribute("Finishing",         null, AttributeRangeType._sbyte), // 11
+            new CMAttribute("Flair",             null, AttributeRangeType._1_20), // 12
+            new CMAttribute("Handling",          null, AttributeRangeType._sbyte), // 13
+            new CMAttribute("Heading",           null, AttributeRangeType._sbyte), // 14
+            new CMAttribute("Influence",         null, AttributeRangeType._1_20), // 15
+            new CMAttribute("Jumping",           null, AttributeRangeType._1_20), // 16
+            new CMAttribute("Long Shots",        null, AttributeRangeType._sbyte), // 17
+            new CMAttribute("Marking",           null, AttributeRangeType._sbyte), // 18
+            new CMAttribute("Off The Ball",      null, AttributeRangeType._sbyte), // 19
+            new CMAttribute("Pace", null, AttributeRangeType._1_20), // 20
+            new CMAttribute("Passing",           null, AttributeRangeType._sbyte), // 21
+            new CMAttribute("Positioning",       null, AttributeRangeType._sbyte), // 22
+            new CMAttribute("Reflexes",          null, AttributeRangeType._sbyte), // 23
+            new CMAttribute("Set Pieces", null, AttributeRangeType._1_20), // 24
+            new CMAttribute("Stamina", null, AttributeRangeType._1_20), // 25
+            new CMAttribute("Strength", null, AttributeRangeType._1_20), // 26
+            new CMAttribute("Tackling",          null, AttributeRangeType._sbyte), // 27
+            new CMAttribute("Teamwork", null, AttributeRangeType._1_20), // 28
+            new CMAttribute("Technique", null, AttributeRangeType._1_20), // 29
+            new CMAttribute("Work Rate", null, AttributeRangeType._1_20), // 30
+            new CMAttribute("Adaptability", null, AttributeRangeType._1_20), // 31
+            new CMAttribute("Important Matches", null, AttributeRangeType._1_20), // 32
+            new CMAttribute("Consistency", null, AttributeRangeType._1_20), // 33
+            new CMAttribute("Corners", null, AttributeRangeType._1_20), // 34
+            new CMAttribute("Dirtiness", null, AttributeRangeType._1_20), // 35
+            new CMAttribute("Natural Fitness",   null, AttributeRangeType._1_20), // 36
+            new CMAttribute("Injury Proneness", null, AttributeRangeType._1_20), // 37
+            new CMAttribute("Loyality",          null, AttributeRangeType._1_20), // 38
+            new CMAttribute("One On Ones",       null, AttributeRangeType._sbyte), // 39
+            new CMAttribute("Penalties",         null, AttributeRangeType._sbyte), // 40
+            new CMAttribute("Versatility",       null, AttributeRangeType._1_20), // 41
+            new CMAttribute("Throw Ins",         null, AttributeRangeType._sbyte), // 42
+            new CMAttribute("Ambition",          null, AttributeRangeType._1_20), // 43
+            new CMAttribute("Pressure",          null, AttributeRangeType._1_20), // 44
+            new CMAttribute("Professionalism", null, AttributeRangeType._1_20), // 45
+            new CMAttribute("Sportsmanship", null, AttributeRangeType._1_20), // 46
+            new CMAttribute("Temperament", null, AttributeRangeType._1_20), // 47
+            new CMAttribute("Current Ability", null, AttributeRangeType._1_200), // 48
+            new CMAttribute("Potential Ability", null, AttributeRangeType._1_200), // 49
+        }.OrderBy(x => (x.FieldName == "CurrentAbility") ? "ZZY" : ((x.FieldName == "PotentialAbility") ? "ZZZ" : x.FieldName)).ToArray();
+
+        public string DisplayName { get; }
+        public string FieldName { get; }
+        public int Min { get; set; } = 1;
+        public int Max { get; set; } = 20;
+
+        public CMAttribute(string displayName, string fieldName, AttributeRangeType rangeType)
+        {
+            if (fieldName == null)
+            {
+                fieldName = "";
+                for (int i = 0; i < displayName.Length; i++)
+                {
+                    if (displayName[i] == ' ') continue;
+                    char ch = displayName[i];
+                    if (i > 0 && displayName[i - 1] == ' ') ch = char.ToUpper(ch);
+                    fieldName += ch;
+                }
+            }
+
+            DisplayName = displayName;
+            FieldName = fieldName;
+            Min = 1;
+            Max = 20;
+            if (rangeType == AttributeRangeType._sbyte)
+            {
+                Min = -128;
+                Max = 127;
+            }
+            else if (rangeType == AttributeRangeType._1_200) Max = 200;
+        }
+
+        public int GetValue(CMStaff staff)
+        {
+            FieldInfo field = staff.Player.GetType().GetField(FieldName);
+            if (field != null) return Convert.ToInt32(field.GetValue(staff.Player));
+            field = staff.GetType().GetField(FieldName);
+            return Convert.ToInt32(field.GetValue(staff));
+        }
+
+        public void SetValue(CMStaff staff, int value)
+        {
+            FieldInfo field = staff.Player.GetType().GetField(FieldName);
+            object obj = staff.Player;
+            if (field == null)
+            {
+                field = staff.GetType().GetField(FieldName);
+                obj = staff;
+            }
+            if (field.FieldType == typeof(SByte)) field.SetValue(obj, Convert.ToSByte(value));
+            else if (field.FieldType == typeof(Int16)) field.SetValue(obj, Convert.ToInt16(value));
+            else throw new NotImplementedException();
+        }
+    }
+
+    public enum AttributeRangeType
+    {
+        _1_20,
+        _sbyte,
+        _1_200
+    }
+}
+
+
+===== Model/SaveFileModels.cs =====
+﻿using System;
+
+namespace CM.Model
+{
+    public class Side
+    {
+        public String Name { get; }
+        public String Code { get; }
+
+        public readonly Func<CMStaff, Boolean> IsSuitableFor;
+
+        public Side(String name, String code, Func<CMStaff, Boolean> isSuitableFor)
+        {
+            Name = name;
+            Code = code;
+            IsSuitableFor = isSuitableFor;
+        }
+    }
+
+    public class Position
+    {
+        public String Name { get; }
+        public String Code { get; }
+
+        public readonly Func<CMStaff, Boolean> IsSuitableFor;
+
+        public Position(String name, String code, Func<CMStaff, Boolean> isSuitableFor)
+        {
+            Name = name;
+            Code = code;
+            IsSuitableFor = isSuitableFor;
+        }
+    }
+
+    public class RatingPosition
+    {
+        public String Name { get; }
+        public String Code { get; }
+
+        public readonly Func<CMStaff, Boolean> IsSuitableFor;
+
+        public RatingPosition(String name, String code, Func<CMStaff, Boolean> isSuitableFor)
+        {
+            Name = name;
+            Code = code;
+            IsSuitableFor = isSuitableFor;
+        }
+    }
+
+    public class ContractType
+    {
+        public Int32 Id { get; }
+        public String Name { get; }
+
+        public readonly Func<Byte, Boolean> IsSuitableFor;
+
+        public ContractType(Int32 id, String name, Func<Byte, Boolean> isSuitableFor)
+        {
+            Id = id;
+            Name = name;
+            IsSuitableFor = isSuitableFor;
+        }
+    }
+
+    public class SquadStatus
+    {
+        public Int32 Id { get; }
+        public String Name { get; }
+
+        public readonly Func<Byte, Boolean> IsSuitableFor;
+
+        public SquadStatus(Int32 id, String name, Func<Byte, Boolean> isSuitableFor)
+        {
+            Id = id;
+            Name = name;
+            IsSuitableFor = isSuitableFor;
+        }
+    }
+
+    public class TransferStatus
+    {
+        public Int32 Id { get; }
+        public String Name { get; }
+
+        public readonly Func<Byte, Boolean> IsSuitableFor;
+
+        public TransferStatus(Int32 id, String name, Func<Byte, Boolean> isSuitableFor)
+        {
+            Id = id;
+            Name = name;
+            IsSuitableFor = isSuitableFor;
+        }
+    }
+
+    public class CMBlock
+    {
+        public Int32 Position;
+        public Int32 Size;
+        public String Name;
+    }
+    public class CMDate
+    {
+        public Int16 Day;
+        public Int16 Year;
+        public Int32 IsLeapYear;
+    }
+
+    public class CMNation
+    {
+        public Int32 Id;
+        public String Name;
+        public SByte GenderName;
+        public String ShortName;
+        public SByte GenderShortName;
+        public String Code;
+        public String Nationality;
+        public Int32 ContinentId;
+        public SByte Region;
+        public SByte ActualRegion;
+        public SByte FirstLanguage;
+        public SByte SecondLanguage;
+        public SByte ThirdLanguage;
+        public Int32 CapitalId;
+        public SByte StateOfDevelopment;
+        public SByte GroupMembership;
+        public Int32 NationalStadiumId;
+        public SByte GameImportance;
+        public SByte LeagueStandard;
+        public Int16 NumberClubs;
+        public Int32 NumberStaff;
+        public Int16 UpdateDay;
+        public Int16 Reputation;
+        public Int32 ForeColour1Id;
+        public Int32 BackColour1Id;
+        public Int32 ForeColour2Id;
+        public Int32 BackColour2Id;
+        public Int32 ForeColour3Id;
+        public Int32 BackColour3Id;
+        public Double FIFACoefficient;
+        public Double FIFACoefficient91;
+        public Double FIFACoefficient92;
+        public Double FIFACoefficient93;
+        public Double FIFACoefficient94;
+        public Double FIFACoefficient95;
+        public Double FIFACoefficient96;
+        public Double UEFACoefficient91;
+        public Double UEFACoefficient92;
+        public Double UEFACoefficient93;
+        public Double UEFACoefficient94;
+        public Double UEFACoefficient95;
+        public Double UEFACoefficient96;
+        public Int32 RivalNation1Id;
+        public Int32 RivalNation2Id;
+        public Int32 RivalNation3Id;
+        public SByte LeagueSelected;
+        public Int32 ShortlistOffset;
+        public SByte GamesPlayed;
+    }
+
+    public class CMDivision
+    {
+        public Int32 Id;
+        public String Name;
+        public SByte GenderName;
+        public String ShortName;
+        public SByte GenderShortName;
+        public String Code;
+        public SByte Scope;
+        public SByte Selected;
+        public Int32 ContinentId;
+        public Int32 NationId;
+        public Int32 ForeColourId;
+        public Int32 BackColourId;
+        public Int16 Reputation;
+
+        public CMNation Nation;
+    }
+
+    public class CMClub
+    {
+        public Int32 Id;
+        public String Name;
+        public SByte GenderName;
+        public String ShortName;
+        public SByte GenderShortName;
+        public Int32 NationId;
+        public Int32 DivisionId;
+        public Int32 LastDivisionId;
+        public SByte LastPosition;
+        public Int32 ReserveDivisionId;
+        public SByte ProfessionalStatus;
+        public Int32 Cash;
+        public Int32 StadiumId;
+        public SByte OwnStadium;
+        public Int32 ReserveStadiumId;
+        public SByte MatchDay;
+        public Int32 Attendance;
+        public Int32 MinAttendance;
+        public Int32 MaxAttendance;
+        public SByte Training;
+        public Int16 Reputation;
+        public SByte PLC;
+        public Int32 ForeColour1Id;
+        public Int32 BackColour1Id;
+        public Int32 ForeColour2Id;
+        public Int32 BackColour2Id;
+        public Int32 ForeColour3Id;
+        public Int32 BackColour3Id;
+        public Int32 FavStaff1Id;
+        public Int32 FavStaff2Id;
+        public Int32 FavStaff3Id;
+        public Int32 DisStaff1Id;
+        public Int32 DisStaff2Id;
+        public Int32 DisStaff3Id;
+        public Int32 Rival1Id;
+        public Int32 Rival2Id;
+        public Int32 Rival3Id;
+        public Int32 ChairmanId;
+        public Int32[] DirectorsIds;
+        public Int32 ManagerId;
+        public Int32 AssistantManagerId;
+        public Int32[] SquadIds;
+        public Int32[] CoachIds;
+        public Int32[] ScoutIds;
+        public Int32[] PhysioIds;
+        public Int32 EuroFlag;
+        public SByte EuroSeeding;
+        public Int32[] TeamSelectedIds;
+        public Int32[] TacticTrainingIds;
+        public Int32 TacticSelected;
+        public SByte HasLinkedClub;
+
+        public CMNation Nation;
+    }
+
+    public class CMName
+    {
+        public String Name;
+        public Int32 Id;
+        public Int32 NationId;
+        public SByte Count;
+    }
+
+    public class CMContract
+    {
+        public Int32 Id;
+        public Int32 ClubId;
+        public Byte[] Unknown1;
+        public Int32 Wage;
+        public Int32 GoalBonus;
+        public Int32 AssistBonus;
+        public Int32 CleanSheetBonus;
+        public Byte NonPromotionRC;
+        public Byte MinimumFeeRC;
+        public Byte NonPlayingRC;
+        public Byte RelegationRC;
+        public Byte ManagerJobRC;
+        public Int32 ReleaseFee;
+        public DateTime? DateStarted;
+        public DateTime? DateEnded;
+        public Byte Type;
+        public Byte[] Unknown2;
+        public Boolean LeavingOnBosman;
+        public Int32 TransferArrangedForClubId;
+        public Byte TransferStatus;
+        public Byte SquadStatus;
+
+        public CMClub Club;
+        public CMClub TransferArrangedForClub;
+        public String UnprotectedReason;
+        public Boolean HasNonPromotionRC;
+        public Boolean IsNonPromotionRCActive;
+        public Boolean HasMinimumFeeRC;
+        public Boolean IsMinimumFeeRCActive;
+        public Boolean HasNonPlayingRC;
+        public Boolean IsNonPlayingRCActive;
+        public Boolean HasRelegationRC;
+        public Boolean IsRelegationRCActive;
+        public Boolean HasManagerJobRC;
+        public Boolean IsManagerJobRCActive;
+    }
+
+    public class CMPlayer
+    {
+        public Int32 Id;
+        public Byte SquardNumber;
+        public Int16 CurrentAbility;
+        public Int16 PotentialAbility;
+        public Int16 HomeReputation;
+        public Int16 CurrentReputation;
+        public Int16 WorldReputation;
+        public SByte Goalkeeper;
+        public SByte Sweeper;
+        public SByte Defender;
+        public SByte DefensiveMidfielder;
+        public SByte Midfielder;
+        public SByte AttackingMidfielder;
+        public SByte Attacker;
+        public SByte WingBack;
+        public SByte RightSide;
+        public SByte LeftSide;
+        public SByte CentreSide;
+        public SByte FreeRole;
+        public SByte Acceleration;
+        public SByte Aggression;
+        public SByte Agility;
+        public SByte Anticipation;
+        public SByte Balance;
+        public SByte Bravery;
+        public SByte Consistency;
+        public SByte Corners;
+        public SByte Crossing;
+        public SByte Decisions;
+        public SByte Dirtiness;
+        public SByte Dribbling;
+        public SByte Finishing;
+        public SByte Flair;
+        public SByte SetPieces;
+        public SByte Handling;
+        public SByte Heading;
+        public SByte ImportantMatches;
+        public SByte InjuryProneness;
+        public SByte Jumping;
+        public SByte Influence;
+        public SByte LeftFoot;
+        public SByte LongShots;
+        public SByte Marking;
+        public SByte OffTheBall;
+        public SByte NaturalFitness;
+        public SByte OneOnOnes;
+        public SByte Pace;
+        public SByte Passing;
+        public SByte Penalties;
+        public SByte Positioning;
+        public SByte Reflexes;
+        public SByte RightFoot;
+        public SByte Stamina;
+        public SByte Strength;
+        public SByte Tackling;
+        public SByte Teamwork;
+        public SByte Technique;
+        public SByte ThrowIns;
+        public SByte Versatility;
+        public SByte Creativity;
+        public SByte WorkRate;
+        public SByte Morale;
+    }
+
+    public class CMStaff
+    {
+        public Int32 Id;
+        public Int32 FirstNameId;
+        public Int32 SecondNameId;
+        public Int32 CommonNameId;
+        public DateTime? DateOfBirth;
+        public Int16 YearOfBirth;
+        public Int32 FirstNationId;
+        public Int32 SecondNationId;
+        public Byte IntApps;
+        public Byte IntGoals;
+        public Int32 NationalJobId;
+        public SByte JobForNation;
+        public DateTime? DateJoinedNation;
+        public DateTime? DateExpiresNation;
+        public Int32 ClubJobId;
+        public SByte JobForClub;
+        public DateTime? DateJoinedClub;
+        public DateTime? DateExpiresClub;
+        public Int32 Wage;
+        public Int32 Value;
+        public SByte Adaptability;
+        public SByte Ambition;
+        public SByte Determination;
+        public SByte Loyality;
+        public SByte Pressure;
+        public SByte Professionalism;
+        public SByte Sportsmanship;
+        public SByte Temperament;
+        public SByte PlayingSquad;
+        public SByte Classification;
+        public SByte ClubValuation;
+        public Int32 PlayerId;
+        public Int32 StaffPreferencesId;
+        public Int32 NonPlayerId;
+        public SByte SquadSelectedFor;
+
+        public CMName FirstName;
+        public CMName SecondName;
+        public CMName CommonName;
+        public CMNation FirstNation;
+        public CMNation SecondNation;
+        public CMClub ClubJob;
+        public CMPlayer Player;
+        public Int32? Age;
+        public CMContract Contract;
+        public CMContract LoanContract;
+
+        public Double[] Ratings;
+
+        public Boolean IsFavorite;
+    }
+}
+
+
+===== PlayerBenchmarker.cs =====
+﻿using System;
+using System.Globalization;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace CM
+{
+    static class GamepadTester
+    {
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            //Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainForm());
+        }
+    }
+}
+
+
+===== README.md =====
+# CM0102PlayerBenchmarker
+Tool for CM 01/02 for testing player attributes via benchmarking.
+
+# Installation
+1. Either download prebuilt binary from "bin" folder or build it from source via Visual Studio.
+2. Copy files from "CM0102 Tactics Benchmarker v1.1" to your CM folder and prefer all necessary preparations. Refer to readme of that tool: https://champman0102.net/viewtopic.php?t=3625
+3. Disable Save Compression in game settings. Backup your "game.cfg" file.
+4. To make testing quicker, it's better to keep a single .sav file in your CM folder.
+
+# System requirements
+The faster your CPU, the faster you will get your tests done. Ryzen 9 makes 100 runs test in 12 minutes.
+
+# Recommendations
+1. Apply most critical patches to cm0102_bm1.1.exe via Nick's patcher (fix of creativity, positioning and marking bugs).
+
+# Usage
+1. Run the PlayerBenchmarker.exe.
+2. Click "Load CM save file". If there is only 1 .sav file in CM folder, the program loads that. Otherwise, it asks user to select a file.
+3. Modify attributes as you wish, and don't forget to click "Save CM save file" afterward.
+<img src="Images/Screenshot.png"/>
+4. Enter a unique test name for each test.
+5. Enter runs count (amount of seasons to play; bigger the value, the higher is precision, but takes longer time).
+6. Enter amount of concurrent runs (as a rule of thumb: amount of cores of your CPU is a good choice).
+7. Modify club name if necessary (depends on your CM save file).
+8. Run tests.
+9. See results appended to "repository.csv" file under "Bench" folder. Format is: "Name For Ag Pts":
+Name - test name;
+For - average amount of goals scored by team per season;
+Ag - average amount of goals conceded by team per season;
+Pts - average amount of points earned by team per season.
+Also the original report ('benchresult.csv' file) of "CM0102 Tactics Benchmarker v1.1" is copied to "Bench" folder under name equal to test name.
+
+# Known cm0102_bm1.1.exe issues:
+1. Sometimes cm0102_bm1.1.exe crushes. Testing stuck until crushed cm0102_bm1.1.exe instances are closed manually.
+2. Sometimes game.cfg becomes corrupted. Better make a backup copy of it for quick replacement.
+
+# How it works
+The program splits all players into categories (according to their original positions) and edits position values for each player accordingly:
+- GK
+- DC (sets Defender = Center = 20, everything else to 1)
+- DLR (sets Defender = DefensiveMidfielder = Midfielder = AttackingMidfielder = WingBack = LeftSide = RightSide = 20, everything else to 1)
+- DMC (sets DefensiveMidfielder = Midfielder = Center = 20, everything else to 1)
+- AMC (sets AttackingMidfielder = Midfielder = 20, everything else to 1)
+- FC (sets Attacker = Center = 20, everything else to 1)
+If you wish another categories and/or values, the only way ATM is to modify the program code.
+
+# Special thanks
+1) Vladimir Filatov, the author of "CM Scout Intrinsic" from which .sav file parsing code was taken.
+2) Nick+Co, the author of "Nick's CM0102Patcher" for an awesome tool with rich functionality.
+3) Tapani and Xeno, authors of "CM0102 Tactics Benchmarker v1.1" for the benchmarker itself.
+4) champman0102.net's community for an awesome resource and keeping the game alive.
+
+===== SaveFile/CMBinaryReader.cs =====
+using System;
+using System.IO;
+
+namespace CM.SaveFile
+{
+    public class CMBinaryReader
+    {
+        private BinaryReader _br;
+        private bool _isCompressed;
+        const int BUFFER_SIZE = 64 * 1024;
+        byte[] Fbuffer = new byte[BUFFER_SIZE];
+        bool FboBufEmpty = true;
+        int FintPos = 0;
+        int FintReadPos = 0;
+        int FintBufPos = 0;
+
+        public long Position { get => _br.BaseStream.Position; }
+
+        public CMBinaryReader(BinaryReader br, bool isCompressed)
+        {
+            _br = br;
+            _isCompressed = isCompressed;
+        }
+
+        public long Seek(long offset, SeekOrigin origin)
+        {
+            FintPos = 0;
+            FintReadPos = 0;
+            FintBufPos = 0;
+            FboBufEmpty = true;
+            return _br.BaseStream.Seek(offset, origin);
+        }
+
+        private int Read(byte[] Buffer, int Count)
+        {
+            int intNewBufPos;
+            int byByteCount;
+            byte byMultByte;
+            byte[] poTemp;
+
+            if (!_isCompressed)
+            {
+                return _br.Read(Buffer, 0, Count);
+            }
+            else
+            {
+                if (Count > BUFFER_SIZE)
+                {
+                    return 0;
+                }
+            }
+
+            if (FintPos != FintReadPos + BUFFER_SIZE || FboBufEmpty)
+            {
+                FboBufEmpty = false;
+                FintBufPos = 0;
+                FintReadPos = (int)_br.BaseStream.Position;
+                FintPos = FintReadPos + _br.Read(Fbuffer, 0, BUFFER_SIZE);
+            }
+
+            if (BUFFER_SIZE - FintBufPos < Count * 2)
+            {
+                poTemp = new byte[BUFFER_SIZE - FintBufPos];
+                Array.Copy(Fbuffer, FintBufPos, poTemp, 0, BUFFER_SIZE - FintBufPos);
+                Array.Copy(poTemp, 0, Fbuffer, 0, BUFFER_SIZE - FintBufPos);
+                FintReadPos = FintPos - (BUFFER_SIZE - FintBufPos);
+                FintPos = FintReadPos + _br.Read(Fbuffer, BUFFER_SIZE - FintBufPos, BUFFER_SIZE - (BUFFER_SIZE - FintBufPos)) + (BUFFER_SIZE - FintBufPos);
+                FintBufPos = 0;
+            }
+
+            intNewBufPos = 0;
+
+            while (intNewBufPos < Count)
+            {
+                if (Fbuffer[FintBufPos] <= 128)
+                {
+                    //Byte(Pointer(Integer(@Buffer) + intNewBufPos)^) = Fbuffer[FintBufPos];
+                    Buffer[intNewBufPos] = Fbuffer[FintBufPos];
+                    intNewBufPos++;
+                    FintBufPos++;
+                }
+                else
+                {
+                    byByteCount = Fbuffer[FintBufPos] - 128;
+                    FintBufPos++;
+                    byMultByte = Fbuffer[FintBufPos];
+                    FintBufPos++;
+                    if (byByteCount + intNewBufPos > Count)
+                    {
+                        FintBufPos -= 2;
+                        Fbuffer[FintBufPos] = (byte)(byByteCount - (Count - intNewBufPos) + 128);
+                        byByteCount = Count - intNewBufPos;
+                    }
+                    //FillChar(Byte(Pointer(Integer(@Buffer) + intNewBufPos)^), byByteCount, byMultByte);
+                    for (int i = intNewBufPos; i < intNewBufPos + byByteCount; i++)
+                        Buffer[i] = byMultByte;
+
+                    intNewBufPos += byByteCount;
+                }
+                if (FintBufPos > BUFFER_SIZE)
+                    FboBufEmpty = true;
+            }
+
+            return Count;
+        }
+
+        // -----
+        public byte[] ReadBytes(int count)
+        {
+            if (!_isCompressed)
+            {
+                return _br.ReadBytes(count);
+            }
+            else
+            {
+                byte[] bytes = new byte[count];
+
+                Read(bytes, count);
+
+                return bytes;
+            }
+        }
+
+        public byte ReadByte()
+        {
+            if (!_isCompressed)
+            {
+                return _br.ReadByte();
+            }
+            else
+            {
+                byte[] bytes = ReadBytes(1);
+
+                return bytes[0];
+            }
+        }
+
+        public sbyte ReadSByte()
+        {
+            if (!_isCompressed)
+            {
+                return _br.ReadSByte();
+            }
+            else
+            {
+                byte[] bytes = ReadBytes(1);
+
+                return (sbyte)bytes[0];
+            }
+        }
+
+        public short ReadInt16()
+        {
+            if (!_isCompressed)
+            {
+                return _br.ReadInt16();
+            }
+            else
+            {
+                byte[] bytes = ReadBytes(2);
+
+                return BitConverter.ToInt16(bytes, 0);
+            }
+        }
+
+        public int ReadInt32()
+        {
+            if (!_isCompressed)
+            {
+                return _br.ReadInt32();
+            }
+            else
+            {
+                byte[] bytes = ReadBytes(4);
+
+                return BitConverter.ToInt32(bytes, 0);
+            }
+        }
+
+        public double ReadDouble()
+        {
+            if (!_isCompressed)
+            {
+                return _br.ReadDouble();
+            }
+            else
+            {
+                byte[] bytes = ReadBytes(8);
+
+                return BitConverter.ToDouble(bytes, 0);
+            }
+        }
+        // -----
+    }
+}
+
+===== SaveFile/SaveFileParser.cs =====
+﻿using CM.Model;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
+namespace CM.SaveFile
+{
+    public class SaveFileParser
+    {
+        public DateTime? GameDate;
+        public List<CMNation> Nations;
+        public List<CMDivision> Divisions;
+        public List<CMClub> Clubs;
+        public List<CMStaff> Staffs;
+        public IDictionary<CMStaff, long> StaffOffsets = new Dictionary<CMStaff, long>();
+        public IDictionary<CMPlayer, long> PlayerOffsets = new Dictionary<CMPlayer, long>();
+
+        public void Save(string filename, IList<CMStaff> staffs = null)
+        {
+            if (staffs == null) staffs = Staffs;
+            using (FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Write))
+            using (BinaryWriter writer =  new BinaryWriter(fs))
+            {
+                foreach (CMStaff staff in staffs)
+                {
+                    // Staff fields.
+                    writer.Seek((int)(StaffOffsets[staff] + 86), SeekOrigin.Begin);
+                    writer.Write(staff.Adaptability);
+                    writer.Write(staff.Ambition);
+                    writer.Write(staff.Determination);
+                    writer.Write(staff.Loyality);
+                    writer.Write(staff.Pressure);
+                    writer.Write(staff.Professionalism);
+                    writer.Write(staff.Sportsmanship);
+                    writer.Write(staff.Temperament);
+
+                    // Player fields.
+                    CMPlayer player = staff.Player;
+                    if (player != null)
+                    {
+                        writer.Seek((int)(PlayerOffsets[player] + 5), SeekOrigin.Begin);
+                        writer.Write(player.CurrentAbility);
+                        writer.Write(player.PotentialAbility);
+                        writer.Write(player.HomeReputation);
+                        writer.Write(player.CurrentReputation);
+                        writer.Write(player.WorldReputation);
+                        writer.Write(player.Goalkeeper);
+                        writer.Write(player.Sweeper);
+                        writer.Write(player.Defender);
+                        writer.Write(player.DefensiveMidfielder);
+                        writer.Write(player.Midfielder);
+                        writer.Write(player.AttackingMidfielder);
+                        writer.Write(player.Attacker);
+                        writer.Write(player.WingBack);
+                        writer.Write(player.RightSide);
+                        writer.Write(player.LeftSide);
+                        writer.Write(player.CentreSide);
+                        writer.Write(player.FreeRole);
+                        writer.Write(player.Acceleration);
+                        writer.Write(player.Aggression);
+                        writer.Write(player.Agility);
+                        writer.Write(player.Anticipation);
+                        writer.Write(player.Balance);
+                        writer.Write(player.Bravery);
+                        writer.Write(player.Consistency);
+                        writer.Write(player.Corners);
+                        writer.Write(player.Crossing);
+                        writer.Write(player.Decisions);
+                        writer.Write(player.Dirtiness);
+                        writer.Write(player.Dribbling);
+                        writer.Write(player.Finishing);
+                        writer.Write(player.Flair);
+                        writer.Write(player.SetPieces);
+                        writer.Write(player.Handling);
+                        writer.Write(player.Heading);
+                        writer.Write(player.ImportantMatches);
+                        writer.Write(player.InjuryProneness);
+                        writer.Write(player.Jumping);
+                        writer.Write(player.Influence);
+                        writer.Write(player.LeftFoot);
+                        writer.Write(player.LongShots);
+                        writer.Write(player.Marking);
+                        writer.Write(player.OffTheBall);
+                        writer.Write(player.NaturalFitness);
+                        writer.Write(player.OneOnOnes);
+                        writer.Write(player.Pace);
+                        writer.Write(player.Passing);
+                        writer.Write(player.Penalties);
+                        writer.Write(player.Positioning);
+                        writer.Write(player.Reflexes);
+                        writer.Write(player.RightFoot);
+                        writer.Write(player.Stamina);
+                        writer.Write(player.Strength);
+                        writer.Write(player.Tackling);
+                        writer.Write(player.Teamwork);
+                        writer.Write(player.Technique);
+                        writer.Write(player.ThrowIns);
+                        writer.Write(player.Versatility);
+                        writer.Write(player.Creativity);
+                        writer.Write(player.WorkRate);
+                    }
+                }
+            }
+        }
+
+        public void Load(string filename)
+        {
+            Dictionary<String, Int32> clubNameToClubIdMap = null;
+            IDictionary<String, Int32> divisionNameToDivisionIdMap = null;
+            Dictionary<Int32, List<Int32>> squadIdToClubIdsMap = null;
+
+            using (Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            {
+                using (BinaryReader binaryReader = new BinaryReader(stream))
+                {
+                    bool isCompressed = binaryReader.ReadInt32() == 4;
+                    if (isCompressed) return;
+
+                    // Skip 4 bytes
+                    binaryReader.ReadBytes(4);
+
+                    int blocksCount = binaryReader.ReadInt32();
+                    List<CMBlock> blocks = new List<CMBlock>();
+
+                    for (int i = 0; i < blocksCount; ++i)
+                    {
+                        CMBlock block = new CMBlock
+                        {
+                            Position = binaryReader.ReadInt32(),
+                            Size = binaryReader.ReadInt32(),
+                            Name = ReadCMString(binaryReader, 260),
+                        };
+
+                        blocks.Add(block);
+                    }
+
+                    CMBinaryReader br = new CMBinaryReader(binaryReader, isCompressed);
+
+                    // general.dat
+                    {
+                        CMBlock block = blocks.Find(item => item.Name == "general.dat");
+
+                        br.Seek(block.Position, SeekOrigin.Begin);
+
+                        br.ReadBytes(3944);
+
+                        GameDate = ReadDateTime(br);
+                    }
+
+                    // nation.dat
+                    Nations = new List<CMNation>();
+
+                    {
+                        CMBlock block = blocks.Find(item => item.Name == "nation.dat");
+
+                        br.Seek(block.Position, SeekOrigin.Begin);
+
+                        int nationsCount = block.Size / 290;
+
+                        for (int i = 0; i < nationsCount; ++i)
+                        {
+                            CMNation nation = new CMNation
+                            {
+                                Id = br.ReadInt32(),
+                                Name = ReadCMString(br, 51),
+                                GenderName = br.ReadSByte(),
+                                ShortName = ReadCMString(br, 26),
+                                GenderShortName = br.ReadSByte(),
+                                Code = ReadCMString(br, 4),
+                                Nationality = ReadCMString(br, 26),
+                                ContinentId = br.ReadInt32(),
+                                Region = br.ReadSByte(),
+                                ActualRegion = br.ReadSByte(),
+                                FirstLanguage = br.ReadSByte(),
+                                SecondLanguage = br.ReadSByte(),
+                                ThirdLanguage = br.ReadSByte(),
+                                CapitalId = br.ReadInt32(),
+                                StateOfDevelopment = br.ReadSByte(),
+                                GroupMembership = br.ReadSByte(),
+                                NationalStadiumId = br.ReadInt32(),
+                                GameImportance = br.ReadSByte(),
+                                LeagueStandard = br.ReadSByte(),
+                                NumberClubs = br.ReadInt16(),
+                                NumberStaff = br.ReadInt32(),
+                                UpdateDay = br.ReadInt16(),
+                                Reputation = br.ReadInt16(),
+                                ForeColour1Id = br.ReadInt32(),
+                                BackColour1Id = br.ReadInt32(),
+                                ForeColour2Id = br.ReadInt32(),
+                                BackColour2Id = br.ReadInt32(),
+                                ForeColour3Id = br.ReadInt32(),
+                                BackColour3Id = br.ReadInt32(),
+                                FIFACoefficient = br.ReadDouble(),
+                                FIFACoefficient91 = br.ReadDouble(),
+                                FIFACoefficient92 = br.ReadDouble(),
+                                FIFACoefficient93 = br.ReadDouble(),
+                                FIFACoefficient94 = br.ReadDouble(),
+                                FIFACoefficient95 = br.ReadDouble(),
+                                FIFACoefficient96 = br.ReadDouble(),
+                                UEFACoefficient91 = br.ReadDouble(),
+                                UEFACoefficient92 = br.ReadDouble(),
+                                UEFACoefficient93 = br.ReadDouble(),
+                                UEFACoefficient94 = br.ReadDouble(),
+                                UEFACoefficient95 = br.ReadDouble(),
+                                UEFACoefficient96 = br.ReadDouble(),
+                                RivalNation1Id = br.ReadInt32(),
+                                RivalNation2Id = br.ReadInt32(),
+                                RivalNation3Id = br.ReadInt32(),
+                                LeagueSelected = br.ReadSByte(),
+                                ShortlistOffset = br.ReadInt32(),
+                                GamesPlayed = br.ReadSByte(),
+                            };
+
+                            Nations.Add(nation);
+
+                            //Debug.WriteLine("Nation.  {0,3}  {1}  {2,-20}  {3}", nation.Id, nation.Code, nation.ShortName, nation.Name);
+                        }
+                    }
+
+                    // club_comp.dat
+                    Divisions = new List<CMDivision>();
+                    divisionNameToDivisionIdMap = new Dictionary<string, int>();
+
+                    {
+                        CMBlock block = blocks.Find(item => item.Name == "club_comp.dat");
+
+                        br.Seek(block.Position, SeekOrigin.Begin);
+
+                        int divisionsCount = block.Size / 107;
+
+                        for (int i = 0; i < divisionsCount; ++i)
+                        {
+                            CMDivision division = new CMDivision
+                            {
+                                Id = br.ReadInt32(),
+                                Name = ReadCMString(br, 51),
+                                GenderName = br.ReadSByte(),
+                                ShortName = ReadCMString(br, 26),
+                                GenderShortName = br.ReadSByte(),
+                                Code = ReadCMString(br, 4),
+                                Scope = br.ReadSByte(),
+                                Selected = br.ReadSByte(),
+                                ContinentId = br.ReadInt32(),
+                                NationId = br.ReadInt32(),
+                                ForeColourId = br.ReadInt32(),
+                                BackColourId = br.ReadInt32(),
+                                Reputation = br.ReadInt16(),
+                            };
+
+                            division.Nation = GetNationFromId(division.NationId, Nations);
+
+                            Divisions.Add(division);
+
+                            if (divisionNameToDivisionIdMap.ContainsKey(division.Name))
+                            {
+                            }
+                            else
+                            {
+                                divisionNameToDivisionIdMap.Add(division.Name, division.Id);
+                            }
+                        }
+                    }
+
+                    // club.dat
+                    Clubs = new List<CMClub>();
+                    clubNameToClubIdMap = new Dictionary<string, int>();
+                    squadIdToClubIdsMap = new Dictionary<int, List<int>>();
+
+                    {
+                        CMBlock block = blocks.Find(item => item.Name == "club.dat");
+
+                        br.Seek(block.Position, SeekOrigin.Begin);
+
+                        int clubsCount = block.Size / 581;
+
+                        for (int i = 0; i < clubsCount; ++i)
+                        {
+                            CMClub club = new CMClub
+                            {
+                                Id = br.ReadInt32(),
+                                Name = ReadCMString(br, 51),
+                                GenderName = br.ReadSByte(),
+                                ShortName = ReadCMString(br, 26),
+                                GenderShortName = br.ReadSByte(),
+                                NationId = br.ReadInt32(),
+                                DivisionId = br.ReadInt32(),
+                                LastDivisionId = br.ReadInt32(),
+                                LastPosition = br.ReadSByte(),
+                                ReserveDivisionId = br.ReadInt32(),
+                                ProfessionalStatus = br.ReadSByte(),
+                                Cash = br.ReadInt32(),
+                                StadiumId = br.ReadInt32(),
+                                OwnStadium = br.ReadSByte(),
+                                ReserveStadiumId = br.ReadInt32(),
+                                MatchDay = br.ReadSByte(),
+                                Attendance = br.ReadInt32(),
+                                MinAttendance = br.ReadInt32(),
+                                MaxAttendance = br.ReadInt32(),
+                                Training = br.ReadSByte(),
+                                Reputation = br.ReadInt16(),
+                                PLC = br.ReadSByte(),
+                                ForeColour1Id = br.ReadInt32(),
+                                BackColour1Id = br.ReadInt32(),
+                                ForeColour2Id = br.ReadInt32(),
+                                BackColour2Id = br.ReadInt32(),
+                                ForeColour3Id = br.ReadInt32(),
+                                BackColour3Id = br.ReadInt32(),
+                                FavStaff1Id = br.ReadInt32(),
+                                FavStaff2Id = br.ReadInt32(),
+                                FavStaff3Id = br.ReadInt32(),
+                                DisStaff1Id = br.ReadInt32(),
+                                DisStaff2Id = br.ReadInt32(),
+                                DisStaff3Id = br.ReadInt32(),
+                                Rival1Id = br.ReadInt32(),
+                                Rival2Id = br.ReadInt32(),
+                                Rival3Id = br.ReadInt32(),
+                                ChairmanId = br.ReadInt32(),
+                                DirectorsIds = ReadIds(br, 3),
+                                ManagerId = br.ReadInt32(),
+                                AssistantManagerId = br.ReadInt32(),
+                                SquadIds = ReadIds(br, 50),
+                                CoachIds = ReadIds(br, 5),
+                                ScoutIds = ReadIds(br, 7),
+                                PhysioIds = ReadIds(br, 3),
+                                EuroFlag = br.ReadInt32(),
+                                EuroSeeding = br.ReadSByte(),
+                                TeamSelectedIds = ReadIds(br, 20),
+                                TacticTrainingIds = ReadIds(br, 4),
+                                TacticSelected = br.ReadInt32(),
+                                HasLinkedClub = br.ReadSByte(),
+                            };
+
+                            club.Nation = GetNationFromId(club.NationId, Nations);
+
+                            Clubs.Add(club);
+
+                            //Debug.WriteLine("Club. {0,6} {1}", club.Id, club.Name);
+
+                            if (clubNameToClubIdMap.ContainsKey(club.Name))
+                            {
+                            }
+                            else
+                            {
+                                clubNameToClubIdMap.Add(club.Name, club.Id);
+                            }
+
+                            foreach (int squadId in club.SquadIds)
+                            {
+                                if (squadId >= 0)
+                                {
+                                    if (squadIdToClubIdsMap.TryGetValue(squadId, out List<int> clubIds))
+                                    {
+                                        clubIds.Add(club.Id);
+                                    }
+                                    else
+                                    {
+                                        squadIdToClubIdsMap.Add(squadId, new List<int> { club.Id, });
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // names
+                    Func<CMBinaryReader, string, List<CMName>> loadNames =
+                        (br_, blockName) =>
+                        {
+                            List<CMName> names = new List<CMName>();
+
+                            CMBlock block = blocks.Find(item => item.Name == blockName);
+
+                            br_.Seek(block.Position, SeekOrigin.Begin);
+
+                            int namesCount = block.Size / 60;
+
+                            for (int i = 0; i < namesCount; ++i)
+                            {
+                                CMName name = new CMName
+                                {
+                                    Name = ReadCMString(br_, 51),
+                                    Id = br_.ReadInt32(),
+                                    NationId = br_.ReadInt32(),
+                                    Count = br_.ReadSByte(),
+                                };
+
+                                names.Add(name);
+                            }
+
+                            return names;
+                        };
+
+                    List<CMName> firstNames = loadNames(br, "first_names.dat");
+                    List<CMName> secondNames = loadNames(br, "second_names.dat");
+                    List<CMName> commonNames = loadNames(br, "common_names.dat");
+
+                    // player.dat
+                    List<CMPlayer> players = new List<CMPlayer>();
+
+                    {
+                        CMBlock block = blocks.Find(item => item.Name == "player.dat");
+
+                        br.Seek(block.Position, SeekOrigin.Begin);
+
+                        int playersCount = block.Size / 70;
+
+                        for (int i = 0; i < playersCount; ++i)
+                        {
+                            long offset = br.Position;
+                            CMPlayer player = new CMPlayer
+                            {
+                                Id = br.ReadInt32(),
+                                SquardNumber = br.ReadByte(),
+                                CurrentAbility = br.ReadInt16(),
+                                PotentialAbility = br.ReadInt16(),
+                                HomeReputation = br.ReadInt16(),
+                                CurrentReputation = br.ReadInt16(),
+                                WorldReputation = br.ReadInt16(),
+                                Goalkeeper = br.ReadSByte(),
+                                Sweeper = br.ReadSByte(),
+                                Defender = br.ReadSByte(),
+                                DefensiveMidfielder = br.ReadSByte(),
+                                Midfielder = br.ReadSByte(),
+                                AttackingMidfielder = br.ReadSByte(),
+                                Attacker = br.ReadSByte(),
+                                WingBack = br.ReadSByte(),
+                                RightSide = br.ReadSByte(),
+                                LeftSide = br.ReadSByte(),
+                                CentreSide = br.ReadSByte(),
+                                FreeRole = br.ReadSByte(),
+                                Acceleration = br.ReadSByte(),
+                                Aggression = br.ReadSByte(),
+                                Agility = br.ReadSByte(),
+                                Anticipation = br.ReadSByte(),
+                                Balance = br.ReadSByte(),
+                                Bravery = br.ReadSByte(),
+                                Consistency = br.ReadSByte(),
+                                Corners = br.ReadSByte(),
+                                Crossing = br.ReadSByte(),
+                                Decisions = br.ReadSByte(),
+                                Dirtiness = br.ReadSByte(),
+                                Dribbling = br.ReadSByte(),
+                                Finishing = br.ReadSByte(),
+                                Flair = br.ReadSByte(),
+                                SetPieces = br.ReadSByte(),
+                                Handling = br.ReadSByte(),
+                                Heading = br.ReadSByte(),
+                                ImportantMatches = br.ReadSByte(),
+                                InjuryProneness = br.ReadSByte(),
+                                Jumping = br.ReadSByte(),
+                                Influence = br.ReadSByte(),
+                                LeftFoot = br.ReadSByte(),
+                                LongShots = br.ReadSByte(),
+                                Marking = br.ReadSByte(),
+                                OffTheBall = br.ReadSByte(),
+                                NaturalFitness = br.ReadSByte(),
+                                OneOnOnes = br.ReadSByte(),
+                                Pace = br.ReadSByte(),
+                                Passing = br.ReadSByte(),
+                                Penalties = br.ReadSByte(),
+                                Positioning = br.ReadSByte(),
+                                Reflexes = br.ReadSByte(),
+                                RightFoot = br.ReadSByte(),
+                                Stamina = br.ReadSByte(),
+                                Strength = br.ReadSByte(),
+                                Tackling = br.ReadSByte(),
+                                Teamwork = br.ReadSByte(),
+                                Technique = br.ReadSByte(),
+                                ThrowIns = br.ReadSByte(),
+                                Versatility = br.ReadSByte(),
+                                Creativity = br.ReadSByte(),
+                                WorkRate = br.ReadSByte(),
+                                Morale = br.ReadSByte(),
+                            };
+
+                            players.Add(player);
+                            PlayerOffsets[player] = offset;
+                        }
+                    }
+
+                    // staff.dat
+                    Staffs = new List<CMStaff>();
+
+                    {
+                        CMBlock block = blocks.Find(item => item.Name == "staff.dat");
+
+                        br.Seek(block.Position, SeekOrigin.Begin);
+
+                        int staffsCount = block.Size / 110;
+
+                        for (int i = 0; i < staffsCount; ++i)
+                        {
+                            long offset = br.Position;
+                            CMStaff staff = new CMStaff
+                            {
+                                Id = br.ReadInt32(),
+                                FirstNameId = br.ReadInt32(),
+                                SecondNameId = br.ReadInt32(),
+                                CommonNameId = br.ReadInt32(),
+                                DateOfBirth = ReadDateTime(br),
+                                YearOfBirth = br.ReadInt16(),
+                                FirstNationId = br.ReadInt32(),
+                                SecondNationId = br.ReadInt32(),
+                                IntApps = br.ReadByte(),
+                                IntGoals = br.ReadByte(),
+                                NationalJobId = br.ReadInt32(),
+                                JobForNation = br.ReadSByte(),
+                                DateJoinedNation = ReadDateTime(br),
+                                DateExpiresNation = ReadDateTime(br),
+                                ClubJobId = br.ReadInt32(),
+                                JobForClub = br.ReadSByte(),
+                                DateJoinedClub = ReadDateTime(br),
+                                DateExpiresClub = ReadDateTime(br),
+                                Wage = br.ReadInt32(),
+                                Value = br.ReadInt32(),
+                                Adaptability = br.ReadSByte(),
+                                Ambition = br.ReadSByte(),
+                                Determination = br.ReadSByte(),
+                                Loyality = br.ReadSByte(),
+                                Pressure = br.ReadSByte(),
+                                Professionalism = br.ReadSByte(),
+                                Sportsmanship = br.ReadSByte(),
+                                Temperament = br.ReadSByte(),
+                                PlayingSquad = br.ReadSByte(),
+                                Classification = br.ReadSByte(),
+                                ClubValuation = br.ReadSByte(),
+                                PlayerId = br.ReadInt32(),
+                                StaffPreferencesId = br.ReadInt32(),
+                                NonPlayerId = br.ReadInt32(),
+                                SquadSelectedFor = br.ReadSByte(),
+                            };
+
+                            staff.FirstName = GetNameFromId(staff.FirstNameId, firstNames);
+                            staff.SecondName = GetNameFromId(staff.SecondNameId, secondNames);
+                            staff.CommonName = GetNameFromId(staff.CommonNameId, commonNames);
+                            staff.FirstNation = GetNationFromId(staff.FirstNationId, Nations);
+                            staff.SecondNation = staff.SecondNationId != staff.FirstNationId ? GetNationFromId(staff.SecondNationId, Nations) : null;
+                            staff.ClubJob = GetClubFromId(staff.ClubJobId, Clubs);
+                            staff.Player = GetPlayerFromId(staff.PlayerId, players);
+                            staff.Age = staff.DateOfBirth != null ? DiffInYears(staff.DateOfBirth.Value, GameDate.Value) : (int?)null;
+
+                            Staffs.Add(staff);
+                            StaffOffsets[staff] = offset;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static Boolean IsValidPlayer(CMStaff staff)
+        {
+            return ((staff.Player != null) &&
+                    (!String.IsNullOrEmpty(staff.FirstName?.Name) ||
+                     !String.IsNullOrEmpty(staff.SecondName?.Name) ||
+                     !String.IsNullOrEmpty(staff.CommonName?.Name)));
+        }
+
+        public static int DiffInYears(DateTime dateFrom, DateTime dateTo)
+        {
+            int m = dateFrom <= dateTo ? 1 : -1;
+
+            DateTime dateFrom_ = m > 0 ? dateFrom : dateTo;
+            DateTime dateTo_ = m > 0 ? dateTo : dateFrom;
+
+            return ((new DateTime(1, 1, 1) + (dateTo_ - dateFrom_)).Year - 1) * m;
+        }
+
+        private int[] ReadIds(CMBinaryReader br, int size)
+        {
+            int[] ids = new int[size];
+
+            for (int i = 0; i < size; ++i)
+            {
+                ids[i] = br.ReadInt32();
+            }
+
+            return ids;
+        }
+
+        private string ReadCMString(BinaryReader br, int size)
+        {
+            byte[] bb = br.ReadBytes(size);
+
+            int c = 0;
+
+            foreach (byte b in bb)
+            {
+                if (b == 0)
+                {
+                    break;
+                }
+
+                ++c;
+            }
+
+            return Encoding.GetEncoding("iso-8859-1").GetString(bb, 0, c);
+        }
+
+        private string ReadCMString(CMBinaryReader br, int size)
+        {
+            byte[] bb = br.ReadBytes(size);
+
+            int c = 0;
+
+            foreach (byte b in bb)
+            {
+                if (b == 0)
+                {
+                    break;
+                }
+
+                ++c;
+            }
+
+            return Encoding.GetEncoding("iso-8859-1").GetString(bb, 0, c);
+        }
+
+        private CMDate ReadCMDate(CMBinaryReader br)
+        {
+            return new CMDate
+            {
+                Day = br.ReadInt16(),
+                Year = br.ReadInt16(),
+                IsLeapYear = br.ReadInt32(),
+            };
+        }
+
+        private DateTime? ReadDateTime(CMBinaryReader br)
+        {
+            return GetDateFromCMDate(ReadCMDate(br));
+        }
+
+        private DateTime? GetDateFromCMDate(CMDate cmDate)
+        {
+            if (cmDate.Day == 0 && cmDate.Year == 0 /*&& cmDate.IsLeapYear == 0*/)
+            {
+                return null;
+            }
+            else
+            {
+                return new DateTime(cmDate.Year, 1, 1).AddDays(cmDate.Day);
+            }
+        }
+
+        private CMName GetNameFromId(int id, List<CMName> a)
+        {
+            return id < 0 ? null : a[id];
+        }
+
+        private CMNation GetNationFromId(int id, List<CMNation> a)
+        {
+            return id < 0 ? null : a[id];
+        }
+
+        private CMDivision GetDivisionFromId(int id, List<CMDivision> a)
+        {
+            return id < 0 ? null : a[id];
+        }
+
+        private CMClub GetClubFromId(int id, List<CMClub> a)
+        {
+            return id < 0 ? null : a[id];
+        }
+
+        private CMPlayer GetPlayerFromId(int id, List<CMPlayer> a)
+        {
+            return id < 0 ? null : a[id];
+        }
+    }
+}

@@ -1,0 +1,189 @@
+SOURCE: https://championshipmanagertherevival.wordpress.com/2022/09/21/training/
+TITLE: Training | Championship Manager – The Revival
+
+Training | Championship Manager – The Revival 
+
+Training Schedules: 
+
+We’ve all been there, bought the best hot prospects, and struggled to get them to achieve their potential. So, I’ve created this training guide, including seven training schedules that I use for Championship Manager 01-02 ( Patch 3.9.68 ). These schedules help train my players and increase their attributes, so players have a greater chance to reach their potential. 
+
+I have added screenshots if you want to copy the schedules and incorporate them into your save (journey). 
+
+If you have any questions, drop me a message in the comments below. 
+
+Training Options: 
+
+The five training options are Fitness , Tactics , Shooting , Skills , and Goalkeeping . Each option trains your player(s) differently, increasing specific attributes, so selecting the right combinations (and intensities) can significantly impact a player’s development. 
+
+Fitness: Improves – Acceleration , Agility , Jumping , Natural Fitness , Pace , Reflexes , Stamina , and Strength . 
+
+Tactics: Improves – Decisions , Marking , Off the Ball , Teamwork , and Positioning . 
+
+Shooting: Improves – Finishing , Long Shots , and Penalties . 
+
+Skills: Improves – Corners , Crossing , Dribbling , Free Kicks , Heading , Passing , Tackling , Technique , Throw Ins , and Preferred Foot . 
+
+Goalkeeping: Improves – Handling and One-on-Ones . 
+
+Training Intensity: 
+
+You have four intensities, None , Light , Medium , and Intensive . The intensive option can be very demanding; I’d recommend only opting for two intensives per schedule. You can see this in all my training schedules below. 
+
+Selecting the appropriate intensity for each option will be your job; getting this right will develop your players without burning them out. 
+
+Assigning Coaches: 
+
+For the best results, assign coaches to no more than three training options each. To do this, open the Overview panel on your club training screen. Here you’ll see your coaches and the training options they’re currently assigned/unassigned. 
+
+Each coach has a rating for training Goalkeepers and Outfield Players (which can increase as they develop). To get the best results, you need a total of 50 points for each training option . Furthermore, consider other ratings when assigning a coach to a training option to get the best results. Anything above a 15 rating is okay, but you’d see better results with 19s and 20s. 
+
+General: Adaptability , Coaching Outfield Players . 
+
+Fitness : Coaching Outfield Players . Level of discipline . 
+
+Shooting : Coaching Outfield Players . 
+
+Skills : Coaching Outfield Players , Working with Youngsters . 
+
+Tactics : Coaching Outfield Players , Tactical Knowledge . 
+
+Goalkeeping : Coaching Goalkeepers . 
+
+Example: The Coaching Outfield Player ratings for Damiano (18), Phelan (18), and Propos (19) total 55 points. These three coaches have been assigned to train Skills as they have a good rating in Working with Youngsters . I can assign them two more training options to aid their development! 
+
+I have added screenshots below outlining my coaches at the club and the three training options I’ve assigned, making sure I have a minimum of 50 points for each training option. 
+
+Fitness (Intense Fitness): 
+
+This intense training schedule is to help players struggling with low fitness levels, otherwise known as tiredness . Players with low Fitness attributes and those commonly injured will need assistance with their fitness from time to time. 
+
+Position (New Position): 
+
+As you may have noticed, within Championship Manager 01-02 , there’s a plethora of players that can play in multiple positions. Sadly, players incur a penalty if they play out of position. Thankfully, if a player is young enough and has a high enough Versatility rating, he will successfully transition into his new role. 
+
+If you don’t have the fourth attribute panel unlocked, you will need to gain a coach report , which will advise on the player’s versatility . There is no time frame regarding the length of time required to retrain for a new position, but look out for hints on the player’s profile. 
+
+The screenshot below doesn’t have any training options assigned, but it’s merely a placeholder. To retrain a player, select the position and a side, and use the same schedule (below) that coincides with the player’s new position. 
+
+Example: If you want to retrain a player into a Defender , copy the selected training options from the Defence training schedule (below). 
+
+The Training Schedules: 
+
+Keepers: 
+
+This training regime is strictly for Goalkeepers only. Due to the extra training option and to prevent your Goalkeepers from getting tired, put Shooting on: None . If you still get keepers coming back tired, consider dropping Tactics to Medium . 
+
+Defense: 
+
+A player that plays in a defensive position (including the Full-Backs and Defensive Midfielders ) will be allocated to this schedule. 
+
+Midfield: 
+
+Players that operate in Midfield (including Wingers and Attacking Midfielders ) will need to be assigned here. 
+
+Forwards: 
+
+All Strikers and Forwards are to be placed within this training schedule. 
+
+Academy: 
+
+Although this training schedule is similar to the Midfield training schedule, keeping these players separate is still beneficial. I add all players below the age of 24 here to assist and track their development. 
+
+Attribute Increases: 
+
+If you’re unsure if your players are developing and want to check their attribute increases, select the training schedule of interest and choose the Attributes panel (as shown in the screenshot). 
+
+Now select the appropriate attributes you wish to view. There are Physical , Mental , Goalkeeping , Defensive , and Attacking . Opt for the one that correlates to the training schedule selected. 
+
+The attributes in yellow haven’t changed; the ones in green have! 
+
+Training via YouTube: 
+
+Please check out my Training video embedded below. If you found the video helpful, please consider liking and subscribing to my channel! 
+
+Feedback: 
+
+That is all for today; keep tabs on this page for future developments. If you have any comments or feedback, drop them in the comment section below. 
+
+Thanks for reading! 
+
+Share this: 
+
+Share on X (Opens in new window) X 
+
+Share on Facebook (Opens in new window) Facebook 
+
+Like Loading... 
+
+Related 
+
+Leave a comment Cancel reply 
+
+Twitter 
+
+YouTube 
+Follow Championship Manager – The Revival on WordPress.com 
+
+Donations 
+
+If you enjoy the content on offer and want to help towards the purchase of a cup of coffee, feel free to donate via Paypal!
+
+Please only consider donating, if you can afford to.
+
+All donations are non-refundable. 
+
+$1.00 
+Click here to purchase. 
+Training 
+
+Tactic: 4-1-3-2 Attack (NWW) 
+
+Acquiring Backroom Staff 
+
+Downloading & Installing Championship Manager 01-02 
+
+The Starter Kit 
+
+Tactic: 4-1-3-1-1 Normal (NWW) 
+
+Premier Division Clubs (English) 
+
+Set Pieces 
+
+Episode Two: Man Utd - Journey to Greatness 
+
+About Me 
+
+Comment 
+
+Reblog 
+
+Subscribe Subscribed 
+
+Championship Manager - The Revival 
+
+Already have a WordPress.com account? Log in now. 
+
+Privacy 
+
+Championship Manager - The Revival 
+
+Subscribe Subscribed 
+
+Sign up 
+
+Log in 
+
+Copy shortlink 
+
+Report this content 
+
+View post in Reader 
+
+Manage subscriptions 
+
+Collapse this bar 
+
+Loading Comments... 
+
+%d
