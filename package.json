@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:missions": "tsx scripts/run-mission-tests.ts",
@@ -11,11 +13,16 @@
   },
   "devDependencies": {
     "@types/node": "latest",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "tsx": "latest",
     "typescript": "latest",
     "vitest": "latest"
   },
   "dependencies": {
-    "fastify": "^5.8.5"
+    "fastify": "^5.8.5",
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   }
 }

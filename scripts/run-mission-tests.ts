@@ -61,6 +61,22 @@ const missions: Mission[] = [
   {
     label: 'MISSION 14: API rejects JSON null bodies',
     args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'JSON null request bodies']
+  },
+  {
+    label: 'MISSION 15: web client posts simulation request',
+    args: ['vitest', 'run', 'tests/web/simulationClient.test.ts', '-t', 'JSON POST request']
+  },
+  {
+    label: 'MISSION 16: web client reports API errors',
+    args: ['vitest', 'run', 'tests/web/simulationClient.test.ts', '-t', 'readable error']
+  },
+  {
+    label: 'MISSION 17: web result view model formatting',
+    args: ['vitest', 'run', 'tests/web/matchResultViewModel.test.ts', '-t', 'scoreboard and stat rows']
+  },
+  {
+    label: 'MISSION 18: web replay labels formatting',
+    args: ['vitest', 'run', 'tests/web/matchResultViewModel.test.ts', '-t', 'event, diagnostic, and replay labels']
   }
 ];
 
