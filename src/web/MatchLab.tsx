@@ -2,19 +2,42 @@
 
 import { FormEvent, useMemo, useState } from 'react';
 import { createMatchResultViewModel } from './matchResultViewModel';
-import { simulateMatchFromWeb, type MovementStyle, type TeamQuality, type WebSimulationResult } from './simulationClient';
+import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
+import {
+  simulateMatchFromWeb,
+  type Formation,
+  type Mentality,
+  type MovementStyle,
+  type Pressing,
+  type TeamQuality,
+  type TransitionStyle,
+  type WebSimulationResult
+} from './simulationClient';
 
 const qualities: TeamQuality[] = ['weak', 'average', 'strong'];
 const movements: MovementStyle[] = ['compact', 'balanced', 'extreme'];
+const formations: Formation[] = ['4-4-2', '4-1-3-2', '4-3-3', '3-5-2', '5-3-2'];
+const mentalities: Mentality[] = ['defensive', 'balanced', 'attacking'];
+const pressings: Pressing[] = ['low', 'medium', 'high'];
+const transitionStyles: TransitionStyle[] = ['hold_shape', 'balanced', 'fast_break'];
 
 export function MatchLab() {
-  const [seed, setSeed] = useState(42);
-  const [homeQuality, setHomeQuality] = useState<TeamQuality>('strong');
-  const [awayQuality, setAwayQuality] = useState<TeamQuality>('average');
-  const [homeFamiliarity, setHomeFamiliarity] = useState(0.8);
-  const [awayFamiliarity, setAwayFamiliarity] = useState(0.5);
-  const [homeMovement, setHomeMovement] = useState<MovementStyle>('balanced');
-  const [awayMovement, setAwayMovement] = useState<MovementStyle>('balanced');
+  const defaults = defaultTacticalState();
+  const [seed, setSeed] = useState(defaults.seed);
+  const [homeQuality, setHomeQuality] = useState<TeamQuality>(defaults.homeQuality);
+  const [awayQuality, setAwayQuality] = useState<TeamQuality>(defaults.awayQuality);
+  const [homeFamiliarity, setHomeFamiliarity] = useState(defaults.homeFamiliarity);
+  const [awayFamiliarity, setAwayFamiliarity] = useState(defaults.awayFamiliarity);
+  const [homeMovement, setHomeMovement] = useState<MovementStyle>(defaults.homeMovement);
+  const [awayMovement, setAwayMovement] = useState<MovementStyle>(defaults.awayMovement);
+  const [homeFormation, setHomeFormation] = useState<Formation>(defaults.homeFormation);
+  const [awayFormation, setAwayFormation] = useState<Formation>(defaults.awayFormation);
+  const [homeMentality, setHomeMentality] = useState<Mentality>(defaults.homeMentality);
+  const [awayMentality, setAwayMentality] = useState<Mentality>(defaults.awayMentality);
+  const [homePressing, setHomePressing] = useState<Pressing>(defaults.homePressing);
+  const [awayPressing, setAwayPressing] = useState<Pressing>(defaults.awayPressing);
+  const [homeTransitionStyle, setHomeTransitionStyle] = useState<TransitionStyle>(defaults.homeTransitionStyle);
+  const [awayTransitionStyle, setAwayTransitionStyle] = useState<TransitionStyle>(defaults.awayTransitionStyle);
   const [result, setResult] = useState<WebSimulationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,15 +50,25 @@ export function MatchLab() {
     setError(null);
 
     try {
-      const nextResult = await simulateMatchFromWeb({
-        seed,
-        homeQuality,
-        awayQuality,
-        homeFamiliarity,
-        awayFamiliarity,
-        homeMovement,
-        awayMovement
-      });
+      const nextResult = await simulateMatchFromWeb(
+        buildSimulationPayload({
+          seed,
+          homeQuality,
+          awayQuality,
+          homeFamiliarity,
+          awayFamiliarity,
+          homeFormation,
+          awayFormation,
+          homeMentality,
+          awayMentality,
+          homePressing,
+          awayPressing,
+          homeTransitionStyle,
+          awayTransitionStyle,
+          homeMovement,
+          awayMovement
+        })
+      );
       setResult(nextResult);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Simulation request failed');
@@ -50,8 +83,8 @@ export function MatchLab() {
         <p className="eyebrow">CM0102 Online</p>
         <h1>Match Lab</h1>
         <p>
-          Tune team quality, familiarity, and WIB/WOB movement intensity, then run a deterministic
-          server-authoritative match simulation.
+          Pick a formation and tune mentality, pressing, transition style, familiarity, and WIB/WOB
+          movement intensity, then run a deterministic server-authoritative match simulation.
         </p>
       </section>
 
@@ -63,6 +96,14 @@ export function MatchLab() {
 
         <Select label="Home quality" value={homeQuality} values={qualities} onChange={setHomeQuality} />
         <Select label="Away quality" value={awayQuality} values={qualities} onChange={setAwayQuality} />
+        <Select label="Home formation" value={homeFormation} values={formations} onChange={setHomeFormation} />
+        <Select label="Away formation" value={awayFormation} values={formations} onChange={setAwayFormation} />
+        <Select label="Home mentality" value={homeMentality} values={mentalities} onChange={setHomeMentality} />
+        <Select label="Away mentality" value={awayMentality} values={mentalities} onChange={setAwayMentality} />
+        <Select label="Home pressing" value={homePressing} values={pressings} onChange={setHomePressing} />
+        <Select label="Away pressing" value={awayPressing} values={pressings} onChange={setAwayPressing} />
+        <Select label="Home transition" value={homeTransitionStyle} values={transitionStyles} onChange={setHomeTransitionStyle} />
+        <Select label="Away transition" value={awayTransitionStyle} values={transitionStyles} onChange={setAwayTransitionStyle} />
 
         <label>
           Home familiarity: {homeFamiliarity.toFixed(2)}

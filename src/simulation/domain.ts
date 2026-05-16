@@ -44,6 +44,7 @@ export type BallZone =
 
 export type WibWobMap = Partial<Record<BallZone, Record<string, PitchPoint>>>;
 
+export type Formation = '4-4-2' | '4-1-3-2' | '4-3-3' | '3-5-2' | '5-3-2';
 export type Mentality = 'defensive' | 'balanced' | 'attacking';
 export type Pressing = 'low' | 'medium' | 'high';
 export type TransitionStyle = 'hold_shape' | 'balanced' | 'fast_break';
@@ -51,6 +52,7 @@ export type TransitionStyle = 'hold_shape' | 'balanced' | 'fast_break';
 export type TacticBook = {
   id: string;
   name: string;
+  formation: Formation;
   mentality: Mentality;
   pressing: Pressing;
   transitionStyle: TransitionStyle;

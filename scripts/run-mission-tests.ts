@@ -77,6 +77,22 @@ const missions: Mission[] = [
   {
     label: 'MISSION 18: web replay labels formatting',
     args: ['vitest', 'run', 'tests/web/matchResultViewModel.test.ts', '-t', 'event, diagnostic, and replay labels']
+  },
+  {
+    label: 'MISSION 19: API accepts tactical editor options',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'accepts tactical editor options']
+  },
+  {
+    label: 'MISSION 20: API rejects tactical editor options',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'rejects invalid tactical editor options']
+  },
+  {
+    label: 'MISSION 21: web tactical payload mapping',
+    args: ['vitest', 'run', 'tests/web/tacticalPayload.test.ts', '-t', 'full simulation request']
+  },
+  {
+    label: 'MISSION 22: web tactical defaults',
+    args: ['vitest', 'run', 'tests/web/tacticalPayload.test.ts', '-t', 'tactical defaults']
   }
 ];
 

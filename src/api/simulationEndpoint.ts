@@ -1,3 +1,4 @@
+import type { Formation, Mentality, Pressing, TransitionStyle } from '../simulation/domain';
 import { createSampleMatchInput, createSampleTacticBook, createSampleTeam, type MovementStyle, type TeamQuality } from '../simulation/sampleData';
 import { simulateMatch } from '../simulation/simulateMatch';
 
@@ -9,10 +10,22 @@ type SimulateMatchRequest = {
   awayFamiliarity?: unknown;
   homeMovement?: unknown;
   awayMovement?: unknown;
+  homeFormation?: unknown;
+  awayFormation?: unknown;
+  homeMentality?: unknown;
+  awayMentality?: unknown;
+  homePressing?: unknown;
+  awayPressing?: unknown;
+  homeTransitionStyle?: unknown;
+  awayTransitionStyle?: unknown;
 };
 
 const qualities: TeamQuality[] = ['weak', 'average', 'strong'];
 const movements: MovementStyle[] = ['compact', 'balanced', 'extreme'];
+const formations: Formation[] = ['4-4-2', '4-1-3-2', '4-3-3', '3-5-2', '5-3-2'];
+const mentalities: Mentality[] = ['defensive', 'balanced', 'attacking'];
+const pressings: Pressing[] = ['low', 'medium', 'high'];
+const transitionStyles: TransitionStyle[] = ['hold_shape', 'balanced', 'fast_break'];
 
 function isTeamQuality(value: unknown): value is TeamQuality {
   return typeof value === 'string' && qualities.includes(value as TeamQuality);
@@ -20,6 +33,17 @@ function isTeamQuality(value: unknown): value is TeamQuality {
 
 function isMovementStyle(value: unknown): value is MovementStyle {
   return typeof value === 'string' && movements.includes(value as MovementStyle);
+}
+
+function pickOption<T extends string>(value: unknown, fallback: T, field: string, allowed: readonly T[], errors: string[]): T {
+  if (value === undefined) {
+    return fallback;
+  }
+  if (typeof value !== 'string' || !allowed.includes(value as T)) {
+    errors.push(`${field} must be ${allowed.join(', ')}`);
+    return fallback;
+  }
+  return value as T;
 }
 
 function parseFamiliarity(value: unknown, fallback: number, field: string, errors: string[]): number {
@@ -68,6 +92,14 @@ function parseRequest(payload: unknown) {
 
   const homeFamiliarity = parseFamiliarity(body.homeFamiliarity, 0.7, 'homeFamiliarity', errors);
   const awayFamiliarity = parseFamiliarity(body.awayFamiliarity, 0.7, 'awayFamiliarity', errors);
+  const homeFormation = pickOption(body.homeFormation, '4-4-2', 'homeFormation', formations, errors);
+  const awayFormation = pickOption(body.awayFormation, '4-4-2', 'awayFormation', formations, errors);
+  const homeMentality = pickOption(body.homeMentality, 'balanced', 'homeMentality', mentalities, errors);
+  const awayMentality = pickOption(body.awayMentality, 'balanced', 'awayMentality', mentalities, errors);
+  const homePressing = pickOption(body.homePressing, 'medium', 'homePressing', pressings, errors);
+  const awayPressing = pickOption(body.awayPressing, 'medium', 'awayPressing', pressings, errors);
+  const homeTransitionStyle = pickOption(body.homeTransitionStyle, 'balanced', 'homeTransitionStyle', transitionStyles, errors);
+  const awayTransitionStyle = pickOption(body.awayTransitionStyle, 'balanced', 'awayTransitionStyle', transitionStyles, errors);
 
   if (errors.length > 0) {
     return { ok: false as const, errors };
@@ -82,7 +114,15 @@ function parseRequest(payload: unknown) {
       homeFamiliarity,
       awayFamiliarity,
       homeMovement: homeMovement as MovementStyle,
-      awayMovement: awayMovement as MovementStyle
+      awayMovement: awayMovement as MovementStyle,
+      homeFormation,
+      awayFormation,
+      homeMentality,
+      awayMentality,
+      homePressing,
+      awayPressing,
+      homeTransitionStyle,
+      awayTransitionStyle
     }
   };
 }
@@ -102,12 +142,20 @@ export function simulateMatchForApi(payload: unknown) {
       away,
       homeTactic: createSampleTacticBook({
         id: 'home-tactic',
+        formation: parsed.value.homeFormation,
+        mentality: parsed.value.homeMentality,
+        pressing: parsed.value.homePressing,
+        transitionStyle: parsed.value.homeTransitionStyle,
         familiarity: parsed.value.homeFamiliarity,
         movement: parsed.value.homeMovement,
         playerIds: home.players.map((player) => player.id)
       }),
       awayTactic: createSampleTacticBook({
         id: 'away-tactic',
+        formation: parsed.value.awayFormation,
+        mentality: parsed.value.awayMentality,
+        pressing: parsed.value.awayPressing,
+        transitionStyle: parsed.value.awayTransitionStyle,
         familiarity: parsed.value.awayFamiliarity,
         movement: parsed.value.awayMovement,
         playerIds: away.players.map((player) => player.id)

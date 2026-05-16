@@ -86,4 +86,47 @@ describe('production API server', () => {
     expect(response.statusCode).toBe(400);
     expect(response.json().error).toMatch(/JSON object/);
   });
+
+  it('simulate match endpoint accepts tactical editor options', async () => {
+    const server = buildServer();
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/simulate-match',
+      payload: {
+        seed: 123,
+        homeQuality: 'average',
+        awayQuality: 'average',
+        homeFormation: '4-1-3-2',
+        awayFormation: '4-4-2',
+        homeMentality: 'attacking',
+        awayMentality: 'defensive',
+        homePressing: 'high',
+        awayPressing: 'low',
+        homeTransitionStyle: 'fast_break',
+        awayTransitionStyle: 'hold_shape'
+      }
+    });
+
+    expect(response.statusCode).toBe(200);
+    const body = response.json();
+    expect(body.replay).toEqual({ seed: 123, engineVersion: expect.any(String), commandCount: 0 });
+    expect(body.events.length).toBeGreaterThan(0);
+  });
+
+  it('simulate match endpoint rejects invalid tactical editor options', async () => {
+    const server = buildServer();
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/simulate-match',
+      payload: {
+        homeFormation: '2-2-6',
+        homeMentality: 'reckless',
+        awayPressing: 'constant',
+        awayTransitionStyle: 'teleport'
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json().error).toMatch(/homeFormation|homeMentality|awayPressing|awayTransitionStyle/);
+  });
 });

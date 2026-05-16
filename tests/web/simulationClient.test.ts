@@ -1,7 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { simulateMatchFromWeb, type WebSimulationRequest } from '../../src/web/simulationClient';
+import { defaultTacticalState } from '../../src/web/tacticalPayload';
 
 const request: WebSimulationRequest = {
+  ...defaultTacticalState(),
   seed: 42,
   homeQuality: 'strong',
   awayQuality: 'average',

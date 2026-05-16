@@ -1,5 +1,9 @@
 import type { WebMatchResult } from './matchResultViewModel';
 
+export type Formation = '4-4-2' | '4-1-3-2' | '4-3-3' | '3-5-2' | '5-3-2';
+export type Mentality = 'defensive' | 'balanced' | 'attacking';
+export type Pressing = 'low' | 'medium' | 'high';
+export type TransitionStyle = 'hold_shape' | 'balanced' | 'fast_break';
 export type TeamQuality = 'weak' | 'average' | 'strong';
 export type MovementStyle = 'compact' | 'balanced' | 'extreme';
 
@@ -11,6 +15,14 @@ export type WebSimulationRequest = {
   awayFamiliarity: number;
   homeMovement: MovementStyle;
   awayMovement: MovementStyle;
+  homeFormation: Formation;
+  awayFormation: Formation;
+  homeMentality: Mentality;
+  awayMentality: Mentality;
+  homePressing: Pressing;
+  awayPressing: Pressing;
+  homeTransitionStyle: TransitionStyle;
+  awayTransitionStyle: TransitionStyle;
 };
 
 export type WebSimulationResult = WebMatchResult;

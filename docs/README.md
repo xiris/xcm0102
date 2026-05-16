@@ -18,9 +18,11 @@ Documentation map:
 - 11-production-simulation-contract.md — first production TypeScript match-engine contract.
 - 12-production-api-contract.md — first Fastify API boundary around the simulation package.
 - 13-production-web-contract.md — first browser-visible Next.js match lab vertical slice.
+- 14-production-tactics-contract.md — first browser/API tactical editor contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
+- plans/2026-05-16-tactical-editor-foundation.md — implementation plan for the first tactical editor foundation.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

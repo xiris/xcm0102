@@ -1,4 +1,5 @@
 import type {
+  Formation,
   MatchContext,
   MatchInput,
   Mentality,
@@ -24,6 +25,7 @@ type TeamOptions = {
 type TacticOptions = {
   id?: string;
   name?: string;
+  formation?: Formation;
   mentality?: Mentality;
   pressing?: Pressing;
   transitionStyle?: TransitionStyle;
@@ -135,6 +137,7 @@ export function createSampleTacticBook(options: TacticOptions = {}): TacticBook 
   return {
     id: options.id ?? 'sample-tactic',
     name: options.name ?? 'Sample Tactic Book',
+    formation: options.formation ?? '4-4-2',
     mentality: options.mentality ?? 'balanced',
     pressing: options.pressing ?? 'medium',
     transitionStyle: options.transitionStyle ?? 'balanced',
