@@ -273,6 +273,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 67: API event chain metadata',
     args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'event chain metadata']
+  },
+  {
+    label: 'MISSION 68: root layout hydration warning suppression',
+    args: ['vitest', 'run', 'tests/web/rootLayout.test.ts', '-t', 'browser-extension body attribute']
   }
 ];
 
