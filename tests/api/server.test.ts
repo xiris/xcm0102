@@ -157,6 +157,23 @@ describe('production API server', () => {
     });
   });
 
+  it('simulate match endpoint returns categorized chance metadata', async () => {
+    const server = buildServer();
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/simulate-match',
+      payload: { seed: 17, homeMentality: 'attacking', homeTransitionStyle: 'fast_break' }
+    });
+
+    expect(response.statusCode).toBe(200);
+    const event = response.json().events.find((item: { category?: string; outcome?: string }) => item.category && item.outcome);
+    expect(event).toEqual(expect.objectContaining({
+      category: expect.stringMatching(/through_ball|counter_attack|cross|long_shot|set_piece/),
+      outcome: expect.stringMatching(/goal|save|block|miss/),
+      description: expect.any(String)
+    }));
+  });
+
   it('simulate match endpoint accepts explicit slot assignments and applies mismatches', async () => {
     const server = buildServer();
     const response = await server.inject({

@@ -72,4 +72,14 @@ describe('chance engine', () => {
     expect(uniqueDescriptions.size).toBeGreaterThanOrEqual(4);
     expect(result.events.some((event) => /Vieri|Crespo|Recoba|Conceicao|Belozoglu/.test(event.description))).toBe(true);
   });
+
+  it('classifies chances with a football event taxonomy', () => {
+    const result = resolveTeamChances({ ...highPressureOptions(17), shotTarget: 18 });
+    const categories = new Set(result.chances.map((chance) => chance.category));
+
+    expect(categories.size).toBeGreaterThanOrEqual(3);
+    expect(categories).toContain('through_ball');
+    expect([...categories].every((category) => ['through_ball', 'counter_attack', 'cross', 'long_shot', 'set_piece'].includes(category))).toBe(true);
+    expect(result.events.every((event) => event.category && event.outcome)).toBe(true);
+  });
 });

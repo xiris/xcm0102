@@ -1,4 +1,5 @@
-import type { MatchEvent, Player, TacticBook, Team } from './domain';
+import type { MatchEvent, MatchEventCategory, Player, TacticBook, Team } from './domain';
+import { describeChanceWithPack } from './commentaryPacks';
 import { getFormationGeometry } from './formationGeometry';
 import { createSeededRng, type SeededRng } from './rng';
 
@@ -23,6 +24,7 @@ export type ResolvedChance = {
   defender: string;
   goalkeeper: string;
   quality: number;
+  category: MatchEventCategory;
   outcome: 'goal' | 'save' | 'block' | 'miss';
   description: string;
 };
@@ -46,6 +48,8 @@ export function resolveTeamChances(options: ChanceEngineOptions): TeamChanceReso
     minute: chance.minute,
     teamId: chance.teamId,
     type: chance.outcome === 'goal' ? 'goal' : 'chance',
+    category: chance.category,
+    outcome: chance.outcome,
     description: chance.description
   }));
   return {
@@ -68,6 +72,7 @@ function resolveChance(options: ChanceEngineOptions, rng: SeededRng, index: numb
   const shooting = (shooter.attributes.finishing * 1.5 + shooter.attributes.positioning + shooter.attributes.anticipation + shooter.attributes.pace * 0.3) / 76;
   const pressure = (defender.attributes.tackling + defender.attributes.positioning + defender.attributes.anticipation) / 60;
   const keeper = goalkeeper ? (goalkeeper.attributes.positioning + goalkeeper.attributes.anticipation + goalkeeper.attributes.decisions) / 60 : 0.55;
+  const category = selectChanceCategory(options, creator, shooter, rng);
   const tacticalBoost = (options.attackIntent - options.opponentDefensiveControl * 0.45 + options.opponentTransitionDelay / 24 + options.opponentLateArrivals / 18) * 0.08;
   const quality = clamp(0.05 + creation * 0.16 + shooting * 0.34 - pressure * 0.14 - keeper * 0.08 + tacticalBoost + rng.next() * 0.11, 0.03, 0.78);
   const onTargetChance = clamp(0.28 + shooting * 0.42 + creation * 0.12 - pressure * 0.14 + rng.next() * 0.12, 0.12, 0.9);
@@ -92,11 +97,12 @@ function resolveChance(options: ChanceEngineOptions, rng: SeededRng, index: numb
     defender: defender.name,
     goalkeeper: goalkeeper?.name ?? 'the goalkeeper',
     quality: round(quality, 3),
+    category,
     outcome,
     description: ''
   } satisfies Omit<ResolvedChance, 'description'> & { description: string };
 
-  return { ...chance, description: describeChance(chance, rng) };
+  return { ...chance, description: describeChanceWithPack(chance, rng, 'classic_cm') };
 }
 
 function attackingPlayers(team: Team, tactic: TacticBook): Player[] {
@@ -143,30 +149,15 @@ function weightedPick<T>(rng: SeededRng, items: T[], weight: (item: T) => number
   return items[items.length - 1] as T;
 }
 
-function describeChance(chance: Omit<ResolvedChance, 'description'>, rng: SeededRng): string {
-  const templates: Record<ResolvedChance['outcome'], string[]> = {
-    goal: [
-      `${chance.creator} slips the ball through and ${chance.shooter} finishes with conviction.`,
-      `${chance.shooter} times the run, meets ${chance.creator}'s pass, and buries it.`,
-      `${chance.creator} opens the defence; ${chance.shooter} takes one touch and scores.`
-    ],
-    save: [
-      `${chance.creator} finds ${chance.shooter}, but ${chance.goalkeeper} gets down to save.`,
-      `${chance.shooter} drives the shot on target and ${chance.goalkeeper} turns it away.`,
-      `${chance.creator} creates a yard for ${chance.shooter}; ${chance.goalkeeper} is equal to it.`
-    ],
-    block: [
-      `${chance.shooter} pulls the trigger, but ${chance.defender} throws himself into the block.`,
-      `${chance.creator} tees up ${chance.shooter}; ${chance.defender} reads it and blocks.`,
-      `${chance.defender} closes fast as ${chance.shooter} shoots, taking the sting out of it.`
-    ],
-    miss: [
-      `${chance.creator} picks out ${chance.shooter}, who drags the effort wide.`,
-      `${chance.shooter} gets into space from ${chance.creator}'s pass but cannot hit the target.`,
-      `${chance.creator} spots the run; ${chance.shooter}'s finish flashes past the post.`
-    ]
-  };
-  return rng.pick(templates[chance.outcome]);
+function selectChanceCategory(options: ChanceEngineOptions, creator: Player, shooter: Player, rng: SeededRng): MatchEventCategory {
+  const categories: Array<{ category: MatchEventCategory; weight: number }> = [
+    { category: 'through_ball', weight: creator.attributes.passing * 1.4 + creator.attributes.decisions + shooter.attributes.positioning },
+    { category: 'counter_attack', weight: options.attackIntent * 14 + options.opponentTransitionDelay + shooter.attributes.pace + shooter.attributes.acceleration },
+    { category: 'cross', weight: creator.attributes.teamwork + creator.attributes.passing + (shooter.position === 'F' ? 12 : 4) },
+    { category: 'long_shot', weight: shooter.attributes.finishing + shooter.attributes.decisions + (options.opponentDefensiveControl > 1 ? 8 : 2) },
+    { category: 'set_piece', weight: creator.attributes.passing * 0.7 + shooter.attributes.anticipation + options.opponentLateArrivals * 4 }
+  ];
+  return weightedPick(rng, categories, (item) => item.weight).category;
 }
 
 function clamp(value: number, min: number, max: number): number {

@@ -97,10 +97,15 @@ export type MatchEventType =
   | 'tactical_shift'
   | 'full_time';
 
+export type MatchEventCategory = 'through_ball' | 'counter_attack' | 'cross' | 'long_shot' | 'set_piece';
+export type MatchEventOutcome = 'goal' | 'save' | 'block' | 'miss';
+
 export type MatchEvent = {
   minute: number;
   teamId?: string;
   type: MatchEventType;
+  category?: MatchEventCategory;
+  outcome?: MatchEventOutcome;
   description: string;
 };
 

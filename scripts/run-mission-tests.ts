@@ -225,6 +225,26 @@ const missions: Mission[] = [
   {
     label: 'MISSION 55: simulation player commentary',
     args: ['vitest', 'run', 'tests/simulation/simulateMatch.test.ts', '-t', 'player-named varied']
+  },
+  {
+    label: 'MISSION 56: event taxonomy categories',
+    args: ['vitest', 'run', 'tests/simulation/chanceEngine.test.ts', '-t', 'football event taxonomy']
+  },
+  {
+    label: 'MISSION 57: commentary pack coverage',
+    args: ['vitest', 'run', 'tests/simulation/commentaryPacks.test.ts', '-t', 'broad template coverage']
+  },
+  {
+    label: 'MISSION 58: commentary pack deterministic text',
+    args: ['vitest', 'run', 'tests/simulation/commentaryPacks.test.ts', '-t', 'same chance deterministically']
+  },
+  {
+    label: 'MISSION 59: commentary pack category variation',
+    args: ['vitest', 'run', 'tests/simulation/commentaryPacks.test.ts', '-t', 'varies repeated chance text']
+  },
+  {
+    label: 'MISSION 60: API categorized chance metadata',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'categorized chance metadata']
   }
 ];
 
