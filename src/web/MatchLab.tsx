@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useMemo, useState } from 'react';
+import { createFormationPreview, type FormationPreview } from './formationPreview';
 import { createMatchResultViewModel } from './matchResultViewModel';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
@@ -43,6 +44,8 @@ export function MatchLab() {
   const [isLoading, setIsLoading] = useState(false);
 
   const viewModel = useMemo(() => (result ? createMatchResultViewModel(result) : null), [result]);
+  const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation), [homeFormation]);
+  const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation), [awayFormation]);
 
   async function runSimulation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -121,6 +124,11 @@ export function MatchLab() {
         <button type="submit" disabled={isLoading}>{isLoading ? 'Simulating...' : 'Run match'}</button>
       </form>
 
+      <section className="panel formation-grid">
+        <FormationPreviewCard title="Home shape" preview={homeFormationPreview} />
+        <FormationPreviewCard title="Away shape" preview={awayFormationPreview} />
+      </section>
+
       {error ? <section className="panel error">{error}</section> : null}
 
       {viewModel ? (
@@ -158,6 +166,26 @@ function Select<T extends string>({ label, value, values, onChange }: { label: s
         {values.map((option) => <option key={option} value={option}>{option}</option>)}
       </select>
     </label>
+  );
+}
+
+function FormationPreviewCard({ title, preview }: { title: string; preview: FormationPreview }) {
+  return (
+    <article className="formation-card">
+      <div>
+        <p className="eyebrow">{title}</p>
+        <h2>{preview.title}</h2>
+        <p>{preview.summary}</p>
+      </div>
+      <div className="formation-lines" aria-label={`${title} tactical lines`}>
+        {preview.lines.map((line) => (
+          <div className="formation-line" key={line.label}>
+            <span>{line.label}</span>
+            <strong>{line.slots.join(' · ')}</strong>
+          </div>
+        ))}
+      </div>
+    </article>
   );
 }
 

@@ -59,4 +59,23 @@ describe('simulateMatch production contract', () => {
     expect(result.report.diagnostics.length).toBeGreaterThan(0);
     expect(result.report.diagnostics.join(' | ')).toMatch(/familiarity|attributes|movement|WIB|WOB|transition/i);
   });
+
+  it('formation geometry changes movement load and transition profile', () => {
+    const playerIds = Array.from({ length: 11 }, (_unused, index) => `home-p${index + 1}`);
+    const classic = simulateMatch(
+      createSampleMatchInput({
+        seed: 72,
+        homeTactic: createSampleTacticBook({ formation: '4-1-3-2', movement: 'balanced', playerIds })
+      })
+    );
+    const cautious = simulateMatch(
+      createSampleMatchInput({
+        seed: 72,
+        homeTactic: createSampleTacticBook({ formation: '5-3-2', movement: 'balanced', playerIds })
+      })
+    );
+
+    expect(classic.stats.home.movementLoad).not.toBe(cautious.stats.home.movementLoad);
+    expect(classic.stats.home.transitionDelay).not.toBe(cautious.stats.home.transitionDelay);
+  });
 });

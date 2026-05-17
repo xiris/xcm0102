@@ -19,10 +19,12 @@ Documentation map:
 - 12-production-api-contract.md — first Fastify API boundary around the simulation package.
 - 13-production-web-contract.md — first browser-visible Next.js match lab vertical slice.
 - 14-production-tactics-contract.md — first browser/API tactical editor contract.
+- 15-production-formation-geometry-contract.md — formation slot geometry and shape-driven WIB/WOB map contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
 - plans/2026-05-16-tactical-editor-foundation.md — implementation plan for the first tactical editor foundation.
+- plans/2026-05-17-formation-geometry-foundation.md — implementation plan for formation slot geometry and preview foundation.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

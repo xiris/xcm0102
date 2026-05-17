@@ -122,10 +122,49 @@ th:not(:first-child), td:not(:first-child) {
   text-align: right;
 }
 
-.grid {
+.grid,
+.formation-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
+}
+
+.formation-card {
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.formation-card h2 {
+  margin-bottom: 8px;
+}
+
+.formation-card p:not(.eyebrow) {
+  color: var(--muted);
+}
+
+.formation-lines {
+  display: grid;
+  gap: 8px;
+}
+
+.formation-line {
+  align-items: center;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 8px;
+}
+
+.formation-line span {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.formation-line strong {
+  text-align: right;
 }
 
 ul {

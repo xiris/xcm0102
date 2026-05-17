@@ -12,6 +12,7 @@ import type {
   TransitionStyle,
   WibWobMap
 } from './domain';
+import { getFormationGeometry } from './formationGeometry';
 
 export type TeamQuality = 'weak' | 'average' | 'strong';
 export type MovementStyle = 'compact' | 'balanced' | 'extreme';
@@ -105,27 +106,33 @@ export function createSampleTeam(options: TeamOptions = {}): Team {
   };
 }
 
-function pointFor(style: MovementStyle, phase: 'wib' | 'wob', index: number): PitchPoint {
-  const lane = 20 + (index % 5) * 15;
-  const row = 20 + Math.floor(index / 5) * 20;
+function pointFor(base: PitchPoint, style: MovementStyle, phase: 'wib' | 'wob', zone: 'DEF_CENTER' | 'MID_CENTER' | 'ATT_CENTER', index: number): PitchPoint {
+  const zonePush = zone === 'DEF_CENTER' ? -8 : zone === 'ATT_CENTER' ? 10 : 0;
+  const phasePush = phase === 'wib' ? 8 : -8;
+  const compactness = style === 'compact' ? 0.45 : style === 'extreme' ? 1.65 : 1;
+  const horizontal = (phasePush + zonePush) * compactness;
+  const vertical = (base.y - 50) * (style === 'compact' ? -0.12 : style === 'extreme' ? 0.28 : 0.05);
+  const alternatingRun = style === 'extreme' ? (index % 2 === 0 ? 5 : -5) : 0;
 
-  if (style === 'compact') {
-    return phase === 'wib' ? { x: 58 + (index % 3) * 3, y: 42 + (index % 4) * 4 } : { x: 43 + (index % 3) * 3, y: 42 + (index % 4) * 4 };
-  }
-
-  if (style === 'extreme') {
-    return phase === 'wib' ? { x: 82 + (index % 2) * 8, y: lane } : { x: 18 - (index % 2) * 8, y: 100 - lane };
-  }
-
-  return phase === 'wib' ? { x: 50 + row / 4, y: lane } : { x: 42 - row / 8, y: 100 - lane };
+  return {
+    x: Math.max(2, Math.min(98, Math.round((base.x + horizontal) * 10) / 10)),
+    y: Math.max(2, Math.min(98, Math.round((base.y + vertical + alternatingRun) * 10) / 10))
+  };
 }
 
-function createMap(style: MovementStyle, phase: 'wib' | 'wob', playerIds: string[]): WibWobMap {
+function createMap(formation: Formation, style: MovementStyle, phase: 'wib' | 'wob', playerIds: string[]): WibWobMap {
   const zones = ['DEF_CENTER', 'MID_CENTER', 'ATT_CENTER'] as const;
   const map: WibWobMap = {};
+  const slots = getFormationGeometry(formation).slots;
 
   for (const zone of zones) {
-    map[zone] = Object.fromEntries(playerIds.map((id, index) => [id, pointFor(style, phase, index)]));
+    map[zone] = Object.fromEntries(playerIds.map((id, index) => {
+      const slot = slots[index % slots.length];
+      if (!slot) {
+        throw new Error(`Formation ${formation} has no slot for player index ${index}`);
+      }
+      return [id, pointFor(slot.point, style, phase, zone, index)];
+    }));
   }
 
   return map;
@@ -133,17 +140,18 @@ function createMap(style: MovementStyle, phase: 'wib' | 'wob', playerIds: string
 
 export function createSampleTacticBook(options: TacticOptions = {}): TacticBook {
   const movement = options.movement ?? 'balanced';
+  const formation = options.formation ?? '4-4-2';
   const playerIds = options.playerIds ?? Array.from({ length: 11 }, (_unused, index) => `player-${index + 1}`);
   return {
     id: options.id ?? 'sample-tactic',
     name: options.name ?? 'Sample Tactic Book',
-    formation: options.formation ?? '4-4-2',
+    formation,
     mentality: options.mentality ?? 'balanced',
     pressing: options.pressing ?? 'medium',
     transitionStyle: options.transitionStyle ?? 'balanced',
     familiarity: options.familiarity ?? 0.7,
-    wib: createMap(movement, 'wib', playerIds),
-    wob: createMap(movement, 'wob', playerIds)
+    wib: createMap(formation, movement, 'wib', playerIds),
+    wob: createMap(formation, movement, 'wob', playerIds)
   };
 }
 

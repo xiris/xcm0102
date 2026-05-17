@@ -87,7 +87,7 @@ function evaluateTeam(team: Team, tactic: TacticBook): TeamEvaluation {
   const transitionStyleFactor = tactic.transitionStyle === 'fast_break' ? 0.9 : tactic.transitionStyle === 'hold_shape' ? 1.1 : 1;
   const pressingFatigue = tactic.pressing === 'high' ? 10 : tactic.pressing === 'medium' ? 5 : 1;
   const transitionDelay = Math.max(0, load * transitionStyleFactor * (1.25 - execution) * (1.1 - familiarity));
-  const lateArrivals = Math.max(0, Math.round((load / 6) * (1.18 - athletic / 20) * (1.08 - familiarity)));
+  const lateArrivals = Math.max(0, Math.floor((load / 6) * (1.18 - athletic / 20) * (1.08 - familiarity)));
   const fatigue = Math.max(0, load * (1.2 - stamina / 20) + pressingFatigue + lateArrivals * 0.6);
   const mentalityAttack = tactic.mentality === 'attacking' ? 1.22 : tactic.mentality === 'balanced' ? 1 : 0.78;
   const mentalityDefense = tactic.mentality === 'defensive' ? 1.18 : tactic.mentality === 'balanced' ? 1 : 0.84;

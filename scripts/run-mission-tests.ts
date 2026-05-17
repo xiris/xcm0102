@@ -93,6 +93,30 @@ const missions: Mission[] = [
   {
     label: 'MISSION 22: web tactical defaults',
     args: ['vitest', 'run', 'tests/web/tacticalPayload.test.ts', '-t', 'tactical defaults']
+  },
+  {
+    label: 'MISSION 23: formation geometry slots',
+    args: ['vitest', 'run', 'tests/simulation/formationGeometry.test.ts', '-t', 'eleven normalized slots']
+  },
+  {
+    label: 'MISSION 24: formation geometry tactical profiles',
+    args: ['vitest', 'run', 'tests/simulation/formationGeometry.test.ts', '-t', 'deeper and narrower']
+  },
+  {
+    label: 'MISSION 25: formation maps affect WIB/WOB geometry',
+    args: ['vitest', 'run', 'tests/simulation/sampleData.test.ts', '-t', 'formation geometry']
+  },
+  {
+    label: 'MISSION 26: formation geometry impacts simulation',
+    args: ['vitest', 'run', 'tests/simulation/simulateMatch.test.ts', '-t', 'formation geometry']
+  },
+  {
+    label: 'MISSION 27: web formation preview formatting',
+    args: ['vitest', 'run', 'tests/web/formationPreview.test.ts', '-t', 'width and depth labels']
+  },
+  {
+    label: 'MISSION 28: web formation preview tactical lines',
+    args: ['vitest', 'run', 'tests/web/formationPreview.test.ts', '-t', 'tactical line']
   }
 ];
 
