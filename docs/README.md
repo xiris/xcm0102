@@ -30,6 +30,7 @@ Documentation map:
 - 23-production-hydration-warning-noise-contract.md — root body hydration warning suppression for extension-injected attributes.
 - 24-production-bench-substitution-condition-contract.md — historic benches, fatigue/injury risk, and substitution event contract.
 - 25-production-interactive-match-timeline-contract.md — progressive key-event match replay and manager-action pause contract.
+- 26-production-manager-commands-contract.md — interactive replay manager command-history recording contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -44,6 +45,7 @@ Documentation map:
 - plans/2026-05-17-match-event-chains.md — implementation plan for foul/free-kick/corner/offside/card chains and interactive-match roadmap.
 - plans/2026-05-17-bench-substitutions-fatigue-injuries.md — implementation plan for historic benches and condition/substitution events.
 - plans/2026-05-17-interactive-match-timeline.md — implementation plan for progressive key-event replay and manager action pause labels.
+- plans/2026-05-17-manager-commands-interactive-replay.md — implementation plan for recording manager commands during interactive replay.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

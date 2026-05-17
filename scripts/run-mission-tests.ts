@@ -325,6 +325,22 @@ const missions: Mission[] = [
   {
     label: 'MISSION 80: interactive replay web formatting',
     args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'formats minute']
+  },
+  {
+    label: 'MISSION 81: manager command creation',
+    args: ['vitest', 'run', 'tests/simulation/managerCommands.test.ts', '-t', 'creates deterministic']
+  },
+  {
+    label: 'MISSION 82: manager command continue filtering',
+    args: ['vitest', 'run', 'tests/simulation/managerCommands.test.ts', '-t', 'continue-only']
+  },
+  {
+    label: 'MISSION 83: manager command append ordering',
+    args: ['vitest', 'run', 'tests/simulation/managerCommands.test.ts', '-t', 'append']
+  },
+  {
+    label: 'MISSION 84: manager command web formatting',
+    args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'command history']
   }
 ];
 

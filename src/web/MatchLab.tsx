@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { getFormationGeometry } from '../simulation/formationGeometry';
 import { createInteractiveMatchState } from '../simulation/interactiveTimeline';
+import { appendManagerCommand, type ManagerCommand } from '../simulation/managerCommands';
 import {
   createAssignmentState,
   movePlayerToSlot,
@@ -56,12 +57,13 @@ export function MatchLab() {
   const [result, setResult] = useState<WebSimulationResult | null>(null);
   const [isInteractiveReplay, setIsInteractiveReplay] = useState(false);
   const [interactiveMinute, setInteractiveMinute] = useState(0);
+  const [managerCommands, setManagerCommands] = useState<ManagerCommand[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const viewModel = useMemo(() => (result ? createMatchResultViewModel(result) : null), [result]);
   const interactiveState = useMemo(() => (result && isInteractiveReplay ? createInteractiveMatchState(result, { currentMinute: interactiveMinute }) : null), [interactiveMinute, isInteractiveReplay, result]);
-  const interactiveViewModel = useMemo(() => (interactiveState ? createInteractiveReplayViewModel(interactiveState) : null), [interactiveState]);
+  const interactiveViewModel = useMemo(() => (interactiveState ? createInteractiveReplayViewModel(interactiveState, managerCommands) : null), [interactiveState, managerCommands]);
   const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation, homeAssignments), [homeFormation, homeAssignments]);
   const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation, awayAssignments), [awayFormation, awayAssignments]);
   const homePitch = useMemo(() => createPitchAssignmentViewModel(homeAssignments), [homeAssignments]);
@@ -111,11 +113,17 @@ export function MatchLab() {
       setResult(nextResult);
       setIsInteractiveReplay(false);
       setInteractiveMinute(0);
+      setManagerCommands([]);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Simulation request failed');
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function recordManagerAction(action: string) {
+    if (!interactiveState?.pauseEvent) return;
+    setManagerCommands((current) => appendManagerCommand(current, { action, pauseEvent: interactiveState.pauseEvent! }));
   }
 
   return (
@@ -178,7 +186,7 @@ export function MatchLab() {
         <section className="panel result">
           <h2>{interactiveViewModel?.scoreLine ?? viewModel.scoreTitle}</h2>
           <div className="replay-controls">
-            <button type="button" onClick={() => { setIsInteractiveReplay(true); setInteractiveMinute(0); }}>Start interactive replay</button>
+            <button type="button" onClick={() => { setIsInteractiveReplay(true); setInteractiveMinute(0); setManagerCommands([]); }}>Start interactive replay</button>
             <button type="button" disabled={!interactiveState || interactiveState.isComplete} onClick={() => interactiveState ? setInteractiveMinute(interactiveState.currentMinute) : undefined}>
               {interactiveViewModel?.continueLabel ?? 'Continue to next key event'}
             </button>
@@ -188,7 +196,12 @@ export function MatchLab() {
             <div className="interactive-status" aria-label="Interactive replay status">
               <h3>{interactiveViewModel.title}</h3>
               <p>{interactiveViewModel.status}</p>
-              <p><strong>Manager options:</strong> {interactiveViewModel.actions.join(' · ')}</p>
+              <p><strong>Manager options:</strong></p>
+              <div className="replay-controls" aria-label="Manager action buttons">
+                {interactiveViewModel.actions.map((action) => (
+                  <button key={action} type="button" onClick={() => recordManagerAction(action)}>{action}</button>
+                ))}
+              </div>
             </div>
           ) : null}
           <table>
@@ -204,6 +217,7 @@ export function MatchLab() {
 
           <div className="grid">
             <InfoList title={interactiveViewModel ? 'Interactive events' : 'Events'} items={interactiveViewModel?.events ?? viewModel.events} />
+            {interactiveViewModel ? <InfoList title="Manager commands" items={interactiveViewModel.commands.length > 0 ? interactiveViewModel.commands : ['No manager commands recorded yet.']} /> : null}
             <InfoList title="Diagnostics" items={viewModel.diagnostics} />
             <InfoList title="Replay" items={viewModel.replay} />
           </div>

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { createInteractiveReplayViewModel } from '../../src/web/interactiveReplayViewModel';
 import type { InteractiveMatchState } from '../../src/simulation/interactiveTimeline';
+import type { ManagerCommand } from '../../src/simulation/managerCommands';
 
 const state: InteractiveMatchState = {
   currentMinute: 54,
@@ -23,6 +24,7 @@ describe('interactive replay view model', () => {
       status: 'Paused: Vieri is tiring.',
       events: ['1’ Kickoff.', '14’ Home score.', '54’ Vieri is tiring.'],
       actions: ['Prepare substitution', 'Continue'],
+      commands: [],
       continueLabel: 'Continue to next key event'
     });
   });
@@ -33,5 +35,22 @@ describe('interactive replay view model', () => {
     expect(model.title).toBe('Interactive replay · Full time');
     expect(model.status).toBe('Full time.');
     expect(model.continueLabel).toBe('Replay complete');
+  });
+
+  it('formats manager command history as a timeline', () => {
+    const commands: ManagerCommand[] = [
+      {
+        id: 'cmd-054-01-prepare-substitution',
+        minute: 54,
+        action: 'Prepare substitution',
+        eventType: 'fatigue_warning',
+        eventDescription: 'Vieri is tiring.',
+        effectSummary: 'Recorded intent: prepare substitution at 54’.'
+      }
+    ];
+
+    expect(createInteractiveReplayViewModel(state, commands).commands).toEqual([
+      '54’ Prepare substitution — Recorded intent: prepare substitution at 54’.'
+    ]);
   });
 });
