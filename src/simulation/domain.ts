@@ -92,13 +92,19 @@ export type MatchEventType =
   | 'kickoff'
   | 'chance'
   | 'goal'
+  | 'foul'
+  | 'free_kick'
+  | 'corner'
+  | 'offside'
+  | 'yellow_card'
+  | 'red_card'
   | 'transition_delay'
   | 'late_arrival'
   | 'tactical_shift'
   | 'full_time';
 
 export type MatchEventCategory = 'through_ball' | 'counter_attack' | 'cross' | 'long_shot' | 'set_piece';
-export type MatchEventOutcome = 'goal' | 'save' | 'block' | 'miss';
+export type MatchEventOutcome = 'goal' | 'save' | 'block' | 'miss' | 'foul' | 'free_kick' | 'corner' | 'offside' | 'yellow_card' | 'red_card';
 
 export type MatchEvent = {
   minute: number;
@@ -106,6 +112,8 @@ export type MatchEvent = {
   type: MatchEventType;
   category?: MatchEventCategory;
   outcome?: MatchEventOutcome;
+  chainId?: string;
+  sequence?: number;
   description: string;
 };
 

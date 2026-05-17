@@ -148,4 +148,21 @@ describe('simulateMatch production contract', () => {
     expect(result.events.filter((event) => event.type === 'chance' || event.type === 'goal').length).toBeGreaterThan(4);
     expect(new Set(result.events.map((event) => event.description)).size).toBeGreaterThan(5);
   });
+
+  it('emits chained match events with stoppage metadata', () => {
+    const home = createHistoricTeam('home');
+    const away = createHistoricTeam('away');
+    const result = simulateMatch(createSampleMatchInput({
+      seed: 8,
+      home,
+      away,
+      homeTactic: createSampleTacticBook({ id: 'home-chain', pressing: 'high', playerIds: home.players.map((player) => player.id) }),
+      awayTactic: createSampleTacticBook({ id: 'away-chain', pressing: 'high', playerIds: away.players.map((player) => player.id) })
+    }));
+    const chainEvents = result.events.filter((event) => event.chainId);
+
+    expect(chainEvents.length).toBeGreaterThan(4);
+    expect(chainEvents.some((event) => ['foul', 'free_kick', 'corner', 'offside', 'yellow_card', 'red_card'].includes(event.type))).toBe(true);
+    expect(chainEvents.every((event) => typeof event.sequence === 'number')).toBe(true);
+  });
 });

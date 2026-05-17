@@ -245,6 +245,34 @@ const missions: Mission[] = [
   {
     label: 'MISSION 60: API categorized chance metadata',
     args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'categorized chance metadata']
+  },
+  {
+    label: 'MISSION 61: event chain deterministic expansion',
+    args: ['vitest', 'run', 'tests/simulation/eventChains.test.ts', '-t', 'deterministically']
+  },
+  {
+    label: 'MISSION 62: event chain free kick precursor',
+    args: ['vitest', 'run', 'tests/simulation/eventChains.test.ts', '-t', 'foul and free kick']
+  },
+  {
+    label: 'MISSION 63: event chain corner precursor',
+    args: ['vitest', 'run', 'tests/simulation/eventChains.test.ts', '-t', 'corner precursor']
+  },
+  {
+    label: 'MISSION 64: event chain offside replacement',
+    args: ['vitest', 'run', 'tests/simulation/eventChains.test.ts', '-t', 'offside event']
+  },
+  {
+    label: 'MISSION 65: event chain card risk',
+    args: ['vitest', 'run', 'tests/simulation/eventChains.test.ts', '-t', 'card events']
+  },
+  {
+    label: 'MISSION 66: simulation chained event metadata',
+    args: ['vitest', 'run', 'tests/simulation/simulateMatch.test.ts', '-t', 'chained match events']
+  },
+  {
+    label: 'MISSION 67: API event chain metadata',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'event chain metadata']
   }
 ];
 

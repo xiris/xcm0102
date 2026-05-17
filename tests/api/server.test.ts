@@ -169,7 +169,24 @@ describe('production API server', () => {
     const event = response.json().events.find((item: { category?: string; outcome?: string }) => item.category && item.outcome);
     expect(event).toEqual(expect.objectContaining({
       category: expect.stringMatching(/through_ball|counter_attack|cross|long_shot|set_piece/),
-      outcome: expect.stringMatching(/goal|save|block|miss/),
+      outcome: expect.stringMatching(/goal|save|block|miss|foul|free_kick|corner|offside|yellow_card|red_card/),
+      description: expect.any(String)
+    }));
+  });
+
+  it('simulate match endpoint exposes event chain metadata', async () => {
+    const server = buildServer();
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/simulate-match',
+      payload: { seed: 8, homePressing: 'high', awayPressing: 'high' }
+    });
+
+    expect(response.statusCode).toBe(200);
+    const chainEvent = response.json().events.find((item: { chainId?: string; sequence?: number; type: string }) => item.chainId && ['foul', 'free_kick', 'corner', 'offside', 'yellow_card', 'red_card'].includes(item.type));
+    expect(chainEvent).toEqual(expect.objectContaining({
+      chainId: expect.any(String),
+      sequence: expect.any(Number),
       description: expect.any(String)
     }));
   });

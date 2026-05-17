@@ -26,6 +26,7 @@ Documentation map:
 - 19-production-historic-player-data-contract.md — shared Inter/Milan 2002 player names, positions, and era-inspired attributes contract.
 - 20-production-chance-quality-commentary-contract.md — deterministic per-chance goal resolution and varied match text contract.
 - 21-production-event-taxonomy-commentary-packs.md — structured event categories and CM-style commentary pack contract.
+- 22-production-match-event-chains-contract.md — foul/free-kick/corner/offside/card chain contract and interactive-match roadmap.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -37,6 +38,7 @@ Documentation map:
 - plans/2026-05-17-historic-player-data-foundation.md — implementation plan for shared historic player data foundation.
 - plans/2026-05-17-chance-quality-commentary-engine.md — implementation plan for per-chance goal resolution and varied commentary.
 - plans/2026-05-17-event-taxonomy-commentary-packs.md — implementation plan for structured event categories and expanded commentary packs.
+- plans/2026-05-17-match-event-chains.md — implementation plan for foul/free-kick/corner/offside/card chains and interactive-match roadmap.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

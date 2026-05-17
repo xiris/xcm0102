@@ -8,6 +8,7 @@ import type {
   WibWobMap
 } from './domain';
 import { resolveTeamChances } from './chanceEngine';
+import { expandChanceEventChains } from './eventChains';
 import { getFormationGeometry } from './formationGeometry';
 import { createSeededRng } from './rng';
 import { summarizeRoleSuitability } from './roleSuitability';
@@ -211,10 +212,15 @@ export function simulateMatch(input: MatchInput): MatchResult {
   homeStats.possession = Math.round((homeEval.attackIntent / totalAttack) * 100);
   awayStats.possession = 100 - homeStats.possession;
 
+  const chainedChanceEvents = expandChanceEventChains([...homeChances.events, ...awayChances.events], {
+    seed: input.seed * 3 + 21,
+    homePressing: input.homeTactic.pressing,
+    awayPressing: input.awayTactic.pressing
+  });
+
   const events: MatchEvent[] = [
     { minute: 1, type: 'kickoff' as const, description: 'The match begins with server-owned deterministic simulation.' },
-    ...homeChances.events,
-    ...awayChances.events,
+    ...chainedChanceEvents,
     {
       minute: 22 + rng.int(0, 16),
       teamId: homeEval.transitionDelay > awayEval.transitionDelay ? input.home.id : input.away.id,

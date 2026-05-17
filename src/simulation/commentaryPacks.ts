@@ -1,13 +1,14 @@
-import type { MatchEventCategory, MatchEventOutcome } from './domain';
+import type { MatchEventCategory } from './domain';
 import type { SeededRng } from './rng';
 import type { ResolvedChance } from './chanceEngine';
 
 export type CommentaryPackId = 'classic_cm';
 
+type ChanceOutcome = ResolvedChance['outcome'];
 type TemplateContext = Omit<ResolvedChance, 'description'>;
 type CommentaryTemplate = (chance: TemplateContext) => string;
 
-type CommentaryTemplateMatrix = Record<MatchEventCategory, Record<MatchEventOutcome, CommentaryTemplate[]>>;
+type CommentaryTemplateMatrix = Record<MatchEventCategory, Record<ChanceOutcome, CommentaryTemplate[]>>;
 
 export type CommentaryPack = {
   id: CommentaryPackId;
