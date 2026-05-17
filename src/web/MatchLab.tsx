@@ -12,6 +12,7 @@ import {
 import { createFormationPreview, type FormationPreview } from './formationPreview';
 import { createMatchResultViewModel } from './matchResultViewModel';
 import { createPitchAssignmentViewModel, type PitchAssignmentViewModel } from './pitchAssignmentViewModel';
+import { createPlayerAttributeCards, type PlayerAttributeCard } from './playerAttributeCards';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
   simulateMatchFromWeb,
@@ -59,6 +60,8 @@ export function MatchLab() {
   const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation, awayAssignments), [awayFormation, awayAssignments]);
   const homePitch = useMemo(() => createPitchAssignmentViewModel(homeAssignments), [homeAssignments]);
   const awayPitch = useMemo(() => createPitchAssignmentViewModel(awayAssignments), [awayAssignments]);
+  const homePlayerCards = useMemo(() => createPlayerAttributeCards(homeAssignments), [homeAssignments]);
+  const awayPlayerCards = useMemo(() => createPlayerAttributeCards(awayAssignments), [awayAssignments]);
   const homeWarnings = useMemo(() => roleMismatchWarnings(homeAssignments), [homeAssignments]);
   const awayWarnings = useMemo(() => roleMismatchWarnings(awayAssignments), [awayAssignments]);
 
@@ -157,8 +160,8 @@ export function MatchLab() {
       </section>
 
       <section className="panel assignment-grid">
-        <AssignmentEditor title="Home assignments" state={homeAssignments} pitch={homePitch} warnings={homeWarnings} onMovePlayer={(playerId, slotId) => setHomeAssignments((current) => movePlayerToSlot(current, playerId, slotId))} />
-        <AssignmentEditor title="Away assignments" state={awayAssignments} pitch={awayPitch} warnings={awayWarnings} onMovePlayer={(playerId, slotId) => setAwayAssignments((current) => movePlayerToSlot(current, playerId, slotId))} />
+        <AssignmentEditor title="Home assignments" state={homeAssignments} pitch={homePitch} playerCards={homePlayerCards} warnings={homeWarnings} onMovePlayer={(playerId, slotId) => setHomeAssignments((current) => movePlayerToSlot(current, playerId, slotId))} />
+        <AssignmentEditor title="Away assignments" state={awayAssignments} pitch={awayPitch} playerCards={awayPlayerCards} warnings={awayWarnings} onMovePlayer={(playerId, slotId) => setAwayAssignments((current) => movePlayerToSlot(current, playerId, slotId))} />
       </section>
 
       {error ? <section className="panel error">{error}</section> : null}
@@ -225,12 +228,14 @@ function AssignmentEditor({
   title,
   state,
   pitch,
+  playerCards,
   warnings,
   onMovePlayer
 }: {
   title: string;
   state: AssignmentState;
   pitch: PitchAssignmentViewModel;
+  playerCards: PlayerAttributeCard[];
   warnings: string[];
   onMovePlayer: (playerId: string, slotId: string) => void;
 }) {
@@ -272,16 +277,29 @@ function AssignmentEditor({
       </div>
 
       <div className="roster-rail" aria-label={`${title} draggable roster`}>
-        {state.players.map((player) => (
+        {playerCards.map((card) => (
           <button
             className="roster-chip"
             draggable
-            key={player.id}
+            key={card.id}
             type="button"
-            onDragStart={(event) => event.dataTransfer.setData('text/plain', player.id)}
+            onDragStart={(event) => event.dataTransfer.setData('text/plain', card.id)}
+            title={card.attributes.join(' · ')}
           >
-            {player.name} <span>{player.position}</span>
+            {card.name} <span>{card.position}</span> <strong>{card.primary}</strong>
           </button>
+        ))}
+      </div>
+
+      <div className="player-card-grid">
+        {playerCards.map((card) => (
+          <div className="player-card" key={card.id}>
+            <div>
+              <strong>{card.name}</strong>
+              <span>{card.position} · {card.primary}</span>
+            </div>
+            <p>{card.attributes.join(' · ')}</p>
+          </div>
         ))}
       </div>
 

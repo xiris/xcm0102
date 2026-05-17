@@ -1,6 +1,7 @@
 import type { Formation, Mentality, Pressing, TransitionStyle } from '../simulation/domain';
 import { getFormationGeometry } from '../simulation/formationGeometry';
-import { createSampleMatchInput, createSampleTacticBook, createSampleTeam, type MovementStyle, type TeamQuality } from '../simulation/sampleData';
+import { createHistoricTeam } from '../simulation/historicSquads';
+import { createSampleMatchInput, createSampleTacticBook, type MovementStyle, type TeamQuality } from '../simulation/sampleData';
 import { simulateMatch } from '../simulation/simulateMatch';
 
 type SimulateMatchRequest = {
@@ -184,8 +185,8 @@ export function simulateMatchForApi(payload: unknown) {
     return { ok: false as const, status: 400, body: { error: parsed.errors.join('; ') } };
   }
 
-  const home = createSampleTeam({ id: 'home', name: 'Home XI', quality: parsed.value.homeQuality });
-  const away = createSampleTeam({ id: 'away', name: 'Away XI', quality: parsed.value.awayQuality });
+  const home = createHistoricTeam('home');
+  const away = createHistoricTeam('away');
   const result = simulateMatch(
     createSampleMatchInput({
       seed: parsed.value.seed,
@@ -220,6 +221,7 @@ export function simulateMatchForApi(payload: unknown) {
     ok: true as const,
     status: 200,
     body: {
+      teams: { home, away },
       score: result.score,
       stats: result.stats,
       events: result.events,

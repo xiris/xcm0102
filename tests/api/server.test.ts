@@ -130,6 +130,33 @@ describe('production API server', () => {
     expect(response.json().error).toMatch(/homeFormation|homeMentality|awayPressing|awayTransitionStyle/);
   });
 
+  it('simulate match endpoint exposes historic team metadata and player attributes', async () => {
+    const server = buildServer();
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/simulate-match',
+      payload: { seed: 7 }
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().teams).toEqual({
+      home: {
+        id: 'home',
+        name: 'Internazionale 2002',
+        players: expect.arrayContaining([
+          expect.objectContaining({ id: 'home-p11', name: 'Christian Vieri', position: 'F', attributes: expect.objectContaining({ finishing: 20 }) })
+        ])
+      },
+      away: {
+        id: 'away',
+        name: 'Milan 2002',
+        players: expect.arrayContaining([
+          expect.objectContaining({ id: 'away-p7', name: 'Andrea Pirlo', position: 'M', attributes: expect.objectContaining({ passing: 20 }) })
+        ])
+      }
+    });
+  });
+
   it('simulate match endpoint accepts explicit slot assignments and applies mismatches', async () => {
     const server = buildServer();
     const response = await server.inject({

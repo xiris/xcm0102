@@ -1,5 +1,6 @@
 import type { Formation, PlayerPosition } from './simulationClient';
 import { getFormationGeometry } from '../simulation/formationGeometry';
+import { createHistoricTeam } from '../simulation/historicSquads';
 import { scoreRoleSuitability } from '../simulation/roleSuitability';
 
 export type AssignmentSide = 'home' | 'away';
@@ -29,58 +30,8 @@ export type AssignmentState = {
   assignments: Record<string, string>;
 };
 
-const inter2002Squad: Array<{ name: string; position: PlayerPosition }> = [
-  { name: 'Francesco Toldo', position: 'GK' },
-  { name: 'Javier Zanetti', position: 'D' },
-  { name: 'Ivan Cordoba', position: 'D' },
-  { name: 'Marco Materazzi', position: 'D' },
-  { name: 'Francesco Coco', position: 'D' },
-  { name: 'Luigi Di Biagio', position: 'DM' },
-  { name: 'Sergio Conceicao', position: 'M' },
-  { name: 'Emre Belozoglu', position: 'M' },
-  { name: 'Alvaro Recoba', position: 'AM' },
-  { name: 'Hernan Crespo', position: 'F' },
-  { name: 'Christian Vieri', position: 'F' }
-];
-
-const milan2002Squad: Array<{ name: string; position: PlayerPosition }> = [
-  { name: 'Dida', position: 'GK' },
-  { name: 'Alessandro Nesta', position: 'D' },
-  { name: 'Paolo Maldini', position: 'D' },
-  { name: 'Alessandro Costacurta', position: 'D' },
-  { name: 'Kakha Kaladze', position: 'D' },
-  { name: 'Gennaro Gattuso', position: 'DM' },
-  { name: 'Andrea Pirlo', position: 'M' },
-  { name: 'Clarence Seedorf', position: 'M' },
-  { name: 'Rui Costa', position: 'AM' },
-  { name: 'Andriy Shevchenko', position: 'F' },
-  { name: 'Filippo Inzaghi', position: 'F' }
-];
-
-const squadsBySide: Record<AssignmentSide, Array<{ name: string; position: PlayerPosition }>> = {
-  home: inter2002Squad,
-  away: milan2002Squad
-};
-const previewAttributes = {
-  pace: 12,
-  acceleration: 12,
-  stamina: 12,
-  positioning: 12,
-  anticipation: 12,
-  teamwork: 12,
-  decisions: 12,
-  finishing: 12,
-  passing: 12,
-  tackling: 12
-};
-
 export function createSamplePlayers(side: AssignmentSide): AssignmentPlayer[] {
-  return squadsBySide[side].map((player, index) => ({
-    id: `${side}-p${index + 1}`,
-    name: player.name,
-    position: player.position,
-    attributes: { ...previewAttributes }
-  }));
+  return createHistoricTeam(side).players;
 }
 
 export function createDefaultAssignments(formation: Formation, players: AssignmentPlayer[]): Record<string, string> {

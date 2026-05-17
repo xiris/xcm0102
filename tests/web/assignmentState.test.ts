@@ -17,6 +17,7 @@ describe('assignment state helpers', () => {
     expect(players).toHaveLength(11);
     expect(players[0]).toEqual({ id: 'home-p1', name: 'Francesco Toldo', position: 'GK', attributes: expect.any(Object) });
     expect(players[10]).toEqual({ id: 'home-p11', name: 'Christian Vieri', position: 'F', attributes: expect.any(Object) });
+    expect(players[10]?.attributes.finishing).toBe(20);
   });
 
   it('uses Milan 2002 names for away sample players', () => {
@@ -24,6 +25,7 @@ describe('assignment state helpers', () => {
 
     expect(players[0]).toEqual({ id: 'away-p1', name: 'Dida', position: 'GK', attributes: expect.any(Object) });
     expect(players[10]).toEqual({ id: 'away-p11', name: 'Filippo Inzaghi', position: 'F', attributes: expect.any(Object) });
+    expect(players[6]?.attributes.passing).toBe(20);
   });
 
   it('assigns every slot in formation order to one player', () => {

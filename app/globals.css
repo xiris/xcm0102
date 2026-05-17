@@ -257,6 +257,44 @@ th:not(:first-child), td:not(:first-child) {
   color: var(--accent);
 }
 
+.roster-chip strong {
+  color: #ffcc66;
+  font-size: 0.72rem;
+  margin-left: 4px;
+}
+
+.player-card-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 16px;
+}
+
+.player-card {
+  background: #10170f;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.player-card div {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.player-card span,
+.player-card p {
+  color: var(--muted);
+  font-size: 0.76rem;
+  margin: 0;
+}
+
+.player-card p {
+  line-height: 1.45;
+  margin-top: 6px;
+}
+
 .assignment-row {
   display: grid;
   grid-template-columns: 64px 1fr;

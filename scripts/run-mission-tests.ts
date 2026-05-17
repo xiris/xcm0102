@@ -185,6 +185,26 @@ const missions: Mission[] = [
   {
     label: 'MISSION 45: pitch mismatch styling',
     args: ['vitest', 'run', 'tests/web/pitchAssignmentViewModel.test.ts', '-t', 'risky mismatches']
+  },
+  {
+    label: 'MISSION 46: historic Inter team fixture',
+    args: ['vitest', 'run', 'tests/simulation/historicSquads.test.ts', '-t', 'Internazionale 2002']
+  },
+  {
+    label: 'MISSION 47: historic Milan team fixture',
+    args: ['vitest', 'run', 'tests/simulation/historicSquads.test.ts', '-t', 'Milan 2002']
+  },
+  {
+    label: 'MISSION 48: historic squad summary',
+    args: ['vitest', 'run', 'tests/simulation/historicSquads.test.ts', '-t', 'summarizes']
+  },
+  {
+    label: 'MISSION 49: browser player attribute cards',
+    args: ['vitest', 'run', 'tests/web/playerAttributeCards.test.ts', '-t', 'key visible attributes']
+  },
+  {
+    label: 'MISSION 50: API historic team metadata',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'historic team metadata']
   }
 ];
 
