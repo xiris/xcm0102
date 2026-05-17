@@ -305,6 +305,26 @@ const missions: Mission[] = [
   {
     label: 'MISSION 75: API condition events',
     args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'condition and substitution']
+  },
+  {
+    label: 'MISSION 76: interactive replay first pause',
+    args: ['vitest', 'run', 'tests/simulation/interactiveTimeline.test.ts', '-t', 'first pause']
+  },
+  {
+    label: 'MISSION 77: interactive replay continues',
+    args: ['vitest', 'run', 'tests/simulation/interactiveTimeline.test.ts', '-t', 'continues']
+  },
+  {
+    label: 'MISSION 78: interactive replay score so far',
+    args: ['vitest', 'run', 'tests/simulation/interactiveTimeline.test.ts', '-t', 'score so far']
+  },
+  {
+    label: 'MISSION 79: interactive replay manager actions',
+    args: ['vitest', 'run', 'tests/simulation/interactiveTimeline.test.ts', '-t', 'manager action']
+  },
+  {
+    label: 'MISSION 80: interactive replay web formatting',
+    args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'formats minute']
   }
 ];
 

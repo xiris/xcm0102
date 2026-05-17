@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useState } from 'react';
 import { getFormationGeometry } from '../simulation/formationGeometry';
+import { createInteractiveMatchState } from '../simulation/interactiveTimeline';
 import {
   createAssignmentState,
   movePlayerToSlot,
@@ -10,6 +11,7 @@ import {
   type AssignmentState
 } from './assignmentState';
 import { createFormationPreview, type FormationPreview } from './formationPreview';
+import { createInteractiveReplayViewModel } from './interactiveReplayViewModel';
 import { createMatchResultViewModel } from './matchResultViewModel';
 import { createPitchAssignmentViewModel, type PitchAssignmentViewModel } from './pitchAssignmentViewModel';
 import { createPlayerAttributeCards, type PlayerAttributeCard } from './playerAttributeCards';
@@ -52,10 +54,14 @@ export function MatchLab() {
   const [homeTransitionStyle, setHomeTransitionStyle] = useState<TransitionStyle>(defaults.homeTransitionStyle);
   const [awayTransitionStyle, setAwayTransitionStyle] = useState<TransitionStyle>(defaults.awayTransitionStyle);
   const [result, setResult] = useState<WebSimulationResult | null>(null);
+  const [isInteractiveReplay, setIsInteractiveReplay] = useState(false);
+  const [interactiveMinute, setInteractiveMinute] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const viewModel = useMemo(() => (result ? createMatchResultViewModel(result) : null), [result]);
+  const interactiveState = useMemo(() => (result && isInteractiveReplay ? createInteractiveMatchState(result, { currentMinute: interactiveMinute }) : null), [interactiveMinute, isInteractiveReplay, result]);
+  const interactiveViewModel = useMemo(() => (interactiveState ? createInteractiveReplayViewModel(interactiveState) : null), [interactiveState]);
   const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation, homeAssignments), [homeFormation, homeAssignments]);
   const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation, awayAssignments), [awayFormation, awayAssignments]);
   const homePitch = useMemo(() => createPitchAssignmentViewModel(homeAssignments), [homeAssignments]);
@@ -103,6 +109,8 @@ export function MatchLab() {
         })
       );
       setResult(nextResult);
+      setIsInteractiveReplay(false);
+      setInteractiveMinute(0);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Simulation request failed');
     } finally {
@@ -168,7 +176,21 @@ export function MatchLab() {
 
       {viewModel ? (
         <section className="panel result">
-          <h2>{viewModel.scoreTitle}</h2>
+          <h2>{interactiveViewModel?.scoreLine ?? viewModel.scoreTitle}</h2>
+          <div className="replay-controls">
+            <button type="button" onClick={() => { setIsInteractiveReplay(true); setInteractiveMinute(0); }}>Start interactive replay</button>
+            <button type="button" disabled={!interactiveState || interactiveState.isComplete} onClick={() => interactiveState ? setInteractiveMinute(interactiveState.currentMinute) : undefined}>
+              {interactiveViewModel?.continueLabel ?? 'Continue to next key event'}
+            </button>
+            <button type="button" onClick={() => setIsInteractiveReplay(false)}>Show full match</button>
+          </div>
+          {interactiveViewModel ? (
+            <div className="interactive-status" aria-label="Interactive replay status">
+              <h3>{interactiveViewModel.title}</h3>
+              <p>{interactiveViewModel.status}</p>
+              <p><strong>Manager options:</strong> {interactiveViewModel.actions.join(' · ')}</p>
+            </div>
+          ) : null}
           <table>
             <thead>
               <tr><th>Stat</th><th>Home</th><th>Away</th></tr>
@@ -181,7 +203,7 @@ export function MatchLab() {
           </table>
 
           <div className="grid">
-            <InfoList title="Events" items={viewModel.events} />
+            <InfoList title={interactiveViewModel ? 'Interactive events' : 'Events'} items={interactiveViewModel?.events ?? viewModel.events} />
             <InfoList title="Diagnostics" items={viewModel.diagnostics} />
             <InfoList title="Replay" items={viewModel.replay} />
           </div>

@@ -1,3 +1,5 @@
+import type { MatchEvent } from '../simulation/domain';
+
 export type WebTeamStats = {
   possession: number;
   shots: number;
@@ -19,12 +21,7 @@ export type WebMatchResult = {
     home: WebTeamStats;
     away: WebTeamStats;
   };
-  events: Array<{
-    minute: number;
-    teamId?: string;
-    type: string;
-    description: string;
-  }>;
+  events: MatchEvent[];
   diagnostics: string[];
   replay: {
     seed: number;
