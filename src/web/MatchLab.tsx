@@ -4,13 +4,14 @@ import { FormEvent, useMemo, useState } from 'react';
 import { getFormationGeometry } from '../simulation/formationGeometry';
 import {
   createAssignmentState,
-  replaceAssignment,
+  movePlayerToSlot,
   resetAssignmentsForFormation,
   roleMismatchWarnings,
   type AssignmentState
 } from './assignmentState';
 import { createFormationPreview, type FormationPreview } from './formationPreview';
 import { createMatchResultViewModel } from './matchResultViewModel';
+import { createPitchAssignmentViewModel, type PitchAssignmentViewModel } from './pitchAssignmentViewModel';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
   simulateMatchFromWeb,
@@ -56,6 +57,8 @@ export function MatchLab() {
   const viewModel = useMemo(() => (result ? createMatchResultViewModel(result) : null), [result]);
   const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation, homeAssignments), [homeFormation, homeAssignments]);
   const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation, awayAssignments), [awayFormation, awayAssignments]);
+  const homePitch = useMemo(() => createPitchAssignmentViewModel(homeAssignments), [homeAssignments]);
+  const awayPitch = useMemo(() => createPitchAssignmentViewModel(awayAssignments), [awayAssignments]);
   const homeWarnings = useMemo(() => roleMismatchWarnings(homeAssignments), [homeAssignments]);
   const awayWarnings = useMemo(() => roleMismatchWarnings(awayAssignments), [awayAssignments]);
 
@@ -154,8 +157,8 @@ export function MatchLab() {
       </section>
 
       <section className="panel assignment-grid">
-        <AssignmentEditor title="Home assignments" state={homeAssignments} warnings={homeWarnings} onChange={(slotId, playerId) => setHomeAssignments((current) => replaceAssignment(current, slotId, playerId))} />
-        <AssignmentEditor title="Away assignments" state={awayAssignments} warnings={awayWarnings} onChange={(slotId, playerId) => setAwayAssignments((current) => replaceAssignment(current, slotId, playerId))} />
+        <AssignmentEditor title="Home assignments" state={homeAssignments} pitch={homePitch} warnings={homeWarnings} onMovePlayer={(playerId, slotId) => setHomeAssignments((current) => movePlayerToSlot(current, playerId, slotId))} />
+        <AssignmentEditor title="Away assignments" state={awayAssignments} pitch={awayPitch} warnings={awayWarnings} onMovePlayer={(playerId, slotId) => setAwayAssignments((current) => movePlayerToSlot(current, playerId, slotId))} />
       </section>
 
       {error ? <section className="panel error">{error}</section> : null}
@@ -218,19 +221,75 @@ function FormationPreviewCard({ title, preview }: { title: string; preview: Form
   );
 }
 
-function AssignmentEditor({ title, state, warnings, onChange }: { title: string; state: AssignmentState; warnings: string[]; onChange: (slotId: string, playerId: string) => void }) {
+function AssignmentEditor({
+  title,
+  state,
+  pitch,
+  warnings,
+  onMovePlayer
+}: {
+  title: string;
+  state: AssignmentState;
+  pitch: PitchAssignmentViewModel;
+  warnings: string[];
+  onMovePlayer: (playerId: string, slotId: string) => void;
+}) {
   const slots = getFormationGeometry(state.formation).slots;
   return (
     <article className="assignment-card">
       <div>
         <p className="eyebrow">{title}</p>
-        <h2>{state.formation}</h2>
+        <h2>{pitch.title}</h2>
       </div>
+
+      <div className="pitch-shell" aria-label={`${title} visual pitch`}>
+        <div className="pitch-board">
+          <div className="pitch-line halfway" />
+          <div className="pitch-box defensive-box" />
+          <div className="pitch-box attacking-box" />
+          {pitch.markers.map((marker) => (
+            <button
+              type="button"
+              className={`pitch-marker suitability-${marker.suitability}`}
+              draggable
+              key={marker.slotId}
+              style={{ left: marker.left, top: marker.top }}
+              onDragStart={(event) => event.dataTransfer.setData('text/plain', marker.playerId)}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={(event) => {
+                event.preventDefault();
+                const playerId = event.dataTransfer.getData('text/plain');
+                if (playerId) onMovePlayer(playerId, marker.slotId);
+              }}
+              title={`Drop a player onto ${marker.label}`}
+            >
+              <span>{marker.label}</span>
+              <strong>{marker.playerName}</strong>
+              <small>{marker.playerPosition}</small>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="roster-rail" aria-label={`${title} draggable roster`}>
+        {state.players.map((player) => (
+          <button
+            className="roster-chip"
+            draggable
+            key={player.id}
+            type="button"
+            onDragStart={(event) => event.dataTransfer.setData('text/plain', player.id)}
+          >
+            {player.name} <span>{player.position}</span>
+          </button>
+        ))}
+      </div>
+
       <div className="assignment-list">
         {slots.map((slot) => (
           <label className="assignment-row" key={slot.id}>
             <span>{slot.label}</span>
-            <select value={state.assignments[slot.id]} onChange={(event) => onChange(slot.id, event.target.value)}>
+            <select value={state.assignments[slot.id]} onChange={(event) => onMovePlayer(event.target.value, slot.id)}>
               {state.players.map((player) => (
                 <option key={player.id} value={player.id}>{player.name} ({player.position})</option>
               ))}

@@ -144,6 +144,117 @@ th:not(:first-child), td:not(:first-child) {
 .assignment-list {
   display: grid;
   gap: 10px;
+  margin-top: 16px;
+}
+
+.pitch-shell {
+  margin: 16px 0;
+}
+
+.pitch-board {
+  aspect-ratio: 0.68;
+  background:
+    linear-gradient(90deg, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #265f26, #123f1d);
+  background-size: 20% 20%, 20% 20%, cover;
+  border: 2px solid rgb(244 242 223 / 0.62);
+  border-radius: 18px;
+  min-height: 520px;
+  overflow: hidden;
+  position: relative;
+}
+
+.pitch-line,
+.pitch-box {
+  border: 1px solid rgb(244 242 223 / 0.42);
+  position: absolute;
+  pointer-events: none;
+}
+
+.halfway {
+  left: 0;
+  right: 0;
+  top: 50%;
+}
+
+.defensive-box {
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  bottom: 0;
+  height: 18%;
+  left: 24%;
+  width: 52%;
+}
+
+.attacking-box {
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  height: 18%;
+  left: 24%;
+  top: 0;
+  width: 52%;
+}
+
+.pitch-marker {
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 0.35);
+  display: grid;
+  gap: 2px;
+  min-width: 112px;
+  padding: 8px 10px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: auto;
+  z-index: 2;
+}
+
+.pitch-marker span,
+.pitch-marker small {
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.pitch-marker strong {
+  font-size: 0.78rem;
+  line-height: 1.1;
+}
+
+.suitability-natural {
+  background: #b5ff5d;
+}
+
+.suitability-acceptable {
+  background: #d6e86f;
+}
+
+.suitability-risky {
+  background: #ffcc66;
+}
+
+.suitability-severe {
+  background: #ff8d7a;
+}
+
+.roster-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.roster-chip {
+  background: #11170f;
+  border-color: var(--line);
+  color: var(--text);
+  font-size: 0.78rem;
+  padding: 8px 10px;
+  width: auto;
+}
+
+.roster-chip span {
+  color: var(--accent);
 }
 
 .assignment-row {

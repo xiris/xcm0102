@@ -161,6 +161,30 @@ const missions: Mission[] = [
   {
     label: 'MISSION 39: API rejects invalid assignments',
     args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'rejects invalid assignment maps']
+  },
+  {
+    label: 'MISSION 40: Inter 2002 sample squad',
+    args: ['vitest', 'run', 'tests/web/assignmentState.test.ts', '-t', 'stable ids and names']
+  },
+  {
+    label: 'MISSION 41: Milan 2002 sample squad',
+    args: ['vitest', 'run', 'tests/web/assignmentState.test.ts', '-t', 'Milan 2002 names']
+  },
+  {
+    label: 'MISSION 42: assignment swap helper',
+    args: ['vitest', 'run', 'tests/web/assignmentState.test.ts', '-t', 'swaps assignments']
+  },
+  {
+    label: 'MISSION 43: assignment move helper',
+    args: ['vitest', 'run', 'tests/web/assignmentState.test.ts', '-t', 'moves a player']
+  },
+  {
+    label: 'MISSION 44: pitch assignment markers',
+    args: ['vitest', 'run', 'tests/web/pitchAssignmentViewModel.test.ts', '-t', 'positioned pitch markers']
+  },
+  {
+    label: 'MISSION 45: pitch mismatch styling',
+    args: ['vitest', 'run', 'tests/web/pitchAssignmentViewModel.test.ts', '-t', 'risky mismatches']
   }
 ];
 

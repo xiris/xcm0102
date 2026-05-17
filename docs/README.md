@@ -22,6 +22,7 @@ Documentation map:
 - 15-production-formation-geometry-contract.md — formation slot geometry and shape-driven WIB/WOB map contract.
 - 16-production-player-assignment-contract.md — slot assignment and role-suitability simulation contract.
 - 17-production-interactive-assignment-contract.md — browser slot dropdown assignment and API validation contract.
+- 18-production-visual-pitch-assignment-contract.md — visual pitch, drag/drop, and Inter/Milan 2002 sample squad assignment contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -29,6 +30,7 @@ Documentation map:
 - plans/2026-05-17-formation-geometry-foundation.md — implementation plan for formation slot geometry and preview foundation.
 - plans/2026-05-17-player-assignment-role-suitability.md — implementation plan for player assignment and role suitability.
 - plans/2026-05-17-interactive-assignment-ui.md — implementation plan for browser slot dropdown assignments.
+- plans/2026-05-17-visual-pitch-drag-drop-assignment.md — implementation plan for visual pitch drag/drop assignment.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

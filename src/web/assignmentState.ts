@@ -29,7 +29,38 @@ export type AssignmentState = {
   assignments: Record<string, string>;
 };
 
-const samplePositions: PlayerPosition[] = ['GK', 'D', 'D', 'D', 'DM', 'M', 'M', 'AM', 'AM', 'F', 'F'];
+const inter2002Squad: Array<{ name: string; position: PlayerPosition }> = [
+  { name: 'Francesco Toldo', position: 'GK' },
+  { name: 'Javier Zanetti', position: 'D' },
+  { name: 'Ivan Cordoba', position: 'D' },
+  { name: 'Marco Materazzi', position: 'D' },
+  { name: 'Francesco Coco', position: 'D' },
+  { name: 'Luigi Di Biagio', position: 'DM' },
+  { name: 'Sergio Conceicao', position: 'M' },
+  { name: 'Emre Belozoglu', position: 'M' },
+  { name: 'Alvaro Recoba', position: 'AM' },
+  { name: 'Hernan Crespo', position: 'F' },
+  { name: 'Christian Vieri', position: 'F' }
+];
+
+const milan2002Squad: Array<{ name: string; position: PlayerPosition }> = [
+  { name: 'Dida', position: 'GK' },
+  { name: 'Alessandro Nesta', position: 'D' },
+  { name: 'Paolo Maldini', position: 'D' },
+  { name: 'Alessandro Costacurta', position: 'D' },
+  { name: 'Kakha Kaladze', position: 'D' },
+  { name: 'Gennaro Gattuso', position: 'DM' },
+  { name: 'Andrea Pirlo', position: 'M' },
+  { name: 'Clarence Seedorf', position: 'M' },
+  { name: 'Rui Costa', position: 'AM' },
+  { name: 'Andriy Shevchenko', position: 'F' },
+  { name: 'Filippo Inzaghi', position: 'F' }
+];
+
+const squadsBySide: Record<AssignmentSide, Array<{ name: string; position: PlayerPosition }>> = {
+  home: inter2002Squad,
+  away: milan2002Squad
+};
 const previewAttributes = {
   pace: 12,
   acceleration: 12,
@@ -44,11 +75,10 @@ const previewAttributes = {
 };
 
 export function createSamplePlayers(side: AssignmentSide): AssignmentPlayer[] {
-  const label = side === 'home' ? 'Home' : 'Away';
-  return samplePositions.map((position, index) => ({
+  return squadsBySide[side].map((player, index) => ({
     id: `${side}-p${index + 1}`,
-    name: `${label} Player ${index + 1}`,
-    position,
+    name: player.name,
+    position: player.position,
     attributes: { ...previewAttributes }
   }));
 }
@@ -81,6 +111,30 @@ export function replaceAssignment(state: AssignmentState, slotId: string, player
       [slotId]: playerId
     }
   };
+}
+
+export function swapAssignments(state: AssignmentState, sourceSlotId: string, targetSlotId: string): AssignmentState {
+  const sourcePlayerId = state.assignments[sourceSlotId];
+  const targetPlayerId = state.assignments[targetSlotId];
+  if (!sourcePlayerId || !targetPlayerId || sourceSlotId === targetSlotId) {
+    return state;
+  }
+  return {
+    ...state,
+    assignments: {
+      ...state.assignments,
+      [sourceSlotId]: targetPlayerId,
+      [targetSlotId]: sourcePlayerId
+    }
+  };
+}
+
+export function movePlayerToSlot(state: AssignmentState, playerId: string, targetSlotId: string): AssignmentState {
+  const sourceSlotId = Object.entries(state.assignments).find(([, assignedPlayerId]) => assignedPlayerId === playerId)?.[0];
+  if (!sourceSlotId) {
+    return replaceAssignment(state, targetSlotId, playerId);
+  }
+  return swapAssignments(state, sourceSlotId, targetSlotId);
 }
 
 export function resetAssignmentsForFormation(state: AssignmentState, formation: Formation): AssignmentState {
