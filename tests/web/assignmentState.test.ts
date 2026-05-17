@@ -14,9 +14,10 @@ describe('assignment state helpers', () => {
   it('creates sample players with stable ids and names', () => {
     const players = createSamplePlayers('home');
 
-    expect(players).toHaveLength(11);
+    expect(players).toHaveLength(16);
     expect(players[0]).toEqual({ id: 'home-p1', name: 'Francesco Toldo', position: 'GK', attributes: expect.any(Object) });
     expect(players[10]).toEqual({ id: 'home-p11', name: 'Christian Vieri', position: 'F', attributes: expect.any(Object) });
+    expect(players[15]).toEqual({ id: 'home-p16', name: 'Okan Buruk', position: 'M', attributes: expect.any(Object) });
     expect(players[10]?.attributes.finishing).toBe(20);
   });
 
@@ -25,6 +26,7 @@ describe('assignment state helpers', () => {
 
     expect(players[0]).toEqual({ id: 'away-p1', name: 'Dida', position: 'GK', attributes: expect.any(Object) });
     expect(players[10]).toEqual({ id: 'away-p11', name: 'Filippo Inzaghi', position: 'F', attributes: expect.any(Object) });
+    expect(players[15]).toEqual({ id: 'away-p16', name: 'Christian Abbiati', position: 'GK', attributes: expect.any(Object) });
     expect(players[6]?.attributes.passing).toBe(20);
   });
 
@@ -33,7 +35,7 @@ describe('assignment state helpers', () => {
     const assignments = createDefaultAssignments('4-1-3-2', players);
 
     expect(Object.keys(assignments)).toEqual(['gk', 'dl', 'dc1', 'dc2', 'dr', 'dm', 'ml', 'mc', 'mr', 'fc1', 'fc2']);
-    expect(Object.values(assignments)).toEqual(players.map((player) => player.id));
+    expect(Object.values(assignments)).toEqual(players.slice(0, 11).map((player) => player.id));
   });
 
   it('replaces a single slot assignment without mutating previous state', () => {

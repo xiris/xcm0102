@@ -6,11 +6,12 @@ describe('historic squad fixtures', () => {
     const team = createHistoricTeam('home');
 
     expect(team.name).toBe('Internazionale 2002');
-    expect(team.players).toHaveLength(11);
+    expect(team.players.length).toBeGreaterThanOrEqual(16);
     expect(team.players[0]).toMatchObject({ id: 'home-p1', name: 'Francesco Toldo', position: 'GK' });
     expect(team.players[10]).toMatchObject({ id: 'home-p11', name: 'Christian Vieri', position: 'F' });
     expect(team.players[10]?.attributes.finishing).toBeGreaterThan(team.players[10]?.attributes.tackling ?? 0);
-    expect(new Set(team.players.map((player) => player.id)).size).toBe(11);
+    expect(team.players.map((player) => player.name)).toEqual(expect.arrayContaining(['Mohamed Kallon', 'Obafemi Martins', 'Guly', 'Nelson Vivas', 'Okan Buruk']));
+    expect(new Set(team.players.map((player) => player.id)).size).toBe(team.players.length);
   });
 
   it('creates Milan 2002 with stable away ids and distinctive attributes', () => {
@@ -21,12 +22,14 @@ describe('historic squad fixtures', () => {
     expect(team.players[6]).toMatchObject({ id: 'away-p7', name: 'Andrea Pirlo', position: 'M' });
     expect(team.players[6]?.attributes.passing).toBeGreaterThanOrEqual(18);
     expect(team.players[9]?.name).toBe('Andriy Shevchenko');
+    expect(team.players.length).toBeGreaterThanOrEqual(16);
+    expect(team.players.map((player) => player.name)).toEqual(expect.arrayContaining(['Massimo Ambrosini', 'Serginho', 'Jon Dahl Tomasson', 'Roque Junior', 'Christian Abbiati']));
   });
 
   it('summarizes available sample squads for UI/docs metadata', () => {
     expect(getHistoricSquadSummary()).toEqual([
-      { side: 'home', teamId: 'home', name: 'Internazionale 2002', playerCount: 11 },
-      { side: 'away', teamId: 'away', name: 'Milan 2002', playerCount: 11 }
+      { side: 'home', teamId: 'home', name: 'Internazionale 2002', playerCount: 16 },
+      { side: 'away', teamId: 'away', name: 'Milan 2002', playerCount: 16 }
     ]);
   });
 });

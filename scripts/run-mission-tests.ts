@@ -277,6 +277,34 @@ const missions: Mission[] = [
   {
     label: 'MISSION 68: root layout hydration warning suppression',
     args: ['vitest', 'run', 'tests/web/rootLayout.test.ts', '-t', 'browser-extension body attribute']
+  },
+  {
+    label: 'MISSION 69: historic Inter bench fixture',
+    args: ['vitest', 'run', 'tests/simulation/historicSquads.test.ts', '-t', 'Internazionale 2002']
+  },
+  {
+    label: 'MISSION 70: historic Milan bench fixture',
+    args: ['vitest', 'run', 'tests/simulation/historicSquads.test.ts', '-t', 'Milan 2002']
+  },
+  {
+    label: 'MISSION 71: condition engine deterministic replay',
+    args: ['vitest', 'run', 'tests/simulation/playerConditionEngine.test.ts', '-t', 'deterministic condition']
+  },
+  {
+    label: 'MISSION 72: condition engine fatigue pressure',
+    args: ['vitest', 'run', 'tests/simulation/playerConditionEngine.test.ts', '-t', 'high pressing']
+  },
+  {
+    label: 'MISSION 73: condition engine substitution recommendation',
+    args: ['vitest', 'run', 'tests/simulation/playerConditionEngine.test.ts', '-t', 'compatible bench']
+  },
+  {
+    label: 'MISSION 74: simulation condition events',
+    args: ['vitest', 'run', 'tests/simulation/simulateMatch.test.ts', '-t', 'condition and substitution']
+  },
+  {
+    label: 'MISSION 75: API condition events',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'condition and substitution']
   }
 ];
 

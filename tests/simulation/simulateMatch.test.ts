@@ -165,4 +165,21 @@ describe('simulateMatch production contract', () => {
     expect(chainEvents.some((event) => ['foul', 'free_kick', 'corner', 'offside', 'yellow_card', 'red_card'].includes(event.type))).toBe(true);
     expect(chainEvents.every((event) => typeof event.sequence === 'number')).toBe(true);
   });
+
+  it('emits condition and substitution timeline events', () => {
+    const home = createHistoricTeam('home');
+    const away = createHistoricTeam('away');
+    const result = simulateMatch(createSampleMatchInput({
+      seed: 18,
+      home,
+      away,
+      homeTactic: createSampleTacticBook({ id: 'home-condition', pressing: 'high', movement: 'extreme', playerIds: home.players.slice(0, 11).map((player) => player.id) }),
+      awayTactic: createSampleTacticBook({ id: 'away-condition', pressing: 'high', movement: 'extreme', playerIds: away.players.slice(0, 11).map((player) => player.id) })
+    }));
+    const text = result.events.map((event) => event.description).join(' | ');
+
+    expect(result.events.some((event) => event.type === 'fatigue_warning')).toBe(true);
+    expect(result.events.some((event) => event.type === 'substitution')).toBe(true);
+    expect(text).toMatch(/tiring|struggling|replaces|injury/i);
+  });
 });

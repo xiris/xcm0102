@@ -9,6 +9,7 @@ import type {
 } from './domain';
 import { resolveTeamChances } from './chanceEngine';
 import { expandChanceEventChains } from './eventChains';
+import { evaluatePlayerConditions } from './playerConditionEngine';
 import { getFormationGeometry } from './formationGeometry';
 import { createSeededRng } from './rng';
 import { summarizeRoleSuitability } from './roleSuitability';
@@ -217,10 +218,14 @@ export function simulateMatch(input: MatchInput): MatchResult {
     homePressing: input.homeTactic.pressing,
     awayPressing: input.awayTactic.pressing
   });
+  const homeConditions = evaluatePlayerConditions({ seed: input.seed * 5 + 31, team: input.home, tactic: input.homeTactic, sideLabel: 'Home' });
+  const awayConditions = evaluatePlayerConditions({ seed: input.seed * 5 + 32, team: input.away, tactic: input.awayTactic, sideLabel: 'Away' });
 
   const events: MatchEvent[] = [
     { minute: 1, type: 'kickoff' as const, description: 'The match begins with server-owned deterministic simulation.' },
     ...chainedChanceEvents,
+    ...homeConditions.events,
+    ...awayConditions.events,
     {
       minute: 22 + rng.int(0, 16),
       teamId: homeEval.transitionDelay > awayEval.transitionDelay ? input.home.id : input.away.id,

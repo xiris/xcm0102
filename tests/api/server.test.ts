@@ -191,6 +191,21 @@ describe('production API server', () => {
     }));
   });
 
+  it('simulate match endpoint exposes condition and substitution events', async () => {
+    const server = buildServer();
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/simulate-match',
+      payload: { seed: 18, homePressing: 'high', awayPressing: 'high', homeMovement: 'extreme', awayMovement: 'extreme' }
+    });
+
+    expect(response.statusCode).toBe(200);
+    const events = response.json().events as Array<{ type: string; description: string }>;
+    expect(events.some((event) => event.type === 'fatigue_warning')).toBe(true);
+    expect(events.some((event) => event.type === 'substitution')).toBe(true);
+    expect(events.map((event) => event.description).join(' | ')).toMatch(/tiring|struggling|replaces|injury/i);
+  });
+
   it('simulate match endpoint accepts explicit slot assignments and applies mismatches', async () => {
     const server = buildServer();
     const response = await server.inject({

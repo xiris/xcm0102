@@ -26,7 +26,12 @@ const inter2002: HistoricPlayerSeed[] = [
   { name: 'Emre Belozoglu', position: 'M', attributes: attrs(14, 15, 15, 14, 15, 15, 15, 11, 16, 12) },
   { name: 'Alvaro Recoba', position: 'AM', attributes: attrs(14, 15, 12, 13, 15, 13, 14, 17, 18, 7) },
   { name: 'Hernan Crespo', position: 'F', attributes: attrs(15, 15, 14, 17, 17, 14, 16, 19, 13, 8) },
-  { name: 'Christian Vieri', position: 'F', attributes: attrs(13, 13, 15, 18, 18, 15, 17, 20, 12, 7) }
+  { name: 'Christian Vieri', position: 'F', attributes: attrs(13, 13, 15, 18, 18, 15, 17, 20, 12, 7) },
+  { name: 'Mohamed Kallon', position: 'F', attributes: attrs(17, 17, 14, 15, 15, 13, 13, 16, 12, 8) },
+  { name: 'Obafemi Martins', position: 'F', attributes: attrs(19, 19, 13, 14, 14, 12, 12, 15, 10, 7) },
+  { name: 'Guly', position: 'AM', attributes: attrs(14, 14, 14, 13, 14, 14, 13, 13, 14, 10) },
+  { name: 'Nelson Vivas', position: 'D', attributes: attrs(13, 13, 15, 14, 14, 14, 13, 6, 10, 15) },
+  { name: 'Okan Buruk', position: 'M', attributes: attrs(14, 14, 16, 14, 15, 16, 15, 10, 15, 13) }
 ];
 
 const milan2002: HistoricPlayerSeed[] = [
@@ -40,7 +45,12 @@ const milan2002: HistoricPlayerSeed[] = [
   { name: 'Clarence Seedorf', position: 'M', attributes: attrs(14, 14, 17, 16, 17, 17, 18, 14, 18, 13) },
   { name: 'Rui Costa', position: 'AM', attributes: attrs(12, 13, 13, 15, 18, 15, 18, 14, 20, 8) },
   { name: 'Andriy Shevchenko', position: 'F', attributes: attrs(18, 18, 16, 18, 18, 15, 17, 19, 14, 8) },
-  { name: 'Filippo Inzaghi', position: 'F', attributes: attrs(13, 14, 15, 20, 19, 14, 16, 19, 11, 7) }
+  { name: 'Filippo Inzaghi', position: 'F', attributes: attrs(13, 14, 15, 20, 19, 14, 16, 19, 11, 7) },
+  { name: 'Massimo Ambrosini', position: 'DM', attributes: attrs(12, 12, 17, 16, 16, 17, 15, 8, 14, 17) },
+  { name: 'Serginho', position: 'M', attributes: attrs(18, 18, 14, 13, 14, 15, 14, 11, 16, 10) },
+  { name: 'Jon Dahl Tomasson', position: 'F', attributes: attrs(14, 14, 15, 17, 17, 15, 16, 17, 13, 8) },
+  { name: 'Roque Junior', position: 'D', attributes: attrs(12, 12, 15, 15, 15, 14, 13, 7, 11, 16) },
+  { name: 'Christian Abbiati', position: 'GK', attributes: attrs(10, 11, 14, 16, 16, 14, 15, 5, 8, 7) }
 ];
 
 const teams: Record<HistoricSide, { teamId: string; name: string; players: HistoricPlayerSeed[] }> = {
