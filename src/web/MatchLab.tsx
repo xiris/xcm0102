@@ -1,7 +1,8 @@
 'use client';
 
 import { FormEvent, useMemo, useState } from 'react';
-import { createFormationPreview, type FormationPreview } from './formationPreview';
+import { getFormationGeometry } from '../simulation/formationGeometry';
+import { createFormationPreview, type FormationPreview, type FormationPreviewOptions } from './formationPreview';
 import { createMatchResultViewModel } from './matchResultViewModel';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
@@ -44,8 +45,10 @@ export function MatchLab() {
   const [isLoading, setIsLoading] = useState(false);
 
   const viewModel = useMemo(() => (result ? createMatchResultViewModel(result) : null), [result]);
-  const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation), [homeFormation]);
-  const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation), [awayFormation]);
+  const homePreviewContext = useMemo(() => createPreviewContext('home', homeFormation), [homeFormation]);
+  const awayPreviewContext = useMemo(() => createPreviewContext('away', awayFormation), [awayFormation]);
+  const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation, homePreviewContext), [homeFormation, homePreviewContext]);
+  const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation, awayPreviewContext), [awayFormation, awayPreviewContext]);
 
   async function runSimulation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -156,6 +159,13 @@ export function MatchLab() {
       )}
     </main>
   );
+}
+
+function createPreviewContext(side: 'home' | 'away', formation: Formation): FormationPreviewOptions {
+  const prefix = side === 'home' ? 'Home' : 'Away';
+  const players = Array.from({ length: 11 }, (_unused, index) => ({ id: `${side}-p${index + 1}`, name: `${prefix} Player ${index + 1}` }));
+  const assignments = Object.fromEntries(getFormationGeometry(formation).slots.map((slot, index) => [slot.id, players[index]!.id]));
+  return { players, assignments };
 }
 
 function Select<T extends string>({ label, value, values, onChange }: { label: string; value: T; values: T[]; onChange: (value: T) => void }) {

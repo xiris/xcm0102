@@ -78,4 +78,32 @@ describe('simulateMatch production contract', () => {
     expect(classic.stats.home.movementLoad).not.toBe(cautious.stats.home.movementLoad);
     expect(classic.stats.home.transitionDelay).not.toBe(cautious.stats.home.transitionDelay);
   });
+
+  it('role mismatches reduce execution and add diagnostics', () => {
+    const home = createSampleTeam({ id: 'home', quality: 'average' });
+    const natural = simulateMatch(
+      createSampleMatchInput({
+        seed: 91,
+        home,
+        homeTactic: createSampleTacticBook({
+          formation: '4-4-2',
+          playerIds: home.players.map((player) => player.id)
+        })
+      })
+    );
+    const mismatched = simulateMatch(
+      createSampleMatchInput({
+        seed: 91,
+        home,
+        homeTactic: createSampleTacticBook({
+          formation: '4-4-2',
+          playerIds: home.players.map((player) => player.id),
+          assignments: { gk: home.players[10]!.id, fc1: home.players[0]!.id }
+        })
+      })
+    );
+
+    expect(mismatched.stats.home.execution).toBeLessThan(natural.stats.home.execution);
+    expect(mismatched.report.diagnostics.join(' | ')).toMatch(/role mismatch|playing/i);
+  });
 });

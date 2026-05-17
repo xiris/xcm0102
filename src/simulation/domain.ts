@@ -57,6 +57,7 @@ export type TacticBook = {
   pressing: Pressing;
   transitionStyle: TransitionStyle;
   familiarity: number;
+  assignments: Record<string, string>;
   wib: WibWobMap;
   wob: WibWobMap;
 };

@@ -117,6 +117,30 @@ const missions: Mission[] = [
   {
     label: 'MISSION 28: web formation preview tactical lines',
     args: ['vitest', 'run', 'tests/web/formationPreview.test.ts', '-t', 'tactical line']
+  },
+  {
+    label: 'MISSION 29: role suitability scoring',
+    args: ['vitest', 'run', 'tests/simulation/roleSuitability.test.ts', '-t', 'natural role matches']
+  },
+  {
+    label: 'MISSION 30: role suitability mismatch summary',
+    args: ['vitest', 'run', 'tests/simulation/roleSuitability.test.ts', '-t', 'summarizes average suitability']
+  },
+  {
+    label: 'MISSION 31: tactic assignments use real players',
+    args: ['vitest', 'run', 'tests/simulation/sampleData.test.ts', '-t', 'assigns each formation slot']
+  },
+  {
+    label: 'MISSION 32: manual tactic assignments preserved',
+    args: ['vitest', 'run', 'tests/simulation/sampleData.test.ts', '-t', 'preserves manual tactic assignments']
+  },
+  {
+    label: 'MISSION 33: role mismatch affects simulation',
+    args: ['vitest', 'run', 'tests/simulation/simulateMatch.test.ts', '-t', 'role mismatches reduce execution']
+  },
+  {
+    label: 'MISSION 34: web assignment preview labels',
+    args: ['vitest', 'run', 'tests/web/formationPreview.test.ts', '-t', 'assigned player names']
   }
 ];
 

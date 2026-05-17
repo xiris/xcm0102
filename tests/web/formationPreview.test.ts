@@ -21,4 +21,17 @@ describe('formation preview', () => {
       { label: 'F', slots: ['FC', 'FC'] }
     ]);
   });
+
+  it('includes assigned player names in slot labels when supplied', () => {
+    const preview = createFormationPreview('4-4-2', {
+      assignments: { gk: 'home-p1', fc1: 'home-p10' },
+      players: [
+        { id: 'home-p1', name: 'Safe Keeper' },
+        { id: 'home-p10', name: 'Sharp Striker' }
+      ]
+    });
+
+    expect(preview.lines[0]!.slots).toEqual(['GK — Safe Keeper']);
+    expect(preview.lines.at(-1)!.slots[0]).toBe('FC — Sharp Striker');
+  });
 });

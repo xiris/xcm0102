@@ -36,4 +36,24 @@ describe('sample data builders', () => {
 
     expect(averageRecoveryDistance(compact)).toBeLessThan(averageRecoveryDistance(extreme));
   });
+
+  it('assigns each formation slot to a real player id', () => {
+    const input = createSampleMatchInput({ seed: 1 });
+    const homeIds = new Set(input.home.players.map((player) => player.id));
+
+    expect(Object.keys(input.homeTactic.assignments)).toHaveLength(11);
+    expect(Object.values(input.homeTactic.assignments).every((playerId) => homeIds.has(playerId))).toBe(true);
+  });
+
+  it('preserves manual tactic assignments', () => {
+    const playerIds = Array.from({ length: 11 }, (_unused, index) => `p${index + 1}`);
+    const tactic = createSampleTacticBook({
+      formation: '4-4-2',
+      playerIds,
+      assignments: { gk: 'p11', fc1: 'p1' }
+    });
+
+    expect(tactic.assignments.gk).toBe('p11');
+    expect(tactic.assignments.fc1).toBe('p1');
+  });
 });

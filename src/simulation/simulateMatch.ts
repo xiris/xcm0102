@@ -7,7 +7,9 @@ import type {
   TacticBook,
   WibWobMap
 } from './domain';
+import { getFormationGeometry } from './formationGeometry';
 import { createSeededRng } from './rng';
+import { summarizeRoleSuitability } from './roleSuitability';
 
 const ENGINE_VERSION = 'production-sim-foundation-0.1.0';
 
@@ -19,6 +21,8 @@ type TeamEvaluation = {
   fatigue: number;
   attackIntent: number;
   defensiveControl: number;
+  roleSuitability: number;
+  roleMismatches: string[];
 };
 
 function average(values: number[]): number {
@@ -67,6 +71,18 @@ function movementLoad(tactic: TacticBook): number {
   return round(distance(wib, wob) + spread / 3, 3);
 }
 
+function assignedRoleSummary(team: Team, tactic: TacticBook) {
+  const playersById = new Map(team.players.map((player) => [player.id, player]));
+  const slots = getFormationGeometry(tactic.formation).slots;
+  return summarizeRoleSuitability(
+    slots.flatMap((slot) => {
+      const playerId = tactic.assignments[slot.id];
+      const player = playerId ? playersById.get(playerId) : undefined;
+      return player ? [{ player, slotRole: slot.role, slotLabel: slot.label }] : [];
+    })
+  );
+}
+
 function evaluateTeam(team: Team, tactic: TacticBook): TeamEvaluation {
   const athletic = avgAttr(team, ['pace', 'acceleration']);
   const stamina = avgAttr(team, ['stamina']);
@@ -75,11 +91,14 @@ function evaluateTeam(team: Team, tactic: TacticBook): TeamEvaluation {
   const finishing = avgAttr(team, ['finishing']);
   const tackling = avgAttr(team, ['tackling']);
   const familiarity = clamp(tactic.familiarity, 0, 1);
+  const roleSummary = assignedRoleSummary(team, tactic);
+  const roleFactor = 0.72 + roleSummary.average * 0.28;
   const load = movementLoad(tactic);
 
   const execution = clamp(
     (athletic * 0.2 + stamina * 0.15 + defensiveBrain * 0.2 + attackingBrain * 0.25 + finishing * 0.1 + tackling * 0.1) / 20 *
-      (0.65 + familiarity * 0.35),
+      (0.65 + familiarity * 0.35) *
+      roleFactor,
     0.1,
     1
   );
@@ -87,8 +106,8 @@ function evaluateTeam(team: Team, tactic: TacticBook): TeamEvaluation {
   const transitionStyleFactor = tactic.transitionStyle === 'fast_break' ? 0.9 : tactic.transitionStyle === 'hold_shape' ? 1.1 : 1;
   const pressingFatigue = tactic.pressing === 'high' ? 10 : tactic.pressing === 'medium' ? 5 : 1;
   const transitionDelay = Math.max(0, load * transitionStyleFactor * (1.25 - execution) * (1.1 - familiarity));
-  const lateArrivals = Math.max(0, Math.floor((load / 6) * (1.18 - athletic / 20) * (1.08 - familiarity)));
-  const fatigue = Math.max(0, load * (1.2 - stamina / 20) + pressingFatigue + lateArrivals * 0.6);
+  const lateArrivals = Math.max(0, Math.floor((load / 6) * (1.18 - athletic / 20) * (1.08 - familiarity) * (1.05 + (1 - roleSummary.average) * 0.5)));
+  const fatigue = Math.max(0, load * (1.2 - stamina / 20) + pressingFatigue + lateArrivals * 0.6 + (1 - roleSummary.average) * 6);
   const mentalityAttack = tactic.mentality === 'attacking' ? 1.22 : tactic.mentality === 'balanced' ? 1 : 0.78;
   const mentalityDefense = tactic.mentality === 'defensive' ? 1.18 : tactic.mentality === 'balanced' ? 1 : 0.84;
 
@@ -99,7 +118,9 @@ function evaluateTeam(team: Team, tactic: TacticBook): TeamEvaluation {
     lateArrivals,
     fatigue: round(fatigue),
     attackIntent: round(mentalityAttack * (0.6 + execution * 0.8) * (0.8 + attackingBrain / 50)),
-    defensiveControl: round(mentalityDefense * (0.65 + execution * 0.7) * (0.75 + defensiveBrain / 55))
+    defensiveControl: round(mentalityDefense * (0.65 + execution * 0.7) * (0.75 + defensiveBrain / 55)),
+    roleSuitability: roleSummary.average,
+    roleMismatches: roleSummary.mismatches
   };
 }
 
@@ -135,6 +156,9 @@ function diagnostics(side: 'Home' | 'Away', team: Team, tactic: TacticBook, eval
   }
   if (evaluation.lateArrivals > 8) {
     notes.push(`${side} late arrivals opened counter windows`);
+  }
+  if (evaluation.roleMismatches.length > 0) {
+    notes.push(`${side} role mismatch reduced tactical execution: ${evaluation.roleMismatches.slice(0, 3).join(', ')}`);
   }
   if (tactic.pressing === 'high' && evaluation.fatigue > 30) {
     notes.push(`${side} high pressing increased fatigue costs`);

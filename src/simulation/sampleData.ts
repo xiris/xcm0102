@@ -33,6 +33,7 @@ type TacticOptions = {
   familiarity?: number;
   movement?: MovementStyle;
   playerIds?: string[];
+  assignments?: Record<string, string>;
 };
 
 type MatchOptions = {
@@ -138,6 +139,18 @@ function createMap(formation: Formation, style: MovementStyle, phase: 'wib' | 'w
   return map;
 }
 
+function createAssignments(formation: Formation, playerIds: string[], manualAssignments: Record<string, string> = {}): Record<string, string> {
+  const slots = getFormationGeometry(formation).slots;
+  const generated = Object.fromEntries(slots.map((slot, index) => {
+    const playerId = playerIds[index % playerIds.length];
+    if (!playerId) {
+      throw new Error(`Cannot assign ${formation} slot ${slot.id} without a player id`);
+    }
+    return [slot.id, playerId];
+  }));
+  return { ...generated, ...manualAssignments };
+}
+
 export function createSampleTacticBook(options: TacticOptions = {}): TacticBook {
   const movement = options.movement ?? 'balanced';
   const formation = options.formation ?? '4-4-2';
@@ -150,6 +163,7 @@ export function createSampleTacticBook(options: TacticOptions = {}): TacticBook 
     pressing: options.pressing ?? 'medium',
     transitionStyle: options.transitionStyle ?? 'balanced',
     familiarity: options.familiarity ?? 0.7,
+    assignments: createAssignments(formation, playerIds, options.assignments),
     wib: createMap(formation, movement, 'wib', playerIds),
     wob: createMap(formation, movement, 'wob', playerIds)
   };
