@@ -341,6 +341,30 @@ const missions: Mission[] = [
   {
     label: 'MISSION 84: manager command web formatting',
     args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'command history']
+  },
+  {
+    label: 'MISSION 85: command effects neutral state',
+    args: ['vitest', 'run', 'tests/simulation/commandEffects.test.ts', '-t', 'neutral']
+  },
+  {
+    label: 'MISSION 86: command effects fatigue relief',
+    args: ['vitest', 'run', 'tests/simulation/commandEffects.test.ts', '-t', 'fatigue relief']
+  },
+  {
+    label: 'MISSION 87: command effects tactical pressure',
+    args: ['vitest', 'run', 'tests/simulation/commandEffects.test.ts', '-t', 'tactical pressure']
+  },
+  {
+    label: 'MISSION 88: command effects defensive risk',
+    args: ['vitest', 'run', 'tests/simulation/commandEffects.test.ts', '-t', 'defensive-line']
+  },
+  {
+    label: 'MISSION 89: command effects substitution intent',
+    args: ['vitest', 'run', 'tests/simulation/commandEffects.test.ts', '-t', 'substitution intent']
+  },
+  {
+    label: 'MISSION 90: command effects web formatting',
+    args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'projected command effects']
   }
 ];
 

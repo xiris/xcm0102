@@ -218,6 +218,7 @@ export function MatchLab() {
           <div className="grid">
             <InfoList title={interactiveViewModel ? 'Interactive events' : 'Events'} items={interactiveViewModel?.events ?? viewModel.events} />
             {interactiveViewModel ? <InfoList title="Manager commands" items={interactiveViewModel.commands.length > 0 ? interactiveViewModel.commands : ['No manager commands recorded yet.']} /> : null}
+            {interactiveViewModel ? <InfoList title="Command effects" items={interactiveViewModel.effects} /> : null}
             <InfoList title="Diagnostics" items={viewModel.diagnostics} />
             <InfoList title="Replay" items={viewModel.replay} />
           </div>

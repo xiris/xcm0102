@@ -25,6 +25,10 @@ describe('interactive replay view model', () => {
       events: ['1’ Kickoff.', '14’ Home score.', '54’ Vieri is tiring.'],
       actions: ['Prepare substitution', 'Continue'],
       commands: [],
+      effects: [
+        'No outcome-affecting manager commands recorded yet.',
+        'Projected state: pressing 0 · mentality 0 · fatigue relief +0 · defensive risk 0 · substitution intent 0'
+      ],
       continueLabel: 'Continue to next key event'
     });
   });
@@ -51,6 +55,24 @@ describe('interactive replay view model', () => {
 
     expect(createInteractiveReplayViewModel(state, commands).commands).toEqual([
       '54’ Prepare substitution — Recorded intent: prepare substitution at 54’.'
+    ]);
+  });
+
+  it('formats projected command effects as replay diagnostics', () => {
+    const commands: ManagerCommand[] = [
+      {
+        id: 'cmd-054-01-lower-tempo-pressing',
+        minute: 54,
+        action: 'Lower tempo/pressing',
+        eventType: 'fatigue_warning',
+        eventDescription: 'Vieri is tiring.',
+        effectSummary: 'Recorded intent: lower tempo/pressing at 54’.'
+      }
+    ];
+
+    expect(createInteractiveReplayViewModel(state, commands).effects).toEqual([
+      '54’ Lower tempo/pressing reduced pressing load and fatigue pressure.',
+      'Projected state: pressing -1 · mentality 0 · fatigue relief +2 · defensive risk 0 · substitution intent 0'
     ]);
   });
 });
