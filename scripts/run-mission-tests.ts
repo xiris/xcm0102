@@ -205,6 +205,26 @@ const missions: Mission[] = [
   {
     label: 'MISSION 50: API historic team metadata',
     args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'historic team metadata']
+  },
+  {
+    label: 'MISSION 51: chance engine deterministic replay',
+    args: ['vitest', 'run', 'tests/simulation/chanceEngine.test.ts', '-t', 'same chances']
+  },
+  {
+    label: 'MISSION 52: chance engine finishing influence',
+    args: ['vitest', 'run', 'tests/simulation/chanceEngine.test.ts', '-t', 'elite finishing']
+  },
+  {
+    label: 'MISSION 53: chance engine commentary variation',
+    args: ['vitest', 'run', 'tests/simulation/chanceEngine.test.ts', '-t', 'varied non-robotic']
+  },
+  {
+    label: 'MISSION 54: simulation score variation',
+    args: ['vitest', 'run', 'tests/simulation/simulateMatch.test.ts', '-t', 'chance resolution']
+  },
+  {
+    label: 'MISSION 55: simulation player commentary',
+    args: ['vitest', 'run', 'tests/simulation/simulateMatch.test.ts', '-t', 'player-named varied']
   }
 ];
 

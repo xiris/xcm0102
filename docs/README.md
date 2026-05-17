@@ -24,6 +24,7 @@ Documentation map:
 - 17-production-interactive-assignment-contract.md — browser slot dropdown assignment and API validation contract.
 - 18-production-visual-pitch-assignment-contract.md — visual pitch, drag/drop, and Inter/Milan 2002 sample squad assignment contract.
 - 19-production-historic-player-data-contract.md — shared Inter/Milan 2002 player names, positions, and era-inspired attributes contract.
+- 20-production-chance-quality-commentary-contract.md — deterministic per-chance goal resolution and varied match text contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -33,6 +34,7 @@ Documentation map:
 - plans/2026-05-17-interactive-assignment-ui.md — implementation plan for browser slot dropdown assignments.
 - plans/2026-05-17-visual-pitch-drag-drop-assignment.md — implementation plan for visual pitch drag/drop assignment.
 - plans/2026-05-17-historic-player-data-foundation.md — implementation plan for shared historic player data foundation.
+- plans/2026-05-17-chance-quality-commentary-engine.md — implementation plan for per-chance goal resolution and varied commentary.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

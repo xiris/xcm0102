@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { simulateMatch } from '../../src/simulation/simulateMatch';
+import { createHistoricTeam } from '../../src/simulation/historicSquads';
 import { createSampleMatchInput, createSampleTacticBook, createSampleTeam } from '../../src/simulation/sampleData';
 
 describe('simulateMatch production contract', () => {
@@ -105,5 +106,46 @@ describe('simulateMatch production contract', () => {
 
     expect(mismatched.stats.home.execution).toBeLessThan(natural.stats.home.execution);
     expect(mismatched.report.diagnostics.join(' | ')).toMatch(/role mismatch|playing/i);
+  });
+
+  it('uses chance resolution so default browser-style scores vary across seeds', () => {
+    const home = createHistoricTeam('home');
+    const away = createHistoricTeam('away');
+    const results = Array.from({ length: 20 }, (_unused, index) => simulateMatch(createSampleMatchInput({
+      seed: index + 1,
+      home,
+      away,
+      homeTactic: createSampleTacticBook({
+        id: 'home-tactic',
+        formation: '4-1-3-2',
+        mentality: 'attacking',
+        pressing: 'high',
+        transitionStyle: 'fast_break',
+        familiarity: 0.8,
+        playerIds: home.players.map((player) => player.id)
+      }),
+      awayTactic: createSampleTacticBook({
+        id: 'away-tactic',
+        formation: '4-4-2',
+        mentality: 'balanced',
+        pressing: 'medium',
+        transitionStyle: 'balanced',
+        familiarity: 0.5,
+        playerIds: away.players.map((player) => player.id)
+      })
+    })).score);
+
+    expect(new Set(results.map((score) => `${score.home}-${score.away}`)).size).toBeGreaterThan(2);
+  });
+
+  it('emits player-named varied chance commentary', () => {
+    const home = createHistoricTeam('home');
+    const away = createHistoricTeam('away');
+    const result = simulateMatch(createSampleMatchInput({ seed: 14, home, away }));
+    const text = result.events.map((event) => event.description).join(' | ');
+
+    expect(text).toMatch(/Vieri|Crespo|Recoba|Pirlo|Shevchenko|Inzaghi|Toldo|Dida/);
+    expect(result.events.filter((event) => event.type === 'chance' || event.type === 'goal').length).toBeGreaterThan(4);
+    expect(new Set(result.events.map((event) => event.description)).size).toBeGreaterThan(5);
   });
 });

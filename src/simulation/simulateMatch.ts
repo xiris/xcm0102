@@ -7,6 +7,7 @@ import type {
   TacticBook,
   WibWobMap
 } from './domain';
+import { resolveTeamChances } from './chanceEngine';
 import { getFormationGeometry } from './formationGeometry';
 import { createSeededRng } from './rng';
 import { summarizeRoleSuitability } from './roleSuitability';
@@ -176,18 +177,44 @@ export function simulateMatch(input: MatchInput): MatchResult {
 
   const homeStats = buildStats(homeEval, awayEval, rng.int(-1, 2));
   const awayStats = buildStats(awayEval, homeEval, rng.int(-1, 2));
+  const homeChances = resolveTeamChances({
+    seed: input.seed * 2 + 11,
+    team: input.home,
+    opponent: input.away,
+    tactic: input.homeTactic,
+    opponentTactic: input.awayTactic,
+    shotTarget: homeStats.shots,
+    attackIntent: homeEval.attackIntent,
+    opponentDefensiveControl: awayEval.defensiveControl,
+    opponentTransitionDelay: awayEval.transitionDelay,
+    opponentLateArrivals: awayEval.lateArrivals
+  });
+  const awayChances = resolveTeamChances({
+    seed: input.seed * 2 + 12,
+    team: input.away,
+    opponent: input.home,
+    tactic: input.awayTactic,
+    opponentTactic: input.homeTactic,
+    shotTarget: awayStats.shots,
+    attackIntent: awayEval.attackIntent,
+    opponentDefensiveControl: homeEval.defensiveControl,
+    opponentTransitionDelay: homeEval.transitionDelay,
+    opponentLateArrivals: homeEval.lateArrivals
+  });
+  homeStats.shots = homeChances.shots;
+  homeStats.shotsOnTarget = homeChances.shotsOnTarget;
+  homeStats.goals = homeChances.goals;
+  awayStats.shots = awayChances.shots;
+  awayStats.shotsOnTarget = awayChances.shotsOnTarget;
+  awayStats.goals = awayChances.goals;
   const totalAttack = Math.max(1, homeEval.attackIntent + awayEval.attackIntent);
   homeStats.possession = Math.round((homeEval.attackIntent / totalAttack) * 100);
   awayStats.possession = 100 - homeStats.possession;
 
   const events: MatchEvent[] = [
     { minute: 1, type: 'kickoff' as const, description: 'The match begins with server-owned deterministic simulation.' },
-    {
-      minute: 12 + rng.int(0, 10),
-      teamId: input.home.id,
-      type: 'chance' as const,
-      description: `${input.home.name} create pressure from ${input.homeTactic.mentality} mentality.`
-    },
+    ...homeChances.events,
+    ...awayChances.events,
     {
       minute: 22 + rng.int(0, 16),
       teamId: homeEval.transitionDelay > awayEval.transitionDelay ? input.home.id : input.away.id,
@@ -196,12 +223,6 @@ export function simulateMatch(input: MatchInput): MatchResult {
     }
   ];
 
-  if (homeStats.goals > 0) {
-    events.push({ minute: 35 + rng.int(0, 20), teamId: input.home.id, type: 'goal', description: `${input.home.name} score after sustained pressure.` });
-  }
-  if (awayStats.goals > 0) {
-    events.push({ minute: 50 + rng.int(0, 25), teamId: input.away.id, type: 'goal', description: `${input.away.name} score after exploiting space.` });
-  }
   if (homeEval.lateArrivals > 0 || awayEval.lateArrivals > 0) {
     events.push({ minute: 70 + rng.int(0, 12), type: 'late_arrival', description: 'Late recovery runs affect second-half structure.' });
   }
