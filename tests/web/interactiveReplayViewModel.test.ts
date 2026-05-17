@@ -23,7 +23,7 @@ describe('interactive replay view model', () => {
       scoreLine: 'Home XI 1 - 0 Away XI',
       status: 'Paused: Vieri is tiring.',
       events: ['1’ Kickoff.', '14’ Home score.', '54’ Vieri is tiring.'],
-      actions: ['Prepare substitution', 'Continue'],
+      actions: ['Prepare substitution'],
       commands: [],
       effects: [
         'No outcome-affecting manager commands recorded yet.',
@@ -31,6 +31,10 @@ describe('interactive replay view model', () => {
       ],
       continueLabel: 'Continue to next key event'
     });
+  });
+
+  it('omits plain Continue from manager action buttons', () => {
+    expect(createInteractiveReplayViewModel(state).actions).toEqual(['Prepare substitution']);
   });
 
   it('formats full-time completion state', () => {

@@ -31,11 +31,20 @@ export function createManagerCommand(input: CreateManagerCommandInput): ManagerC
 }
 
 export function appendManagerCommand(history: ManagerCommand[], input: AppendManagerCommandInput): ManagerCommand[] {
+  if (history.some((command) => isSamePauseAction(command, input))) return history;
+
   const command = createManagerCommand({ ...input, commandIndex: history.length });
   return command ? [...history, command] : history;
 }
 
-function isContinueOnlyAction(action: string): boolean {
+function isSamePauseAction(command: ManagerCommand, input: AppendManagerCommandInput): boolean {
+  return command.minute === input.pauseEvent.minute
+    && command.action === input.action
+    && command.eventType === input.pauseEvent.type
+    && command.eventDescription === input.pauseEvent.description;
+}
+
+export function isContinueOnlyAction(action: string): boolean {
   return action.trim().toLowerCase() === 'continue';
 }
 

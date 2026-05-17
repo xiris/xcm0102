@@ -1,6 +1,6 @@
 import type { InteractiveMatchState } from '../simulation/interactiveTimeline';
 import { projectCommandEffects } from '../simulation/commandEffects';
-import type { ManagerCommand } from '../simulation/managerCommands';
+import { isContinueOnlyAction, type ManagerCommand } from '../simulation/managerCommands';
 
 export type InteractiveReplayViewModel = {
   title: string;
@@ -20,7 +20,7 @@ export function createInteractiveReplayViewModel(state: InteractiveMatchState, c
     scoreLine: `Home XI ${state.scoreSoFar.home} - ${state.scoreSoFar.away} Away XI`,
     status: state.isComplete ? (state.pauseEvent?.description ?? 'Full time.') : `Paused: ${state.pauseEvent?.description ?? 'Waiting for the next key event.'}`,
     events: state.visibleEvents.map((event) => `${event.minute}’ ${event.description}`),
-    actions: state.availableActions,
+    actions: state.availableActions.filter((action) => !isContinueOnlyAction(action)),
     commands: commands.map((command) => `${command.minute}’ ${command.action} — ${command.effectSummary}`),
     effects: formatEffects(effects),
     continueLabel: state.isComplete ? 'Replay complete' : 'Continue to next key event'

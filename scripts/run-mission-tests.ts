@@ -365,6 +365,18 @@ const missions: Mission[] = [
   {
     label: 'MISSION 90: command effects web formatting',
     args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'projected command effects']
+  },
+  {
+    label: 'MISSION 91: manager command duplicate suppression',
+    args: ['vitest', 'run', 'tests/simulation/managerCommands.test.ts', '-t', 'duplicate action']
+  },
+  {
+    label: 'MISSION 92: manager command distinct same-pause actions',
+    args: ['vitest', 'run', 'tests/simulation/managerCommands.test.ts', '-t', 'distinct actions']
+  },
+  {
+    label: 'MISSION 93: manager action continue hidden from UI',
+    args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'omits plain Continue']
   }
 ];
 

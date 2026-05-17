@@ -59,9 +59,28 @@ The ID includes:
 - command index, padded to two digits
 - slugified action label
 
+## Duplicate prevention
+
+Repeated clicks on the same action at the same pause event are ignored.
+
+Duplicate identity uses:
+
+- minute
+- action label
+- event type
+- event description
+
+This keeps accidental double-clicks from inflating command history or projected effects while still allowing distinct actions at the same pause.
+
 ## Continue-only actions
 
-The plain `Continue` action is not recorded as a manager command.
+The plain `Continue` action is not recorded as a manager command and is not rendered in the manager-action button group.
+
+Use the dedicated replay navigation button instead:
+
+```text
+Continue to next key event
+```
 
 Reason:
 

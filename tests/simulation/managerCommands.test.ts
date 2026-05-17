@@ -37,4 +37,19 @@ describe('manager commands', () => {
       'cmd-054-02-lower-tempo-pressing'
     ]);
   });
+
+  it('does not append duplicate action records for the same pause event', () => {
+    const first = appendManagerCommand([], { action: 'Prepare substitution', pauseEvent });
+    const duplicate = appendManagerCommand(first, { action: 'Prepare substitution', pauseEvent });
+
+    expect(duplicate).toBe(first);
+    expect(duplicate).toHaveLength(1);
+  });
+
+  it('keeps distinct actions at the same pause event', () => {
+    const first = appendManagerCommand([], { action: 'Prepare substitution', pauseEvent });
+    const second = appendManagerCommand(first, { action: 'Lower tempo/pressing', pauseEvent });
+
+    expect(second).toHaveLength(2);
+  });
 });
