@@ -2,7 +2,14 @@
 
 import { FormEvent, useMemo, useState } from 'react';
 import { getFormationGeometry } from '../simulation/formationGeometry';
-import { createFormationPreview, type FormationPreview, type FormationPreviewOptions } from './formationPreview';
+import {
+  createAssignmentState,
+  replaceAssignment,
+  resetAssignmentsForFormation,
+  roleMismatchWarnings,
+  type AssignmentState
+} from './assignmentState';
+import { createFormationPreview, type FormationPreview } from './formationPreview';
 import { createMatchResultViewModel } from './matchResultViewModel';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
@@ -32,8 +39,10 @@ export function MatchLab() {
   const [awayFamiliarity, setAwayFamiliarity] = useState(defaults.awayFamiliarity);
   const [homeMovement, setHomeMovement] = useState<MovementStyle>(defaults.homeMovement);
   const [awayMovement, setAwayMovement] = useState<MovementStyle>(defaults.awayMovement);
-  const [homeFormation, setHomeFormation] = useState<Formation>(defaults.homeFormation);
-  const [awayFormation, setAwayFormation] = useState<Formation>(defaults.awayFormation);
+  const [homeFormation, setHomeFormationState] = useState<Formation>(defaults.homeFormation);
+  const [awayFormation, setAwayFormationState] = useState<Formation>(defaults.awayFormation);
+  const [homeAssignments, setHomeAssignments] = useState(() => createAssignmentState('home', defaults.homeFormation));
+  const [awayAssignments, setAwayAssignments] = useState(() => createAssignmentState('away', defaults.awayFormation));
   const [homeMentality, setHomeMentality] = useState<Mentality>(defaults.homeMentality);
   const [awayMentality, setAwayMentality] = useState<Mentality>(defaults.awayMentality);
   const [homePressing, setHomePressing] = useState<Pressing>(defaults.homePressing);
@@ -45,10 +54,20 @@ export function MatchLab() {
   const [isLoading, setIsLoading] = useState(false);
 
   const viewModel = useMemo(() => (result ? createMatchResultViewModel(result) : null), [result]);
-  const homePreviewContext = useMemo(() => createPreviewContext('home', homeFormation), [homeFormation]);
-  const awayPreviewContext = useMemo(() => createPreviewContext('away', awayFormation), [awayFormation]);
-  const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation, homePreviewContext), [homeFormation, homePreviewContext]);
-  const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation, awayPreviewContext), [awayFormation, awayPreviewContext]);
+  const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation, homeAssignments), [homeFormation, homeAssignments]);
+  const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation, awayAssignments), [awayFormation, awayAssignments]);
+  const homeWarnings = useMemo(() => roleMismatchWarnings(homeAssignments), [homeAssignments]);
+  const awayWarnings = useMemo(() => roleMismatchWarnings(awayAssignments), [awayAssignments]);
+
+  function setHomeFormation(formation: Formation) {
+    setHomeFormationState(formation);
+    setHomeAssignments((current) => resetAssignmentsForFormation(current, formation));
+  }
+
+  function setAwayFormation(formation: Formation) {
+    setAwayFormationState(formation);
+    setAwayAssignments((current) => resetAssignmentsForFormation(current, formation));
+  }
 
   async function runSimulation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -72,7 +91,9 @@ export function MatchLab() {
           homeTransitionStyle,
           awayTransitionStyle,
           homeMovement,
-          awayMovement
+          awayMovement,
+          homeAssignments: homeAssignments.assignments,
+          awayAssignments: awayAssignments.assignments
         })
       );
       setResult(nextResult);
@@ -132,6 +153,11 @@ export function MatchLab() {
         <FormationPreviewCard title="Away shape" preview={awayFormationPreview} />
       </section>
 
+      <section className="panel assignment-grid">
+        <AssignmentEditor title="Home assignments" state={homeAssignments} warnings={homeWarnings} onChange={(slotId, playerId) => setHomeAssignments((current) => replaceAssignment(current, slotId, playerId))} />
+        <AssignmentEditor title="Away assignments" state={awayAssignments} warnings={awayWarnings} onChange={(slotId, playerId) => setAwayAssignments((current) => replaceAssignment(current, slotId, playerId))} />
+      </section>
+
       {error ? <section className="panel error">{error}</section> : null}
 
       {viewModel ? (
@@ -161,13 +187,6 @@ export function MatchLab() {
   );
 }
 
-function createPreviewContext(side: 'home' | 'away', formation: Formation): FormationPreviewOptions {
-  const prefix = side === 'home' ? 'Home' : 'Away';
-  const players = Array.from({ length: 11 }, (_unused, index) => ({ id: `${side}-p${index + 1}`, name: `${prefix} Player ${index + 1}` }));
-  const assignments = Object.fromEntries(getFormationGeometry(formation).slots.map((slot, index) => [slot.id, players[index]!.id]));
-  return { players, assignments };
-}
-
 function Select<T extends string>({ label, value, values, onChange }: { label: string; value: T; values: T[]; onChange: (value: T) => void }) {
   return (
     <label>
@@ -195,6 +214,35 @@ function FormationPreviewCard({ title, preview }: { title: string; preview: Form
           </div>
         ))}
       </div>
+    </article>
+  );
+}
+
+function AssignmentEditor({ title, state, warnings, onChange }: { title: string; state: AssignmentState; warnings: string[]; onChange: (slotId: string, playerId: string) => void }) {
+  const slots = getFormationGeometry(state.formation).slots;
+  return (
+    <article className="assignment-card">
+      <div>
+        <p className="eyebrow">{title}</p>
+        <h2>{state.formation}</h2>
+      </div>
+      <div className="assignment-list">
+        {slots.map((slot) => (
+          <label className="assignment-row" key={slot.id}>
+            <span>{slot.label}</span>
+            <select value={state.assignments[slot.id]} onChange={(event) => onChange(slot.id, event.target.value)}>
+              {state.players.map((player) => (
+                <option key={player.id} value={player.id}>{player.name} ({player.position})</option>
+              ))}
+            </select>
+          </label>
+        ))}
+      </div>
+      {warnings.length > 0 ? (
+        <ul className="warnings">
+          {warnings.map((warning) => <li key={warning}>{warning}</li>)}
+        </ul>
+      ) : <p className="ok-note">No major role mismatches.</p>}
     </article>
   );
 }

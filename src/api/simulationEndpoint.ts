@@ -1,4 +1,5 @@
 import type { Formation, Mentality, Pressing, TransitionStyle } from '../simulation/domain';
+import { getFormationGeometry } from '../simulation/formationGeometry';
 import { createSampleMatchInput, createSampleTacticBook, createSampleTeam, type MovementStyle, type TeamQuality } from '../simulation/sampleData';
 import { simulateMatch } from '../simulation/simulateMatch';
 
@@ -18,6 +19,8 @@ type SimulateMatchRequest = {
   awayPressing?: unknown;
   homeTransitionStyle?: unknown;
   awayTransitionStyle?: unknown;
+  homeAssignments?: unknown;
+  awayAssignments?: unknown;
 };
 
 const qualities: TeamQuality[] = ['weak', 'average', 'strong'];
@@ -55,6 +58,48 @@ function parseFamiliarity(value: unknown, fallback: number, field: string, error
     return fallback;
   }
   return value;
+}
+
+function parseAssignments(value: unknown, formation: Formation, playerIds: string[], field: string, errors: string[]): Record<string, string> | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    errors.push(`${field} must be an object keyed by formation slot id`);
+    return undefined;
+  }
+
+  const assignments = value as Record<string, unknown>;
+  const requiredSlots = getFormationGeometry(formation).slots.map((slot) => slot.id);
+  const requiredSet = new Set(requiredSlots);
+  const playerSet = new Set(playerIds);
+  const result: Record<string, string> = {};
+
+  for (const slotId of Object.keys(assignments)) {
+    if (!requiredSet.has(slotId)) {
+      errors.push(`${field} has unknown slot ${slotId}`);
+      continue;
+    }
+    const playerId = assignments[slotId];
+    if (typeof playerId !== 'string' || !playerSet.has(playerId)) {
+      errors.push(`${field}.${slotId} must be one of ${playerIds.join(', ')}`);
+      continue;
+    }
+    result[slotId] = playerId;
+  }
+
+  const missing = requiredSlots.filter((slotId) => !(slotId in result));
+  if (missing.length > 0) {
+    errors.push(`${field} missing slot assignments: ${missing.join(', ')}`);
+  }
+
+  const used = Object.values(result);
+  const duplicates = [...new Set(used.filter((playerId, index) => used.indexOf(playerId) !== index))];
+  if (duplicates.length > 0) {
+    errors.push(`${field} has duplicate player assignments: ${duplicates.join(', ')}`);
+  }
+
+  return result;
 }
 
 function parseRequest(payload: unknown) {
@@ -100,6 +145,10 @@ function parseRequest(payload: unknown) {
   const awayPressing = pickOption(body.awayPressing, 'medium', 'awayPressing', pressings, errors);
   const homeTransitionStyle = pickOption(body.homeTransitionStyle, 'balanced', 'homeTransitionStyle', transitionStyles, errors);
   const awayTransitionStyle = pickOption(body.awayTransitionStyle, 'balanced', 'awayTransitionStyle', transitionStyles, errors);
+  const homePlayerIds = Array.from({ length: 11 }, (_unused, index) => `home-p${index + 1}`);
+  const awayPlayerIds = Array.from({ length: 11 }, (_unused, index) => `away-p${index + 1}`);
+  const homeAssignments = parseAssignments(body.homeAssignments, homeFormation, homePlayerIds, 'homeAssignments', errors);
+  const awayAssignments = parseAssignments(body.awayAssignments, awayFormation, awayPlayerIds, 'awayAssignments', errors);
 
   if (errors.length > 0) {
     return { ok: false as const, errors };
@@ -122,7 +171,9 @@ function parseRequest(payload: unknown) {
       homePressing,
       awayPressing,
       homeTransitionStyle,
-      awayTransitionStyle
+      awayTransitionStyle,
+      homeAssignments,
+      awayAssignments
     }
   };
 }
@@ -148,7 +199,8 @@ export function simulateMatchForApi(payload: unknown) {
         transitionStyle: parsed.value.homeTransitionStyle,
         familiarity: parsed.value.homeFamiliarity,
         movement: parsed.value.homeMovement,
-        playerIds: home.players.map((player) => player.id)
+        playerIds: home.players.map((player) => player.id),
+        assignments: parsed.value.homeAssignments
       }),
       awayTactic: createSampleTacticBook({
         id: 'away-tactic',
@@ -158,7 +210,8 @@ export function simulateMatchForApi(payload: unknown) {
         transitionStyle: parsed.value.awayTransitionStyle,
         familiarity: parsed.value.awayFamiliarity,
         movement: parsed.value.awayMovement,
-        playerIds: away.players.map((player) => player.id)
+        playerIds: away.players.map((player) => player.id),
+        assignments: parsed.value.awayAssignments
       })
     })
   );

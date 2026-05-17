@@ -129,4 +129,60 @@ describe('production API server', () => {
     expect(response.statusCode).toBe(400);
     expect(response.json().error).toMatch(/homeFormation|homeMentality|awayPressing|awayTransitionStyle/);
   });
+
+  it('simulate match endpoint accepts explicit slot assignments and applies mismatches', async () => {
+    const server = buildServer();
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/simulate-match',
+      payload: {
+        seed: 91,
+        homeQuality: 'average',
+        homeFormation: '4-4-2',
+        homeAssignments: {
+          gk: 'home-p11',
+          dl: 'home-p2',
+          dc1: 'home-p3',
+          dc2: 'home-p4',
+          dr: 'home-p5',
+          ml: 'home-p6',
+          mc1: 'home-p7',
+          mc2: 'home-p8',
+          mr: 'home-p9',
+          fc1: 'home-p10',
+          fc2: 'home-p1'
+        }
+      }
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().diagnostics.join(' | ')).toMatch(/role mismatch|playing GK/i);
+  });
+
+  it('simulate match endpoint rejects invalid assignment maps', async () => {
+    const server = buildServer();
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/simulate-match',
+      payload: {
+        homeFormation: '4-4-2',
+        homeAssignments: {
+          gk: 'home-p1',
+          dl: 'home-p2',
+          dc1: 'home-p2',
+          dc2: 'home-p4',
+          dr: 'home-p5',
+          ml: 'home-p6',
+          mc1: 'home-p7',
+          mc2: 'home-p8',
+          mr: 'home-p9',
+          fc1: 'home-p10',
+          extra: 'home-p11'
+        }
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json().error).toMatch(/homeAssignments.*missing|duplicate|unknown slot/);
+  });
 });

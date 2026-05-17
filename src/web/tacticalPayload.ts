@@ -18,7 +18,9 @@ export function defaultTacticalState(): TacticalState {
     homeTransitionStyle: 'fast_break',
     awayTransitionStyle: 'balanced',
     homeMovement: 'balanced',
-    awayMovement: 'balanced'
+    awayMovement: 'balanced',
+    homeAssignments: {},
+    awayAssignments: {}
   };
 }
 

@@ -6,6 +6,7 @@ export type Pressing = 'low' | 'medium' | 'high';
 export type TransitionStyle = 'hold_shape' | 'balanced' | 'fast_break';
 export type TeamQuality = 'weak' | 'average' | 'strong';
 export type MovementStyle = 'compact' | 'balanced' | 'extreme';
+export type PlayerPosition = 'GK' | 'D' | 'DM' | 'M' | 'AM' | 'F';
 
 export type WebSimulationRequest = {
   seed: number;
@@ -23,6 +24,8 @@ export type WebSimulationRequest = {
   awayPressing: Pressing;
   homeTransitionStyle: TransitionStyle;
   awayTransitionStyle: TransitionStyle;
+  homeAssignments: Record<string, string>;
+  awayAssignments: Record<string, string>;
 };
 
 export type WebSimulationResult = WebMatchResult;

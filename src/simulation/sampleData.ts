@@ -33,7 +33,7 @@ type TacticOptions = {
   familiarity?: number;
   movement?: MovementStyle;
   playerIds?: string[];
-  assignments?: Record<string, string>;
+  assignments?: Record<string, string> | undefined;
 };
 
 type MatchOptions = {

@@ -123,10 +123,53 @@ th:not(:first-child), td:not(:first-child) {
 }
 
 .grid,
-.formation-grid {
+.formation-grid,
+.assignment-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 18px;
+}
+
+.assignment-grid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.assignment-card {
+  background: var(--panel-strong);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.assignment-list {
+  display: grid;
+  gap: 10px;
+}
+
+.assignment-row {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.assignment-row span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.assignment-row select {
+  width: 100%;
+}
+
+.warnings {
+  color: #ffcc66;
+  margin-top: 14px;
+}
+
+.ok-note {
+  color: var(--muted);
+  margin-top: 14px;
 }
 
 .formation-card {

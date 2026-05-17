@@ -141,6 +141,26 @@ const missions: Mission[] = [
   {
     label: 'MISSION 34: web assignment preview labels',
     args: ['vitest', 'run', 'tests/web/formationPreview.test.ts', '-t', 'assigned player names']
+  },
+  {
+    label: 'MISSION 35: web assignment defaults',
+    args: ['vitest', 'run', 'tests/web/assignmentState.test.ts', '-t', 'assigns every slot']
+  },
+  {
+    label: 'MISSION 36: web assignment replacement',
+    args: ['vitest', 'run', 'tests/web/assignmentState.test.ts', '-t', 'replaces a single slot']
+  },
+  {
+    label: 'MISSION 37: web assignment role warnings',
+    args: ['vitest', 'run', 'tests/web/assignmentState.test.ts', '-t', 'role mismatch warnings']
+  },
+  {
+    label: 'MISSION 38: API accepts explicit assignments',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'accepts explicit slot assignments']
+  },
+  {
+    label: 'MISSION 39: API rejects invalid assignments',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'rejects invalid assignment maps']
   }
 ];
 

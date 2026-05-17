@@ -18,7 +18,9 @@ describe('tactical payload builder', () => {
       homeTransitionStyle: 'fast_break',
       awayTransitionStyle: 'hold_shape',
       homeMovement: 'extreme',
-      awayMovement: 'compact'
+      awayMovement: 'compact',
+      homeAssignments: { gk: 'home-p11', fc1: 'home-p1' },
+      awayAssignments: { gk: 'away-p1', fc1: 'away-p10' }
     };
 
     expect(buildSimulationPayload(state)).toEqual(state);
@@ -40,7 +42,9 @@ describe('tactical payload builder', () => {
       homeTransitionStyle: 'fast_break',
       awayTransitionStyle: 'balanced',
       homeMovement: 'balanced',
-      awayMovement: 'balanced'
+      awayMovement: 'balanced',
+      homeAssignments: {},
+      awayAssignments: {}
     });
   });
 });
