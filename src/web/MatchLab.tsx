@@ -12,7 +12,7 @@ import {
   type AssignmentState
 } from './assignmentState';
 import { createFormationPreview, type FormationPreview } from './formationPreview';
-import { createInteractiveReplayViewModel } from './interactiveReplayViewModel';
+import { createInteractiveReplayViewModel, formatAuthoritativeReplay } from './interactiveReplayViewModel';
 import {
   createMatchLabLayoutViewModel,
   groupMatchStatRows,
@@ -20,6 +20,7 @@ import {
 } from './matchLabLayoutViewModel';
 import { createMatchResultViewModel } from './matchResultViewModel';
 import { createPitchAssignmentViewModel, type PitchAssignmentViewModel } from './pitchAssignmentViewModel';
+import { resumeMatchFromWeb } from './authoritativeResumeClient';
 import { createPlayerAttributeCards, type PlayerAttributeCard } from './playerAttributeCards';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
@@ -63,6 +64,9 @@ export function MatchLab() {
   const [isInteractiveReplay, setIsInteractiveReplay] = useState(false);
   const [interactiveMinute, setInteractiveMinute] = useState(0);
   const [managerCommands, setManagerCommands] = useState<ManagerCommand[]>([]);
+  const [authoritativeReplay, setAuthoritativeReplay] = useState<string[]>([]);
+  const [authoritativeError, setAuthoritativeError] = useState<string | null>(null);
+  const [isAuthoritativeLoading, setIsAuthoritativeLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -122,6 +126,8 @@ export function MatchLab() {
       setIsInteractiveReplay(false);
       setInteractiveMinute(0);
       setManagerCommands([]);
+      setAuthoritativeReplay([]);
+      setAuthoritativeError(null);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Simulation request failed');
     } finally {
@@ -132,6 +138,35 @@ export function MatchLab() {
   function recordManagerAction(action: string) {
     if (!interactiveState?.pauseEvent) return;
     setManagerCommands((current) => appendManagerCommand(current, { action, pauseEvent: interactiveState.pauseEvent! }));
+    setAuthoritativeReplay([]);
+    setAuthoritativeError(null);
+  }
+
+  async function requestAuthoritativeResume() {
+    if (!interactiveState) return;
+    setIsAuthoritativeLoading(true);
+    setAuthoritativeError(null);
+
+    try {
+      const response = await resumeMatchFromWeb({
+        seed,
+        currentMinute: interactiveState.currentMinute,
+        visibleEvents: interactiveState.visibleEvents,
+        managerCommands
+      });
+      setAuthoritativeReplay(formatAuthoritativeReplay({
+        score: response.score,
+        events: response.events,
+        diagnostics: response.diagnostics,
+        signature: response.signature,
+        currentMinute: interactiveState.currentMinute
+      }));
+    } catch (caught) {
+      setAuthoritativeReplay([]);
+      setAuthoritativeError(caught instanceof Error ? caught.message : 'Authoritative resume request failed');
+    } finally {
+      setIsAuthoritativeLoading(false);
+    }
   }
 
   return (
@@ -199,11 +234,14 @@ export function MatchLab() {
           </div>
           <div className="replay-controls">
             <PanelHeader section={section('replay-controls')} compact />
-            <button type="button" onClick={() => { setIsInteractiveReplay(true); setInteractiveMinute(0); setManagerCommands([]); }}>Start interactive replay</button>
-            <button type="button" disabled={!interactiveState || interactiveState.isComplete} onClick={() => interactiveState ? setInteractiveMinute(interactiveState.currentMinute) : undefined}>
+            <button type="button" onClick={() => { setIsInteractiveReplay(true); setInteractiveMinute(0); setManagerCommands([]); setAuthoritativeReplay([]); setAuthoritativeError(null); }}>Start interactive replay</button>
+            <button type="button" disabled={!interactiveState || interactiveState.isComplete} onClick={() => { if (interactiveState) { setInteractiveMinute(interactiveState.currentMinute); setAuthoritativeReplay([]); setAuthoritativeError(null); } }}>
               {interactiveViewModel?.continueLabel ?? 'Continue to next key event'}
             </button>
-            <button type="button" onClick={() => setIsInteractiveReplay(false)}>Show full match</button>
+            <button type="button" onClick={() => { setIsInteractiveReplay(false); setAuthoritativeReplay([]); setAuthoritativeError(null); }}>Show full match</button>
+            <button type="button" disabled={!interactiveState || isAuthoritativeLoading} onClick={requestAuthoritativeResume}>
+              {isAuthoritativeLoading ? 'Requesting authoritative resume...' : 'Request authoritative resume'}
+            </button>
           </div>
           {interactiveViewModel ? (
             <div className="interactive-status" aria-label="Interactive replay status">
@@ -240,6 +278,7 @@ export function MatchLab() {
             {interactiveViewModel ? <InfoList title={section('manager-commands').title} eyebrow={section('manager-commands').eyebrow} items={interactiveViewModel.commands.length > 0 ? interactiveViewModel.commands : ['No manager commands recorded yet.']} /> : null}
             {interactiveViewModel ? <InfoList title="Command effects" items={interactiveViewModel.effects} /> : null}
             {interactiveViewModel ? <InfoList title={section('projection').title} eyebrow={section('projection').eyebrow} items={interactiveViewModel.projectedReplay} /> : null}
+            {interactiveViewModel ? <InfoList title="Server-authoritative replay" eyebrow="Server resume" items={authoritativeReplay.length > 0 ? authoritativeReplay : [authoritativeError ?? (isAuthoritativeLoading ? 'Requesting server-authoritative resume...' : 'Request an authoritative resume to compare against the client projection.')]} /> : null}
             <InfoList title={section('diagnostics').title} eyebrow={section('diagnostics').eyebrow} items={viewModel.diagnostics} />
             <InfoList title={section('replay-metadata').title} eyebrow={section('replay-metadata').eyebrow} items={viewModel.replay} />
           </div>

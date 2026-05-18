@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local/pushed work before the next persistence/authoritative UI slice: P16A Match Lab UI Modernization Foundation.
+- Latest completed local work before the next persistence/stabilization slice: P16B Authoritative Resume UI Integration.
 
 ## Product Direction
 
@@ -46,6 +46,7 @@ The browser app currently exposes a Match Lab where the user can:
 - view deterministic projected command effects
 - view projected remaining replay after manager commands
 - consume a tested, modernized Match Lab layout with grouped stat panels and clearer replay/diagnostic separation
+- request server-authoritative resumed replay output from the interactive replay console and compare it with client-side projected replay
 
 ## Completed Production Slices
 
@@ -80,44 +81,50 @@ Completed:
 - Authoritative command adapter maps current UI manager commands to typed simulation commands.
 - `POST /api/resume-match` exposes a deterministic authoritative resume preview for the current demo fixture.
 - Web view-model helpers format authoritative resume score/signature/event-count diagnostics.
+- A tested browser client posts visible replay history and manager commands to `/api/resume-match`.
+- Match Lab can request server-authoritative resumed replay output and displays it in a distinct panel from client-side projection.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P16A Match Lab UI Modernization Foundation
+## Latest Slice: P16B Authoritative Resume UI Integration
 
 Files added/updated:
 
-- `src/web/matchLabLayoutViewModel.ts`
-- `tests/web/matchLabLayoutViewModel.test.ts`
+- `src/web/authoritativeResumeClient.ts`
+- `tests/web/authoritativeResumeClient.test.ts`
+- `app/api/resume-match/route.ts`
+- `src/web/interactiveReplayViewModel.ts`
+- `tests/web/interactiveReplayViewModel.test.ts`
 - `src/web/MatchLab.tsx`
-- `app/globals.css`
 - `scripts/run-mission-tests.ts`
-- `docs/33-match-lab-ui-modernization-contract.md`
-- `docs/plans/2026-05-18-match-lab-ui-modernization.md`
+- `docs/34-authoritative-resume-ui-contract.md`
+- `docs/plans/2026-05-18-authoritative-resume-ui-integration.md`
 - `docs/README.md`
 
 Behavior implemented:
 
-- Match Lab now has a tested semantic layout contract for setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and replay metadata.
-- Match stat rows are grouped into Summary, Attacking, and Tactical load tables.
-- The React screen uses the layout contract for stable section labels and clearer projected/diagnostic/metadata separation.
-- Global CSS now applies an original dark, dense football-manager console visual foundation with compact tables, subtle borders, status accents, and responsive panels.
-- Existing simulation, replay, command, projection, and authoritative resume behavior remains intact.
+- Browser code now has a tested `resumeMatchFromWeb` helper that posts visible replay history and recorded manager commands to `/api/resume-match`.
+- The Next app now exposes `app/api/resume-match/route.ts`, delegating to the existing server-authoritative resume adapter.
+- Authoritative replay formatting now includes remaining authoritative events after the current pause minute when supplied.
+- Match Lab replay controls now include `Request authoritative resume` during interactive replay.
+- The UI keeps `Projected remaining replay` and `Server-authoritative replay` as separate panels, with loading/empty/error messaging for server-owned output.
+- Authoritative output resets when a new match runs, replay restarts/advances, full-match view is restored, or a new manager command is recorded.
 
 ## Latest Validation
 
-For P16A, run and verify:
+For P16B, run and verify:
 
 ```bash
-npx vitest run tests/web/matchLabLayoutViewModel.test.ts
+npx vitest run tests/web/authoritativeResumeClient.test.ts
+npx vitest run tests/web/interactiveReplayViewModel.test.ts -t 'authoritative resumed replay'
 npm run test:missions
 npm test
 npx tsc --noEmit
 npm run build
 ```
 
-Expected mission count after P16A: ALL 117 MISSIONS PASSED.
+Expected mission count after P16B: ALL 119 MISSIONS PASSED.
 
 ## Important User Preferences
 
@@ -148,32 +155,32 @@ npx tsc --noEmit && npm run build
 
 ## Recommended Next Slice
 
-Recommended next work: **P16B Authoritative Resume UI Integration**.
+Recommended next work: **P16C Replay Session Persistence Foundation**.
 
 Why this is next:
 
-The Match Lab now has a clearer console structure, but the browser still displays the P15B projected remaining replay path rather than actively submitting visible history and commands to `/api/resume-match`. The next slice should put the server-authoritative resume preview into the redesigned replay console.
+The Match Lab can now compare client projection against server-authoritative resumed output, but the match/replay state still lives only in browser memory and demo fixture reconstruction. The next production step should introduce a small persistence boundary for match sessions, visible events, command logs, and authoritative resume audit metadata before deeper multiplayer/head-to-head work.
 
 Suggested goals:
 
-1. Add a tested web client helper for `POST /api/resume-match`.
-2. Add pure UI/view-model tests for authoritative resume status, errors, signature, event count, and final score display.
-3. Wire a replay-console button to request authoritative resume preview from visible events and recorded manager commands.
-4. Display projected replay and authoritative replay as distinct panels so client projection is never confused with server-owned output.
-5. Keep all existing replay/projection behavior and tests intact.
+1. Design a minimal in-process or file-backed match-session repository contract before selecting a production database.
+2. Persist match seed, initial simulation output, visible replay events, manager commands, and authoritative resume signatures.
+3. Add API/view-model tests proving a session can be created, replay commands can be appended, and authoritative resume can reference stored state rather than trusting a full client payload.
+4. Keep the current demo Match Lab path working while introducing the session-owned path behind a thin adapter.
+5. Document migration path toward PostgreSQL/Drizzle or Prisma in the production persistence roadmap.
 
 Suggested docs:
 
-- `docs/34-authoritative-resume-ui-contract.md`
-- `docs/plans/2026-05-18-authoritative-resume-ui-integration.md`
+- `docs/35-production-replay-session-persistence-contract.md`
+- `docs/plans/2026-05-18-replay-session-persistence-foundation.md`
 
 Suggested TDD sequence:
 
-1. Add web client tests for request shape and API error handling.
-2. Add view-model tests for authoritative resume panel formatting.
-3. Wire React state/events after pure tests are green.
-4. Add mission tests for the new client/view-model behavior.
-5. Run full validation and commit.
+1. Add pure repository/session tests for storing and retrieving deterministic match sessions.
+2. Add API adapter tests for session creation and command append payloads.
+3. Integrate authoritative resume against stored visible history/commands.
+4. Add mission tests and update handoff docs.
+5. Run full validation and commit locally.
 
 ## Known Non-Blocking Follow-Ups
 

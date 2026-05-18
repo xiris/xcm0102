@@ -473,6 +473,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 117: match lab layout modernization contract',
     args: ['vitest', 'run', 'tests/web/matchLabLayoutViewModel.test.ts']
+  },
+  {
+    label: 'MISSION 118: authoritative resume web client contract',
+    args: ['vitest', 'run', 'tests/web/authoritativeResumeClient.test.ts']
+  },
+  {
+    label: 'MISSION 119: authoritative resume remaining-event formatting',
+    args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'formats authoritative resumed replay']
   }
 ];
 

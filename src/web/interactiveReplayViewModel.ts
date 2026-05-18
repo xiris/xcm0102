@@ -22,6 +22,7 @@ export type AuthoritativeReplaySummary = {
   events: MatchEvent[];
   diagnostics: string[];
   signature: string;
+  currentMinute?: number;
 };
 
 export function createInteractiveReplayViewModel(state: InteractiveMatchState, commands: ManagerCommand[] = [], sourceEvents: MatchEvent[] = []): InteractiveReplayViewModel {
@@ -64,8 +65,18 @@ export function formatAuthoritativeReplay(summary: AuthoritativeReplaySummary): 
     `Authoritative resumed final: Home XI ${summary.score.home} - ${summary.score.away} Away XI`,
     `Server-authoritative signature: ${summary.signature}`,
     `Authoritative event count: ${summary.events.length}`,
+    ...formatRemainingAuthoritativeEvents(summary),
     ...summary.diagnostics
   ];
+}
+
+function formatRemainingAuthoritativeEvents(summary: AuthoritativeReplaySummary): string[] {
+  const { currentMinute } = summary;
+  if (currentMinute === undefined) return [];
+  const remaining = summary.events
+    .filter((event) => event.minute > currentMinute)
+    .map((event) => `${event.minute}’ ${event.description}`);
+  return [`Remaining authoritative events: ${remaining.length > 0 ? remaining.join(' · ') : 'none'}`];
 }
 
 function formatSigned(value: number): string {

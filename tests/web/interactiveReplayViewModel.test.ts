@@ -111,11 +111,13 @@ describe('interactive replay view model', () => {
       score: { home: 2, away: 1 },
       events: fullReplayEvents,
       diagnostics: ['50’ home change_pressing command set pressing to high for regenerated future simulation.'],
-      signature: '71|50|cmd|vh-abcd|8'
+      signature: '71|50|cmd|vh-abcd|8',
+      currentMinute: 54
     })).toEqual([
       'Authoritative resumed final: Home XI 2 - 1 Away XI',
       'Server-authoritative signature: 71|50|cmd|vh-abcd|8',
       'Authoritative event count: 5',
+      'Remaining authoritative events: 66’ Home winger is tiring. · 90’ Full time.',
       '50’ home change_pressing command set pressing to high for regenerated future simulation.'
     ]);
   });
