@@ -1,5 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import { buildServer } from '../../src/api/server';
+import { createHistoricTeam } from '../../src/simulation/historicSquads';
+import { createSampleMatchInput, createSampleTacticBook } from '../../src/simulation/sampleData';
+import { simulateMatch } from '../../src/simulation/simulateMatch';
+
+function authoritativeResumeFixture(seed = 71) {
+  const home = createHistoricTeam('home');
+  const away = createHistoricTeam('away');
+  const input = createSampleMatchInput({
+    seed,
+    home,
+    away,
+    homeTactic: createSampleTacticBook({ id: 'home-tactic', playerIds: home.players.map((player) => player.id) }),
+    awayTactic: createSampleTacticBook({ id: 'away-tactic', playerIds: away.players.map((player) => player.id) })
+  });
+  const original = simulateMatch(input);
+  return {
+    currentMinute: 50,
+    visibleEvents: original.events.filter((event) => event.minute <= 50)
+  };
+}
 
 describe('production API server', () => {
   it('health endpoint reports service status', async () => {
@@ -85,6 +105,73 @@ describe('production API server', () => {
 
     expect(response.statusCode).toBe(400);
     expect(response.json().error).toMatch(/JSON object/);
+  });
+
+  it('authoritative resume endpoint returns deterministic resumed replay signatures', async () => {
+    const server = buildServer();
+    const fixture = authoritativeResumeFixture(71);
+    const request = {
+      method: 'POST' as const,
+      url: '/api/resume-match',
+      payload: {
+        seed: 71,
+        currentMinute: fixture.currentMinute,
+        visibleEvents: fixture.visibleEvents,
+        managerCommands: [
+          {
+            id: 'cmd-050-01-change-pressing',
+            minute: 50,
+            action: 'Change pressing',
+            eventType: 'goal',
+            eventDescription: 'Pause event.',
+            effectSummary: 'Recorded intent: change pressing at 50’.'
+          }
+        ]
+      }
+    };
+
+    const first = await server.inject(request);
+    const second = await server.inject(request);
+
+    expect(first.statusCode).toBe(200);
+    expect(first.json()).toEqual(second.json());
+    expect(first.json()).toEqual(expect.objectContaining({
+      score: { home: expect.any(Number), away: expect.any(Number) },
+      events: expect.arrayContaining(fixture.visibleEvents),
+      diagnostics: expect.arrayContaining([
+        '50’ home change_pressing command set pressing to high for regenerated future simulation.'
+      ]),
+      signature: expect.stringContaining('vh-')
+    }));
+  });
+
+  it('authoritative resume endpoint rejects forged visible history', async () => {
+    const server = buildServer();
+    const fixture = authoritativeResumeFixture(71);
+    const response = await server.inject({
+      method: 'POST',
+      url: '/api/resume-match',
+      payload: {
+        seed: 71,
+        currentMinute: fixture.currentMinute,
+        visibleEvents: [
+          ...fixture.visibleEvents,
+          { minute: 20, teamId: 'home', type: 'goal', description: 'Forged.' }
+        ],
+        managerCommands: []
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json().error).toMatch(/visible event history/i);
+  });
+
+  it('authoritative resume endpoint rejects malformed resume request bodies', async () => {
+    const server = buildServer();
+    const response = await server.inject({ method: 'POST', url: '/api/resume-match', payload: { currentMinute: 'late', visibleEvents: 'nope' } });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json().error).toMatch(/seed|currentMinute|visibleEvents|managerCommands/);
   });
 
   it('simulate match endpoint accepts tactical editor options', async () => {

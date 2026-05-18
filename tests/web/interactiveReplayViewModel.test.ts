@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createInteractiveReplayViewModel } from '../../src/web/interactiveReplayViewModel';
+import { createInteractiveReplayViewModel, formatAuthoritativeReplay } from '../../src/web/interactiveReplayViewModel';
 import type { InteractiveMatchState } from '../../src/simulation/interactiveTimeline';
 import type { ManagerCommand } from '../../src/simulation/managerCommands';
 
@@ -34,6 +34,7 @@ describe('interactive replay view model', () => {
         'Projected state: pressing 0 · mentality 0 · fatigue relief +0 · defensive risk 0 · substitution intent 0'
       ],
       projectedReplay: [],
+      authoritativeReplay: [],
       continueLabel: 'Continue to next key event'
     });
   });
@@ -102,6 +103,20 @@ describe('interactive replay view model', () => {
       'Remaining projected events: 90’ Full time.',
       '54’ Lower tempo/pressing suppressed future fatigue warning at 66’.',
       'Projection uses command effects signature: cmd-054-01-lower-tempo-pressing.'
+    ]);
+  });
+
+  it('formats authoritative resumed replay as server-owned output', () => {
+    expect(formatAuthoritativeReplay({
+      score: { home: 2, away: 1 },
+      events: fullReplayEvents,
+      diagnostics: ['50’ home change_pressing command set pressing to high for regenerated future simulation.'],
+      signature: '71|50|cmd|vh-abcd|8'
+    })).toEqual([
+      'Authoritative resumed final: Home XI 2 - 1 Away XI',
+      'Server-authoritative signature: 71|50|cmd|vh-abcd|8',
+      'Authoritative event count: 5',
+      '50’ home change_pressing command set pressing to high for regenerated future simulation.'
     ]);
   });
 });

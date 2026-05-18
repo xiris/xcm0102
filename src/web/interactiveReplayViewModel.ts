@@ -13,7 +13,15 @@ export type InteractiveReplayViewModel = {
   commands: string[];
   effects: string[];
   projectedReplay: string[];
+  authoritativeReplay: string[];
   continueLabel: string;
+};
+
+export type AuthoritativeReplaySummary = {
+  score: { home: number; away: number };
+  events: MatchEvent[];
+  diagnostics: string[];
+  signature: string;
 };
 
 export function createInteractiveReplayViewModel(state: InteractiveMatchState, commands: ManagerCommand[] = [], sourceEvents: MatchEvent[] = []): InteractiveReplayViewModel {
@@ -28,6 +36,7 @@ export function createInteractiveReplayViewModel(state: InteractiveMatchState, c
     commands: commands.map((command) => `${command.minute}’ ${command.action} — ${command.effectSummary}`),
     effects: formatEffects(effects),
     projectedReplay,
+    authoritativeReplay: [],
     continueLabel: state.isComplete ? 'Replay complete' : 'Continue to next key event'
   };
 }
@@ -47,6 +56,15 @@ function formatProjectedReplay(projection: ReturnType<typeof projectRemainingRep
     `Projected final: Home XI ${projection.score.home} - ${projection.score.away} Away XI`,
     `Remaining projected events: ${remaining.length > 0 ? remaining.join(' · ') : 'none'}`,
     ...projection.diagnostics
+  ];
+}
+
+export function formatAuthoritativeReplay(summary: AuthoritativeReplaySummary): string[] {
+  return [
+    `Authoritative resumed final: Home XI ${summary.score.home} - ${summary.score.away} Away XI`,
+    `Server-authoritative signature: ${summary.signature}`,
+    `Authoritative event count: ${summary.events.length}`,
+    ...summary.diagnostics
   ];
 }
 

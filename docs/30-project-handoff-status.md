@@ -6,14 +6,8 @@ This document is the short-context handoff for starting a new chat on the XCM010
 
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
-- Remote: none configured yet. The user prefers to create/configure the remote repository themselves later.
-- Latest commit: `8cc4aa6 feat: project resumable match replay`
-- Recent commits:
-  - `8cc4aa6 feat: project resumable match replay`
-  - `fc9a4a0 fix: stabilize interactive manager commands`
-  - `e6f2ba9 feat: project manager command effects`
-  - `585a68c feat: record interactive manager commands`
-  - `ab772c3 feat: add interactive match replay`
+- Remote: `origin git@github.com:xiris/xcm0102.git`
+- Latest completed local/pushed work before the next UI slice: P15D Authoritative Resume API/View-Model Adapter.
 
 ## Product Direction
 
@@ -70,16 +64,9 @@ The browser app currently exposes a Match Lab where the user can:
 - Bench/condition/substitution events.
 - Progressive interactive match timeline.
 
-### Interactive manager-command work
+### Interactive manager-command and resume work
 
-Completed and committed:
-
-- `585a68c feat: record interactive manager commands`
-- `e6f2ba9 feat: project manager command effects`
-- `fc9a4a0 fix: stabilize interactive manager commands`
-- `8cc4aa6 feat: project resumable match replay`
-
-Current behavior:
+Completed:
 
 - Manager commands can be recorded during interactive replay.
 - Duplicate same-action/same-pause command records are suppressed.
@@ -88,65 +75,53 @@ Current behavior:
 - Dedicated replay navigation remains available as `Continue to next key event`.
 - Command effects are deterministic and displayed as diagnostics.
 - Remaining replay projection can alter future displayed events while preserving visible history.
+- Pure authoritative resume can preserve server-verified visible history and regenerate future events from command-adjusted tactics.
+- Authoritative command adapter maps current UI manager commands to typed simulation commands.
+- `POST /api/resume-match` exposes a deterministic authoritative resume preview for the current demo fixture.
+- Web view-model helpers format authoritative resume score/signature/event-count diagnostics.
 
-## Latest Slice: P15B Resumable Match Replay Projection
-
-Latest commit:
-
-```text
-8cc4aa6 feat: project resumable match replay
-```
+## Latest Slice: P15D Authoritative Resume API/View-Model Adapter
 
 Files added/updated:
 
-- `src/simulation/resumableReplayProjection.ts`
-- `tests/simulation/resumableReplayProjection.test.ts`
+- `src/simulation/authoritativeCommandAdapter.ts`
+- `tests/simulation/authoritativeCommandAdapter.test.ts`
+- `src/api/authoritativeResumeEndpoint.ts`
+- `src/api/server.ts`
+- `tests/api/server.test.ts`
 - `src/web/interactiveReplayViewModel.ts`
-- `src/web/MatchLab.tsx`
 - `tests/web/interactiveReplayViewModel.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/29-production-resumable-replay-projection-contract.md`
-- `docs/plans/2026-05-17-resumable-match-regeneration.md`
+- `docs/32-production-authoritative-resume-api-contract.md`
+- `docs/31-production-authoritative-resumable-match-engine-contract.md`
+- `docs/plans/2026-05-18-authoritative-resume-api-adapter.md`
 - `docs/README.md`
 
 Behavior implemented:
 
-- No-command projection preserves `sourceEvents` exactly as provided.
-- Visible events at or before `currentMinute` preserve exact source order even when commands project future changes.
-- Suppression rules only target future events after both the command minute and the current interactive replay minute.
-- Lower-tempo / reduced-pressing style commands can suppress future fatigue warnings.
-- Defensive-line commands can suppress future away pressure events.
-- Proactive commands such as `Change mentality` and `Change pressing` can inject deterministic `tactical_shift` events.
-- Tactical-shift injection uses the first unused minute after both the replay minute and command minute, up to minute 89.
-- Non-proactive commands do not consume tactical-shift insertion slots.
-- Earlier proactive commands do not globally delay later proactive commands beyond the later command's own first available future minute.
-- Tactical shifts are skipped only when no valid future minute remains.
-- Browser UI displays `Projected remaining replay`, projected final score, projected event count, projected event snippets, and projection diagnostics.
-
-Final independent review for P15B passed:
-
-- no security concerns
-- no blocking logic errors
-- one non-blocking suggestion: consider a future regression test documenting whether tactical-shift injected events may coexist with non-tactical source events in the same minute, or whether source-event minutes should be treated as occupied insertion slots.
+- `Change mentality` maps to authoritative `change_mentality: attacking`.
+- `Change pressing` maps to `change_pressing: high`.
+- `Lower tempo/pressing` maps to `change_pressing: low`.
+- `Adjust defensive line` maps to `change_transition_style: hold_shape`.
+- `Reduce pressing or change mentality` emits low pressing plus defensive mentality.
+- `Continue`, `Review formation`, and `Review match report` are ignored as UI-only actions.
+- `/api/resume-match` rejects malformed requests and forged visible histories.
+- Identical authoritative resume API requests return identical responses/signatures.
+- Web formatting labels authoritative output as server-owned with final score, signature, and event count.
 
 ## Latest Validation
 
-Before commit `8cc4aa6`, validation passed:
+For P15D, run and verify:
 
 ```bash
-npx vitest run tests/simulation/resumableReplayProjection.test.ts
+npx vitest run tests/simulation/authoritativeCommandAdapter.test.ts tests/api/server.test.ts tests/web/interactiveReplayViewModel.test.ts
 npm run test:missions
 npm test
-npx tsc --noEmit && npm run build
+npx tsc --noEmit
+npm run build
 ```
 
-Results:
-
-- Projection targeted tests: 10 passed.
-- Mission tests: ALL 104 MISSIONS PASSED.
-- Full suite: 24 test files passed, 113 tests passed.
-- TypeScript/build: PASS.
-- Browser verification: projected remaining replay, projected final score, tactical shift, and command signature appeared; browser console had zero messages/errors.
+Expected mission count after P15D: ALL 116 MISSIONS PASSED.
 
 ## Important User Preferences
 
@@ -154,7 +129,7 @@ Results:
 - Run tests individually with clear mission labels/status, then full suite.
 - Keep documenting findings and decisions in `docs/` as work progresses.
 - Commit locally when a slice is complete.
-- Do not create/configure/push remote unless explicitly asked; user will create the remote repository later.
+- Remote exists now; push only when explicitly asked or when continuing the current push-after-complete workflow is clear.
 - Periodically do stabilization/fix passes after several feature-building slices.
 
 ## How To Resume In A New Chat
@@ -162,7 +137,7 @@ Results:
 Start with:
 
 ```text
-Continue work in /Users/christophersilva/Projects/personal/xcm0102. Read docs/30-project-handoff-status.md, docs/05-roadmap.md, docs/10-production-roadmap.md, and docs/29-production-resumable-replay-projection-contract.md first. Then recommend and execute the next TDD slice. Keep docs updated, run mission tests plus full validation, and commit locally when complete. Do not configure a remote.
+Continue work in /Users/christophersilva/Projects/personal/xcm0102. Read docs/30-project-handoff-status.md, docs/05-roadmap.md, docs/10-production-roadmap.md, and the latest production contract docs first. Then recommend and execute the next TDD slice. Keep docs updated, run mission tests plus full validation, and commit locally when complete.
 ```
 
 Recommended first commands in the new chat:
@@ -177,60 +152,37 @@ npx tsc --noEmit && npm run build
 
 ## Recommended Next Slice
 
-Recommended next work: **P15C Authoritative Resumable Match Engine Foundation**.
+Recommended next work: **P16A Match Lab UI Modernization Foundation**.
 
 Why this is next:
 
-P15B projects future replay events from command effects, but it is still a deterministic projection layer over an already-generated event list. The next major step is making mid-match commands feed into an authoritative resumable match-engine pathway, so future events are generated from updated tactical state instead of only post-processing an existing timeline.
+The product loop now has enough match/replay/resume behavior, but the browser interface is still raw/prototype-like. The next slice should improve perceived product quality and usability before deeper persistence or multiplayer work.
 
 Suggested goals:
 
-1. Define a resumable simulation input/output contract.
-2. Split match simulation into a deterministic phase/state representation that can pause and resume.
-3. Preserve already-visible events exactly.
-4. Recompute only future events from updated command-adjusted tactical state.
-5. Keep seed determinism stable.
-6. Keep UI behavior compatible with the current projected replay section.
-7. Document limitations clearly; do not overbuild multiplayer persistence yet.
+1. Define a UI direction doc for a modernized CM01/02-inspired interface without copying protected assets or exact screens.
+2. Add pure view-model/layout tests for section labels, match-console hierarchy, stat/table grouping, and replay/resume separation.
+3. Refactor `MatchLab.tsx` styling into clearer panels: setup, teams/tactics, match console, replay controls, diagnostics.
+4. Improve typography, spacing, table density, contrast, and status chips.
+5. Keep all existing behavior and tests intact.
 
-Suggested files to inspect first:
+Suggested docs:
 
-- `src/simulation/simulateMatch.ts`
-- `src/simulation/domain.ts`
-- `src/simulation/interactiveTimeline.ts`
-- `src/simulation/managerCommands.ts`
-- `src/simulation/commandEffects.ts`
-- `src/simulation/resumableReplayProjection.ts`
-- `src/web/interactiveReplayViewModel.ts`
-- `src/web/MatchLab.tsx`
-- `tests/simulation/resumableReplayProjection.test.ts`
-- `scripts/run-mission-tests.ts`
-
-Suggested plan doc:
-
-- `docs/plans/2026-05-18-authoritative-resumable-match-engine.md`
-
-Suggested contract doc:
-
-- `docs/31-production-authoritative-resumable-match-engine-contract.md`
+- `docs/33-match-lab-ui-modernization-contract.md`
+- `docs/plans/2026-05-18-match-lab-ui-modernization.md`
 
 Suggested TDD sequence:
 
-1. Add tests for preserving already-visible events during authoritative resume.
-2. Add tests for identical resume inputs producing identical future events.
-3. Add tests showing command-adjusted tactical state changes a future outcome or event distribution.
-4. Implement minimal pure resume module that delegates to existing simulation helpers instead of duplicating logic.
-5. Integrate with replay projection/view model only after pure module tests pass.
-6. Add mission tests.
-7. Update docs index.
-8. Run targeted tests, mission tests, full suite, typecheck, build, browser verification.
-9. Run independent staged-diff review.
-10. Commit locally.
+1. Add tests for UI copy/view-model groupings where possible before changing JSX.
+2. Add CSS/class structure incrementally.
+3. Run browser verification after build to catch layout or console issues.
+4. Add mission tests for any new pure formatting/view-model behavior.
+5. Run full validation and commit.
 
 ## Known Non-Blocking Follow-Ups
 
 - Decide whether tactical-shift injected events may coexist with non-tactical source events in the same minute, or whether all source-event minutes should count as occupied insertion slots.
 - Add more nuanced command effects over time, especially substitutions, fatigue relief, mentality, pressing, and defensive-line interactions.
-- Replace projection-layer future-event post-processing with truly authoritative command-aware future simulation.
-- Consider persistence/session storage for manager commands after the simulation loop is more mature.
-- Later, after the user creates a remote repo, configure `origin` and push `main`.
+- Persist match sessions, command logs, events, reports, and audit logs.
+- Add home/away manager command ownership for multiplayer/head-to-head scenarios.
+- Replace projection-layer future-event post-processing with authoritative command-aware future simulation in the browser UI once the UX is ready.

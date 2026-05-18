@@ -73,19 +73,25 @@ Diagnostics explicitly state which command was applied, for example:
 
 P15B remains the browser-facing projected replay section for current interactive manager-command labels.
 
-P15C establishes the server-authoritative pure simulation path that can replace projection-layer event transforms later. This keeps the transition incremental and testable.
+P15C establishes the server-authoritative pure simulation path that can replace projection-layer event transforms later. P15D adds the first API/view-model adapter around that path:
+
+- `src/simulation/authoritativeCommandAdapter.ts` translates current UI `ManagerCommand` records into typed `MatchCommand[]` values.
+- `POST /api/resume-match` reconstructs the demo match input, validates visible history, and returns authoritative resumed events plus a deterministic signature.
+- `formatAuthoritativeReplay(...)` gives the web layer a tested text contract for server-authoritative resumed output.
+
+The P15B projection display should stay visible until the next UI pass cleanly presents both projected and authoritative concepts.
 
 ## Current limitations
 
-P15C intentionally does not yet:
+P15D intentionally does not yet:
 
 - persist resumable sessions in a database;
-- expose an API endpoint for resume commands;
-- translate UI `ManagerCommand.action` strings into typed `MatchCommand` values;
+- expose saved match IDs or arbitrary persisted match input;
 - model substitutions as real personnel changes;
 - split the engine into minute-by-minute state checkpoints;
-- guarantee regenerated stats are only post-pause stats.
+- guarantee regenerated stats are only post-pause stats;
+- distinguish home/away manager ownership in the current single-manager Match Lab payload.
 
 ## Next transition
 
-The next slice should connect this pure authoritative resume module to an API/view-model adapter, including translation from interactive manager command records to typed `MatchCommand` values, while keeping the existing P15B projection visible until the authoritative path is browser-ready.
+The next slice should improve the raw Match Lab UI into a modernized CM01/02-inspired manager interface: dense but readable panels, stronger table hierarchy, match-console presentation, and clearer separation between projected and authoritative replay. Do not copy original game assets, exact screens, logos, or protected text.

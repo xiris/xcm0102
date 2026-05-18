@@ -449,6 +449,26 @@ const missions: Mission[] = [
   {
     label: 'MISSION 111: authoritative resume signs visible history',
     args: ['vitest', 'run', 'tests/simulation/authoritativeResume.test.ts', '-t', 'visible history in the deterministic resume signature']
+  },
+  {
+    label: 'MISSION 112: authoritative command adapter maps mentality',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeCommandAdapter.test.ts', '-t', 'maps mentality']
+  },
+  {
+    label: 'MISSION 113: authoritative command adapter ignores UI-only actions',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeCommandAdapter.test.ts', '-t', 'ignores continue']
+  },
+  {
+    label: 'MISSION 114: authoritative command adapter preserves tactical order',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeCommandAdapter.test.ts', '-t', 'preserving order']
+  },
+  {
+    label: 'MISSION 115: authoritative resume API deterministic signature',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'authoritative resume endpoint returns deterministic']
+  },
+  {
+    label: 'MISSION 116: authoritative resume web formatting',
+    args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'formats authoritative']
   }
 ];
 
