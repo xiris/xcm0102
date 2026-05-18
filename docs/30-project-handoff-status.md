@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next persistence/stabilization slice: P16B Authoritative Resume UI Integration.
+- Latest completed local work before the next browser-session slice: P16C Replay Session Persistence Foundation.
 
 ## Product Direction
 
@@ -47,6 +47,7 @@ The browser app currently exposes a Match Lab where the user can:
 - view projected remaining replay after manager commands
 - consume a tested, modernized Match Lab layout with grouped stat panels and clearer replay/diagnostic separation
 - request server-authoritative resumed replay output from the interactive replay console and compare it with client-side projected replay
+- create server-owned replay sessions through the API and resume them authoritatively from stored visible history and command logs
 
 ## Completed Production Slices
 
@@ -83,48 +84,50 @@ Completed:
 - Web view-model helpers format authoritative resume score/signature/event-count diagnostics.
 - A tested browser client posts visible replay history and manager commands to `/api/resume-match`.
 - Match Lab can request server-authoritative resumed replay output and displays it in a distinct panel from client-side projection.
+- Replay-session repository and API helpers can create in-memory demo match sessions, append command logs, and resume authoritatively from stored server state.
+- Fastify exposes stored-session routes at `/api/replay-sessions`, `/api/replay-sessions/:sessionId/commands`, and `/api/replay-sessions/:sessionId/resume`.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P16B Authoritative Resume UI Integration
+## Latest Slice: P16C Replay Session Persistence Foundation
 
 Files added/updated:
 
-- `src/web/authoritativeResumeClient.ts`
-- `tests/web/authoritativeResumeClient.test.ts`
-- `app/api/resume-match/route.ts`
-- `src/web/interactiveReplayViewModel.ts`
-- `tests/web/interactiveReplayViewModel.test.ts`
-- `src/web/MatchLab.tsx`
+- `src/api/replaySessionRepository.ts`
+- `tests/api/replaySessionRepository.test.ts`
+- `src/api/replaySessionEndpoint.ts`
+- `tests/api/replaySessionEndpoint.test.ts`
+- `src/api/server.ts`
+- `tests/api/server.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/34-authoritative-resume-ui-contract.md`
-- `docs/plans/2026-05-18-authoritative-resume-ui-integration.md`
+- `docs/35-production-replay-session-persistence-contract.md`
+- `docs/plans/2026-05-18-replay-session-persistence-foundation.md`
 - `docs/README.md`
 
 Behavior implemented:
 
-- Browser code now has a tested `resumeMatchFromWeb` helper that posts visible replay history and recorded manager commands to `/api/resume-match`.
-- The Next app now exposes `app/api/resume-match/route.ts`, delegating to the existing server-authoritative resume adapter.
-- Authoritative replay formatting now includes remaining authoritative events after the current pause minute when supplied.
-- Match Lab replay controls now include `Request authoritative resume` during interactive replay.
-- The UI keeps `Projected remaining replay` and `Server-authoritative replay` as separate panels, with loading/empty/error messaging for server-owned output.
-- Authoritative output resets when a new match runs, replay restarts/advances, full-match view is restored, or a new manager command is recorded.
+- Added a replaceable `ReplaySessionRepository` interface with an in-memory implementation for current demo sessions.
+- Stored replay sessions include seed, initial match result, visible events, manager commands, latest authoritative signature, timestamps, and audit entries.
+- Added API helpers to create a replay session, append manager commands, and run authoritative resume from stored server-side visible history/commands.
+- Added Fastify routes for stored sessions without removing the existing `/api/resume-match` compatibility path.
+- Stored authoritative resume records latest signature and event-count audit metadata.
 
 ## Latest Validation
 
-For P16B, run and verify:
+For P16C, run and verify:
 
 ```bash
-npx vitest run tests/web/authoritativeResumeClient.test.ts
-npx vitest run tests/web/interactiveReplayViewModel.test.ts -t 'authoritative resumed replay'
+npx vitest run tests/api/replaySessionRepository.test.ts
+npx vitest run tests/api/replaySessionEndpoint.test.ts
+npx vitest run tests/api/server.test.ts -t 'replay session endpoints'
 npm run test:missions
 npm test
 npx tsc --noEmit
 npm run build
 ```
 
-Expected mission count after P16B: ALL 119 MISSIONS PASSED.
+Expected mission count after P16C: ALL 122 MISSIONS PASSED.
 
 ## Important User Preferences
 
@@ -155,30 +158,30 @@ npx tsc --noEmit && npm run build
 
 ## Recommended Next Slice
 
-Recommended next work: **P16C Replay Session Persistence Foundation**.
+Recommended next work: **P16D Browser Session ID Resume Integration**.
 
 Why this is next:
 
-The Match Lab can now compare client projection against server-authoritative resumed output, but the match/replay state still lives only in browser memory and demo fixture reconstruction. The next production step should introduce a small persistence boundary for match sessions, visible events, command logs, and authoritative resume audit metadata before deeper multiplayer/head-to-head work.
+The API can now create server-owned replay sessions and run authoritative resume from stored visible history/commands, but Match Lab still uses the legacy browser-payload `/api/resume-match` path. The next slice should make the browser create/hold a replay session ID after running a match, append manager commands to that session, and request authoritative resume through the session route.
 
 Suggested goals:
 
-1. Design a minimal in-process or file-backed match-session repository contract before selecting a production database.
-2. Persist match seed, initial simulation output, visible replay events, manager commands, and authoritative resume signatures.
-3. Add API/view-model tests proving a session can be created, replay commands can be appended, and authoritative resume can reference stored state rather than trusting a full client payload.
-4. Keep the current demo Match Lab path working while introducing the session-owned path behind a thin adapter.
-5. Document migration path toward PostgreSQL/Drizzle or Prisma in the production persistence roadmap.
+1. Add a tested browser client for replay-session creation, command append, and session-owned resume.
+2. Wire Match Lab to create a replay session after a successful simulation.
+3. Append manager commands to the stored session before requesting authoritative resume.
+4. Display session ID/audit metadata in the replay metadata panel.
+5. Keep legacy `/api/resume-match` tests passing during the transition.
 
 Suggested docs:
 
-- `docs/35-production-replay-session-persistence-contract.md`
-- `docs/plans/2026-05-18-replay-session-persistence-foundation.md`
+- `docs/36-browser-replay-session-ui-contract.md`
+- `docs/plans/2026-05-18-browser-replay-session-ui-integration.md`
 
 Suggested TDD sequence:
 
-1. Add pure repository/session tests for storing and retrieving deterministic match sessions.
-2. Add API adapter tests for session creation and command append payloads.
-3. Integrate authoritative resume against stored visible history/commands.
+1. Add web client tests for session create/append/resume request shapes and API errors.
+2. Add pure UI state tests or helper tests for session status/reset rules.
+3. Wire Match Lab state/events after pure tests are green.
 4. Add mission tests and update handoff docs.
 5. Run full validation and commit locally.
 

@@ -174,6 +174,53 @@ describe('production API server', () => {
     expect(response.json().error).toMatch(/seed|currentMinute|visibleEvents|managerCommands/);
   });
 
+  it('replay session endpoints create command and resume from stored state', async () => {
+    const server = buildServer();
+    const created = await server.inject({
+      method: 'POST',
+      url: '/api/replay-sessions',
+      payload: { seed: 71, currentMinute: 50 }
+    });
+
+    expect(created.statusCode).toBe(200);
+    const sessionId = created.json().sessionId as string;
+    expect(sessionId).toMatch(/^rs-/);
+
+    const appended = await server.inject({
+      method: 'POST',
+      url: `/api/replay-sessions/${sessionId}/commands`,
+      payload: {
+        command: {
+          id: 'cmd-050-01-change-pressing',
+          minute: 50,
+          action: 'Change pressing',
+          eventType: 'goal',
+          eventDescription: 'Pause event.',
+          effectSummary: 'Recorded intent: change pressing at 50’.'
+        }
+      }
+    });
+
+    expect(appended.statusCode).toBe(200);
+    expect(appended.json()).toEqual({ sessionId, commandCount: 1 });
+
+    const resumed = await server.inject({
+      method: 'POST',
+      url: `/api/replay-sessions/${sessionId}/resume`,
+      payload: { currentMinute: 50 }
+    });
+
+    expect(resumed.statusCode).toBe(200);
+    expect(resumed.json()).toEqual(expect.objectContaining({
+      sessionId,
+      authoritative: true,
+      signature: expect.stringContaining('vh-'),
+      diagnostics: expect.arrayContaining([
+        '50’ home change_pressing command set pressing to high for regenerated future simulation.'
+      ])
+    }));
+  });
+
   it('simulate match endpoint accepts tactical editor options', async () => {
     const server = buildServer();
     const response = await server.inject({

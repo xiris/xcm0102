@@ -481,6 +481,18 @@ const missions: Mission[] = [
   {
     label: 'MISSION 119: authoritative resume remaining-event formatting',
     args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'formats authoritative resumed replay']
+  },
+  {
+    label: 'MISSION 120: replay session repository contract',
+    args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts']
+  },
+  {
+    label: 'MISSION 121: replay session API adapter contract',
+    args: ['vitest', 'run', 'tests/api/replaySessionEndpoint.test.ts']
+  },
+  {
+    label: 'MISSION 122: replay session Fastify routes',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'replay session endpoints']
   }
 ];
 

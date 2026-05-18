@@ -39,6 +39,7 @@ Documentation map:
 - 32-production-authoritative-resume-api-contract.md — API/view-model adapter for authoritative resume commands.
 - 33-match-lab-ui-modernization-contract.md — tested Match Lab section/stat grouping and first UI modernization direction.
 - 34-authoritative-resume-ui-contract.md — browser client and Match Lab UI contract for server-authoritative resume output.
+- 35-production-replay-session-persistence-contract.md — in-memory replay-session persistence seam for stored authoritative resume state.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -61,6 +62,7 @@ Documentation map:
 - plans/2026-05-18-authoritative-resume-api-adapter.md — implementation plan for authoritative resume command/API/view-model adapter.
 - plans/2026-05-18-match-lab-ui-modernization.md — implementation plan for Match Lab UI modernization foundation.
 - plans/2026-05-18-authoritative-resume-ui-integration.md — implementation plan for Match Lab server-authoritative resume UI integration.
+- plans/2026-05-18-replay-session-persistence-foundation.md — implementation plan for stored replay-session persistence foundation.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 
