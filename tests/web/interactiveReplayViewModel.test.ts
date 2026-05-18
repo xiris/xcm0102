@@ -3,13 +3,17 @@ import { createInteractiveReplayViewModel } from '../../src/web/interactiveRepla
 import type { InteractiveMatchState } from '../../src/simulation/interactiveTimeline';
 import type { ManagerCommand } from '../../src/simulation/managerCommands';
 
+const fullReplayEvents = [
+  { minute: 1, type: 'kickoff' as const, description: 'Kickoff.' },
+  { minute: 14, teamId: 'home', type: 'goal' as const, description: 'Home score.' },
+  { minute: 54, teamId: 'home', type: 'fatigue_warning' as const, description: 'Vieri is tiring.' },
+  { minute: 66, teamId: 'home', type: 'fatigue_warning' as const, description: 'Home winger is tiring.' },
+  { minute: 90, type: 'full_time' as const, description: 'Full time.' }
+];
+
 const state: InteractiveMatchState = {
   currentMinute: 54,
-  visibleEvents: [
-    { minute: 1, type: 'kickoff', description: 'Kickoff.' },
-    { minute: 14, teamId: 'home', type: 'goal', description: 'Home score.' },
-    { minute: 54, teamId: 'home', type: 'fatigue_warning', description: 'Vieri is tiring.' }
-  ],
+  visibleEvents: fullReplayEvents.slice(0, 3),
   pauseEvent: { minute: 54, teamId: 'home', type: 'fatigue_warning', description: 'Vieri is tiring.' },
   scoreSoFar: { home: 1, away: 0 },
   availableActions: ['Prepare substitution', 'Continue'],
@@ -29,6 +33,7 @@ describe('interactive replay view model', () => {
         'No outcome-affecting manager commands recorded yet.',
         'Projected state: pressing 0 · mentality 0 · fatigue relief +0 · defensive risk 0 · substitution intent 0'
       ],
+      projectedReplay: [],
       continueLabel: 'Continue to next key event'
     });
   });
@@ -77,6 +82,26 @@ describe('interactive replay view model', () => {
     expect(createInteractiveReplayViewModel(state, commands).effects).toEqual([
       '54’ Lower tempo/pressing reduced pressing load and fatigue pressure.',
       'Projected state: pressing -1 · mentality 0 · fatigue relief +2 · defensive risk 0 · substitution intent 0'
+    ]);
+  });
+
+  it('formats projected remaining replay after commands alter the future timeline', () => {
+    const commands: ManagerCommand[] = [
+      {
+        id: 'cmd-054-01-lower-tempo-pressing',
+        minute: 54,
+        action: 'Lower tempo/pressing',
+        eventType: 'fatigue_warning',
+        eventDescription: 'Vieri is tiring.',
+        effectSummary: 'Recorded intent: lower tempo/pressing at 54’.'
+      }
+    ];
+
+    expect(createInteractiveReplayViewModel(state, commands, fullReplayEvents).projectedReplay).toEqual([
+      'Projected final: Home XI 1 - 0 Away XI',
+      'Remaining projected events: 90’ Full time.',
+      '54’ Lower tempo/pressing suppressed future fatigue warning at 66’.',
+      'Projection uses command effects signature: cmd-054-01-lower-tempo-pressing.'
     ]);
   });
 });

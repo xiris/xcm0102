@@ -377,6 +377,50 @@ const missions: Mission[] = [
   {
     label: 'MISSION 93: manager action continue hidden from UI',
     args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'omits plain Continue']
+  },
+  {
+    label: 'MISSION 94: replay projection preserves timeline',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'no commands']
+  },
+  {
+    label: 'MISSION 95: replay projection suppresses fatigue',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'lower-tempo']
+  },
+  {
+    label: 'MISSION 96: replay projection suppresses pressure',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'defensive-line']
+  },
+  {
+    label: 'MISSION 97: replay projection injects tactical shifts',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'proactive commands']
+  },
+  {
+    label: 'MISSION 98: replay projection web formatting',
+    args: ['vitest', 'run', 'tests/web/interactiveReplayViewModel.test.ts', '-t', 'projected remaining replay']
+  },
+  {
+    label: 'MISSION 99: replay projection preserves visible history',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'already visible']
+  },
+  {
+    label: 'MISSION 100: replay projection keeps no-command order',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'source order']
+  },
+  {
+    label: 'MISSION 101: replay projection preserves visible ordering under commands',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'same-minute source order']
+  },
+  {
+    label: 'MISSION 102: replay projection skips impossible late tactical shifts',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'no future minute']
+  },
+  {
+    label: 'MISSION 103: replay projection gives late proactive commands remaining future slot',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'remaining future minute']
+  },
+  {
+    label: 'MISSION 104: replay projection does not globally delay late proactive commands',
+    args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'available late minute']
   }
 ];
 

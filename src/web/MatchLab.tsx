@@ -63,7 +63,7 @@ export function MatchLab() {
 
   const viewModel = useMemo(() => (result ? createMatchResultViewModel(result) : null), [result]);
   const interactiveState = useMemo(() => (result && isInteractiveReplay ? createInteractiveMatchState(result, { currentMinute: interactiveMinute }) : null), [interactiveMinute, isInteractiveReplay, result]);
-  const interactiveViewModel = useMemo(() => (interactiveState ? createInteractiveReplayViewModel(interactiveState, managerCommands) : null), [interactiveState, managerCommands]);
+  const interactiveViewModel = useMemo(() => (interactiveState && result ? createInteractiveReplayViewModel(interactiveState, managerCommands, result.events) : null), [interactiveState, managerCommands, result]);
   const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation, homeAssignments), [homeFormation, homeAssignments]);
   const awayFormationPreview = useMemo(() => createFormationPreview(awayFormation, awayAssignments), [awayFormation, awayAssignments]);
   const homePitch = useMemo(() => createPitchAssignmentViewModel(homeAssignments), [homeAssignments]);
@@ -219,6 +219,7 @@ export function MatchLab() {
             <InfoList title={interactiveViewModel ? 'Interactive events' : 'Events'} items={interactiveViewModel?.events ?? viewModel.events} />
             {interactiveViewModel ? <InfoList title="Manager commands" items={interactiveViewModel.commands.length > 0 ? interactiveViewModel.commands : ['No manager commands recorded yet.']} /> : null}
             {interactiveViewModel ? <InfoList title="Command effects" items={interactiveViewModel.effects} /> : null}
+            {interactiveViewModel ? <InfoList title="Projected remaining replay" items={interactiveViewModel.projectedReplay} /> : null}
             <InfoList title="Diagnostics" items={viewModel.diagnostics} />
             <InfoList title="Replay" items={viewModel.replay} />
           </div>
