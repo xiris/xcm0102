@@ -34,6 +34,7 @@ Documentation map:
 - 27-production-command-effects-contract.md — deterministic projected effects for manager commands during interactive replay.
 - 28-stabilization-fixes-pass-notes.md — post-P15A duplicate-command and replay-navigation cleanup notes.
 - 29-production-resumable-replay-projection-contract.md — deterministic projected remaining replay after manager commands.
+- 30-project-handoff-status.md — current repository state, latest validation, next recommended slice, and new-chat resume instructions.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
