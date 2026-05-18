@@ -35,6 +35,7 @@ Documentation map:
 - 28-stabilization-fixes-pass-notes.md — post-P15A duplicate-command and replay-navigation cleanup notes.
 - 29-production-resumable-replay-projection-contract.md — deterministic projected remaining replay after manager commands.
 - 30-project-handoff-status.md — current repository state, latest validation, next recommended slice, and new-chat resume instructions.
+- 31-production-authoritative-resumable-match-engine-contract.md — pure authoritative resume module for command-adjusted future simulation.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -53,6 +54,7 @@ Documentation map:
 - plans/2026-05-17-outcome-affecting-manager-commands.md — implementation plan for projected tactical effects from manager commands.
 - plans/2026-05-17-stabilization-fixes-pass.md — stabilization plan for duplicate-command and replay-navigation cleanup.
 - plans/2026-05-17-resumable-match-regeneration.md — implementation plan for projected remaining replay after manager commands.
+- plans/2026-05-18-authoritative-resumable-match-engine.md — implementation plan for the first pure authoritative resumable match engine foundation.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

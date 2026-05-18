@@ -421,6 +421,34 @@ const missions: Mission[] = [
   {
     label: 'MISSION 104: replay projection does not globally delay late proactive commands',
     args: ['vitest', 'run', 'tests/simulation/resumableReplayProjection.test.ts', '-t', 'available late minute']
+  },
+  {
+    label: 'MISSION 105: authoritative resume preserves visible history',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeResume.test.ts', '-t', 'preserves visible history']
+  },
+  {
+    label: 'MISSION 106: authoritative resume deterministic replay',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeResume.test.ts', '-t', 'identical resumed futures']
+  },
+  {
+    label: 'MISSION 107: authoritative resume applies tactical commands',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeResume.test.ts', '-t', 'typed manager commands']
+  },
+  {
+    label: 'MISSION 108: authoritative resume scores arbitrary team ids',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeResume.test.ts', '-t', 'arbitrary team ids']
+  },
+  {
+    label: 'MISSION 109: authoritative resume ignores invalid command pairs',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeResume.test.ts', '-t', 'invalid command']
+  },
+  {
+    label: 'MISSION 110: authoritative resume rejects forged visible history',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeResume.test.ts', '-t', 'forged visible']
+  },
+  {
+    label: 'MISSION 111: authoritative resume signs visible history',
+    args: ['vitest', 'run', 'tests/simulation/authoritativeResume.test.ts', '-t', 'visible history in the deterministic resume signature']
   }
 ];
 

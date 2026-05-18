@@ -71,12 +71,25 @@ export type MatchContext = {
   neutralVenue: boolean;
 };
 
-export type MatchCommand = {
-  minute: number;
-  teamId: string;
-  type: 'change_mentality' | 'change_pressing' | 'change_transition_style';
-  value: Mentality | Pressing | TransitionStyle;
-};
+export type MatchCommand =
+  | {
+      minute: number;
+      teamId: string;
+      type: 'change_mentality';
+      value: Mentality;
+    }
+  | {
+      minute: number;
+      teamId: string;
+      type: 'change_pressing';
+      value: Pressing;
+    }
+  | {
+      minute: number;
+      teamId: string;
+      type: 'change_transition_style';
+      value: TransitionStyle;
+    };
 
 export type MatchInput = {
   seed: number;
