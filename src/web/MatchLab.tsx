@@ -13,6 +13,11 @@ import {
 } from './assignmentState';
 import { createFormationPreview, type FormationPreview } from './formationPreview';
 import { createInteractiveReplayViewModel } from './interactiveReplayViewModel';
+import {
+  createMatchLabLayoutViewModel,
+  groupMatchStatRows,
+  type MatchLabSection
+} from './matchLabLayoutViewModel';
 import { createMatchResultViewModel } from './matchResultViewModel';
 import { createPitchAssignmentViewModel, type PitchAssignmentViewModel } from './pitchAssignmentViewModel';
 import { createPlayerAttributeCards, type PlayerAttributeCard } from './playerAttributeCards';
@@ -61,7 +66,10 @@ export function MatchLab() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const layout = useMemo(() => createMatchLabLayoutViewModel(), []);
+  const section = (id: (typeof layout.sections)[number]['id']) => layout.sections.find((item) => item.id === id)!;
   const viewModel = useMemo(() => (result ? createMatchResultViewModel(result) : null), [result]);
+  const statGroups = useMemo(() => (viewModel ? groupMatchStatRows(viewModel.statRows) : []), [viewModel]);
   const interactiveState = useMemo(() => (result && isInteractiveReplay ? createInteractiveMatchState(result, { currentMinute: interactiveMinute }) : null), [interactiveMinute, isInteractiveReplay, result]);
   const interactiveViewModel = useMemo(() => (interactiveState && result ? createInteractiveReplayViewModel(interactiveState, managerCommands, result.events) : null), [interactiveState, managerCommands, result]);
   const homeFormationPreview = useMemo(() => createFormationPreview(homeFormation, homeAssignments), [homeFormation, homeAssignments]);
@@ -129,15 +137,13 @@ export function MatchLab() {
   return (
     <main className="shell">
       <section className="hero">
-        <p className="eyebrow">CM0102 Online</p>
-        <h1>Match Lab</h1>
-        <p>
-          Pick a formation and tune mentality, pressing, transition style, familiarity, and WIB/WOB
-          movement intensity, then run a deterministic server-authoritative match simulation.
-        </p>
+        <p className="eyebrow">{layout.hero.eyebrow}</p>
+        <h1>{layout.hero.title}</h1>
+        <p>{layout.hero.summary}</p>
       </section>
 
       <form className="panel controls" onSubmit={runSimulation}>
+        <PanelHeader section={section('setup')} />
         <label>
           Seed
           <input type="number" value={seed} onChange={(event) => setSeed(Number(event.target.value))} />
@@ -171,11 +177,13 @@ export function MatchLab() {
       </form>
 
       <section className="panel formation-grid">
+        <PanelHeader section={section('team-shape')} />
         <FormationPreviewCard title="Home shape" preview={homeFormationPreview} />
         <FormationPreviewCard title="Away shape" preview={awayFormationPreview} />
       </section>
 
       <section className="panel assignment-grid">
+        <PanelHeader section={section('assignments')} />
         <AssignmentEditor title="Home assignments" state={homeAssignments} pitch={homePitch} playerCards={homePlayerCards} warnings={homeWarnings} onMovePlayer={(playerId, slotId) => setHomeAssignments((current) => movePlayerToSlot(current, playerId, slotId))} />
         <AssignmentEditor title="Away assignments" state={awayAssignments} pitch={awayPitch} playerCards={awayPlayerCards} warnings={awayWarnings} onMovePlayer={(playerId, slotId) => setAwayAssignments((current) => movePlayerToSlot(current, playerId, slotId))} />
       </section>
@@ -183,9 +191,14 @@ export function MatchLab() {
       {error ? <section className="panel error">{error}</section> : null}
 
       {viewModel ? (
-        <section className="panel result">
-          <h2>{interactiveViewModel?.scoreLine ?? viewModel.scoreTitle}</h2>
+        <section className="panel result match-console">
+          <PanelHeader section={section('match-console')} />
+          <div className="score-strip">
+            <span className="score-kicker">Final / replay scoreline</span>
+            <h2>{interactiveViewModel?.scoreLine ?? viewModel.scoreTitle}</h2>
+          </div>
           <div className="replay-controls">
+            <PanelHeader section={section('replay-controls')} compact />
             <button type="button" onClick={() => { setIsInteractiveReplay(true); setInteractiveMinute(0); setManagerCommands([]); }}>Start interactive replay</button>
             <button type="button" disabled={!interactiveState || interactiveState.isComplete} onClick={() => interactiveState ? setInteractiveMinute(interactiveState.currentMinute) : undefined}>
               {interactiveViewModel?.continueLabel ?? 'Continue to next key event'}
@@ -204,30 +217,47 @@ export function MatchLab() {
               </div>
             </div>
           ) : null}
-          <table>
-            <thead>
-              <tr><th>Stat</th><th>Home</th><th>Away</th></tr>
-            </thead>
-            <tbody>
-              {viewModel.statRows.map((row) => (
-                <tr key={row.label}><td>{row.label}</td><td>{row.home}</td><td>{row.away}</td></tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="stat-groups" aria-label="Grouped match statistics">
+            {statGroups.map((group) => (
+              <section className="stat-card" key={group.id}>
+                <h3>{group.title}</h3>
+                <table>
+                  <thead>
+                    <tr><th>Stat</th><th>Home</th><th>Away</th></tr>
+                  </thead>
+                  <tbody>
+                    {group.rows.map((row) => (
+                      <tr key={row.label}><td>{row.label}</td><td>{row.home}</td><td>{row.away}</td></tr>
+                    ))}
+                  </tbody>
+                </table>
+              </section>
+            ))}
+          </div>
 
-          <div className="grid">
+          <div className="grid console-grid">
             <InfoList title={interactiveViewModel ? 'Interactive events' : 'Events'} items={interactiveViewModel?.events ?? viewModel.events} />
-            {interactiveViewModel ? <InfoList title="Manager commands" items={interactiveViewModel.commands.length > 0 ? interactiveViewModel.commands : ['No manager commands recorded yet.']} /> : null}
+            {interactiveViewModel ? <InfoList title={section('manager-commands').title} eyebrow={section('manager-commands').eyebrow} items={interactiveViewModel.commands.length > 0 ? interactiveViewModel.commands : ['No manager commands recorded yet.']} /> : null}
             {interactiveViewModel ? <InfoList title="Command effects" items={interactiveViewModel.effects} /> : null}
-            {interactiveViewModel ? <InfoList title="Projected remaining replay" items={interactiveViewModel.projectedReplay} /> : null}
-            <InfoList title="Diagnostics" items={viewModel.diagnostics} />
-            <InfoList title="Replay" items={viewModel.replay} />
+            {interactiveViewModel ? <InfoList title={section('projection').title} eyebrow={section('projection').eyebrow} items={interactiveViewModel.projectedReplay} /> : null}
+            <InfoList title={section('diagnostics').title} eyebrow={section('diagnostics').eyebrow} items={viewModel.diagnostics} />
+            <InfoList title={section('replay-metadata').title} eyebrow={section('replay-metadata').eyebrow} items={viewModel.replay} />
           </div>
         </section>
       ) : (
         <section className="panel empty">Run a match to generate score, stats, events, diagnostics, and replay metadata.</section>
       )}
     </main>
+  );
+}
+
+function PanelHeader({ section, compact = false }: { section: MatchLabSection; compact?: boolean }) {
+  return (
+    <header className={compact ? 'panel-header panel-header-compact' : 'panel-header'}>
+      <p className="eyebrow">{section.eyebrow}</p>
+      <h2>{section.title}</h2>
+      {!compact ? <p>{section.summary}</p> : null}
+    </header>
   );
 }
 
@@ -362,9 +392,10 @@ function AssignmentEditor({
   );
 }
 
-function InfoList({ title, items }: { title: string; items: string[] }) {
+function InfoList({ title, items, eyebrow }: { title: string; items: string[]; eyebrow?: string }) {
   return (
-    <section>
+    <section className="info-list">
+      {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
       <h3>{title}</h3>
       <ul>
         {items.map((item) => <li key={item}>{item}</li>)}
