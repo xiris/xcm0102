@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next browser-session slice: P16C Replay Session Persistence Foundation.
+- Latest completed local work before the next stabilization/custom-tactic slice: P16D Browser Session ID Resume Integration.
 
 ## Product Direction
 
@@ -48,6 +48,7 @@ The browser app currently exposes a Match Lab where the user can:
 - consume a tested, modernized Match Lab layout with grouped stat panels and clearer replay/diagnostic separation
 - request server-authoritative resumed replay output from the interactive replay console and compare it with client-side projected replay
 - create server-owned replay sessions through the API and resume them authoritatively from stored visible history and command logs
+- create and hold a browser replay session ID, sync manager commands/visible events, and request authoritative resume through session-owned routes
 
 ## Completed Production Slices
 
@@ -84,42 +85,52 @@ Completed:
 - Web view-model helpers format authoritative resume score/signature/event-count diagnostics.
 - A tested browser client posts visible replay history and manager commands to `/api/resume-match`.
 - Match Lab can request server-authoritative resumed replay output and displays it in a distinct panel from client-side projection.
-- Replay-session repository and API helpers can create in-memory demo match sessions, append command logs, and resume authoritatively from stored server state.
-- Fastify exposes stored-session routes at `/api/replay-sessions`, `/api/replay-sessions/:sessionId/commands`, and `/api/replay-sessions/:sessionId/resume`.
+- Replay-session repository and API helpers can create in-memory demo match sessions, append command logs, synchronize visible events, and resume authoritatively from stored server state.
+- Fastify exposes stored-session routes at `/api/replay-sessions`, `/api/replay-sessions/:sessionId/commands`, `/api/replay-sessions/:sessionId/visible-events`, and `/api/replay-sessions/:sessionId/resume`.
+- Next app routes expose the same replay-session create/append/sync/resume contract for browser use.
+- Match Lab now creates a replay session after simulation, appends manager commands to that session, syncs visible replay events, and requests authoritative resume by session ID.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P16C Replay Session Persistence Foundation
+## Latest Slice: P16D Browser Session ID Resume Integration
 
 Files added/updated:
 
-- `src/api/replaySessionRepository.ts`
-- `tests/api/replaySessionRepository.test.ts`
+- `src/web/replaySessionClient.ts`
+- `tests/web/replaySessionClient.test.ts`
+- `src/web/MatchLab.tsx`
+- `app/api/replay-sessions/sessionStore.ts`
+- `app/api/replay-sessions/route.ts`
+- `app/api/replay-sessions/[sessionId]/commands/route.ts`
+- `app/api/replay-sessions/[sessionId]/visible-events/route.ts`
+- `app/api/replay-sessions/[sessionId]/resume/route.ts`
 - `src/api/replaySessionEndpoint.ts`
 - `tests/api/replaySessionEndpoint.test.ts`
 - `src/api/server.ts`
 - `tests/api/server.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/35-production-replay-session-persistence-contract.md`
-- `docs/plans/2026-05-18-replay-session-persistence-foundation.md`
+- `docs/36-browser-replay-session-ui-contract.md`
+- `docs/plans/2026-05-18-browser-replay-session-ui-integration.md`
 - `docs/README.md`
 
 Behavior implemented:
 
-- Added a replaceable `ReplaySessionRepository` interface with an in-memory implementation for current demo sessions.
-- Stored replay sessions include seed, initial match result, visible events, manager commands, latest authoritative signature, timestamps, and audit entries.
-- Added API helpers to create a replay session, append manager commands, and run authoritative resume from stored server-side visible history/commands.
-- Added Fastify routes for stored sessions without removing the existing `/api/resume-match` compatibility path.
-- Stored authoritative resume records latest signature and event-count audit metadata.
+- Added a tested browser replay-session client for create, command append, visible-event sync, and session-owned authoritative resume.
+- Added server/API visible-event sync helper and Fastify route for `/api/replay-sessions/:sessionId/visible-events`.
+- Added Next app replay-session routes backed by a shared in-memory repository for the running app process.
+- Match Lab now creates a replay session after a successful simulation and displays session status in replay metadata.
+- Manager commands are appended to the server-owned session when recorded.
+- Authoritative resume now syncs visible replay events, then resumes through `/api/replay-sessions/:sessionId/resume`.
+- Legacy `/api/resume-match` client/API coverage remains in place during the transition.
 
 ## Latest Validation
 
-For P16C, run and verify:
+For P16D, run and verify:
 
 ```bash
-npx vitest run tests/api/replaySessionRepository.test.ts
-npx vitest run tests/api/replaySessionEndpoint.test.ts
+npx vitest run tests/web/replaySessionClient.test.ts
+npx vitest run tests/api/replaySessionEndpoint.test.ts -t 'creates a demo session'
 npx vitest run tests/api/server.test.ts -t 'replay session endpoints'
 npm run test:missions
 npm test
@@ -127,7 +138,7 @@ npx tsc --noEmit
 npm run build
 ```
 
-Expected mission count after P16C: ALL 122 MISSIONS PASSED.
+Expected mission count after P16D: ALL 124 MISSIONS PASSED.
 
 ## Important User Preferences
 
@@ -158,31 +169,31 @@ npx tsc --noEmit && npm run build
 
 ## Recommended Next Slice
 
-Recommended next work: **P16D Browser Session ID Resume Integration**.
+Recommended next work: **P16E Stabilization and Custom-Tactic Session Parity**.
 
 Why this is next:
 
-The API can now create server-owned replay sessions and run authoritative resume from stored visible history/commands, but Match Lab still uses the legacy browser-payload `/api/resume-match` path. The next slice should make the browser create/hold a replay session ID after running a match, append manager commands to that session, and request authoritative resume through the session route.
+The browser now uses replay-session IDs for its primary authoritative resume path, but the stored session currently reconstructs the demo fixture from seed rather than preserving the full custom Match Lab tactic/player-assignment payload used by `/api/simulate-match`. Before deeper multiplayer or persistence work, stabilize the new session routes and close that custom-tactic parity gap.
 
 Suggested goals:
 
-1. Add a tested browser client for replay-session creation, command append, and session-owned resume.
-2. Wire Match Lab to create a replay session after a successful simulation.
-3. Append manager commands to the stored session before requesting authoritative resume.
-4. Display session ID/audit metadata in the replay metadata panel.
-5. Keep legacy `/api/resume-match` tests passing during the transition.
+1. Add regression coverage that verifies session-owned authoritative resume respects the same tactical payload used to create the browser match.
+2. Extend replay-session creation to accept/store the simulation payload or normalized tactic snapshot instead of seed-only demo reconstruction.
+3. Add UI status/error cleanup for async session command append failures and visible-event sync failures.
+4. Remove duplicate mission coverage if missions 122/124 remain identical after route coverage is split.
+5. Keep legacy `/api/resume-match` tests passing until the compatibility route is deliberately retired.
 
 Suggested docs:
 
-- `docs/36-browser-replay-session-ui-contract.md`
-- `docs/plans/2026-05-18-browser-replay-session-ui-integration.md`
+- `docs/37-production-replay-session-tactic-parity-contract.md`
+- `docs/plans/2026-05-18-replay-session-tactic-parity.md`
 
 Suggested TDD sequence:
 
-1. Add web client tests for session create/append/resume request shapes and API errors.
-2. Add pure UI state tests or helper tests for session status/reset rules.
-3. Wire Match Lab state/events after pure tests are green.
-4. Add mission tests and update handoff docs.
+1. Write failing tests proving stored session creation accepts full simulation/tactical payload.
+2. Write failing Match Lab/client tests for forwarding that payload into session creation.
+3. Implement session payload persistence and authoritative resume reconstruction from stored payload.
+4. Stabilize browser error/status behavior around append/sync/resume.
 5. Run full validation and commit locally.
 
 ## Known Non-Blocking Follow-Ups

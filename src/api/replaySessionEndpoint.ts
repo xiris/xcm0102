@@ -48,6 +48,22 @@ export function appendReplaySessionCommandForApi(payload: unknown, repository: R
   }
 }
 
+export function syncReplaySessionVisibleEventsForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
+  const parsed = parseVisibleEventsRequest(payload);
+  if (!parsed.ok) return badRequest(parsed.errors.join('; '));
+
+  try {
+    const session = repository.replaceVisibleEvents(parsed.value.sessionId, parsed.value.visibleEvents);
+    return {
+      ok: true,
+      status: 200,
+      body: { sessionId: session.sessionId, visibleEventCount: session.visibleEvents.length }
+    };
+  } catch (error) {
+    return notFound(error);
+  }
+}
+
 export function resumeReplaySessionForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
   const parsed = parseResumeSessionRequest(payload);
   if (!parsed.ok) return badRequest(parsed.errors.join('; '));
@@ -118,6 +134,16 @@ function parseAppendCommandRequest(payload: unknown) {
   return { ok: true as const, value: { sessionId: body.value.sessionId as string, command: body.value.command as ManagerCommand } };
 }
 
+function parseVisibleEventsRequest(payload: unknown) {
+  const body = asObject(payload);
+  if (!body.ok) return body;
+  const errors: string[] = [];
+  if (typeof body.value.sessionId !== 'string' || body.value.sessionId.length === 0) errors.push('sessionId must be a non-empty string');
+  if (!Array.isArray(body.value.visibleEvents) || !body.value.visibleEvents.every(isMatchEventLike)) errors.push('visibleEvents must be an array of match events');
+  if (errors.length > 0) return { ok: false as const, errors };
+  return { ok: true as const, value: { sessionId: body.value.sessionId as string, visibleEvents: body.value.visibleEvents as MatchEvent[] } };
+}
+
 function parseResumeSessionRequest(payload: unknown) {
   const body = asObject(payload);
   if (!body.ok) return body;
@@ -137,6 +163,18 @@ function asObject(payload: unknown) {
 
 function isMinute(value: unknown): boolean {
   return typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= 90;
+}
+
+function isMatchEventLike(value: unknown): value is MatchEvent {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const event = value as Record<string, unknown>;
+  return typeof event.minute === 'number'
+    && Number.isInteger(event.minute)
+    && event.minute >= 0
+    && event.minute <= 90
+    && typeof event.type === 'string'
+    && typeof event.description === 'string'
+    && (event.teamId === undefined || typeof event.teamId === 'string');
 }
 
 function isManagerCommandLike(value: unknown): value is ManagerCommand {

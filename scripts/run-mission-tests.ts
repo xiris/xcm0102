@@ -493,6 +493,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 122: replay session Fastify routes',
     args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'replay session endpoints']
+  },
+  {
+    label: 'MISSION 123: replay session browser client contract',
+    args: ['vitest', 'run', 'tests/web/replaySessionClient.test.ts']
+  },
+  {
+    label: 'MISSION 124: replay session visible-event sync route',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'replay session endpoints']
   }
 ];
 

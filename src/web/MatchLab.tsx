@@ -20,7 +20,12 @@ import {
 } from './matchLabLayoutViewModel';
 import { createMatchResultViewModel } from './matchResultViewModel';
 import { createPitchAssignmentViewModel, type PitchAssignmentViewModel } from './pitchAssignmentViewModel';
-import { resumeMatchFromWeb } from './authoritativeResumeClient';
+import {
+  appendReplaySessionCommandFromWeb,
+  createReplaySessionFromWeb,
+  resumeReplaySessionFromWeb,
+  syncReplaySessionVisibleEventsFromWeb
+} from './replaySessionClient';
 import { createPlayerAttributeCards, type PlayerAttributeCard } from './playerAttributeCards';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
@@ -67,6 +72,11 @@ export function MatchLab() {
   const [authoritativeReplay, setAuthoritativeReplay] = useState<string[]>([]);
   const [authoritativeError, setAuthoritativeError] = useState<string | null>(null);
   const [isAuthoritativeLoading, setIsAuthoritativeLoading] = useState(false);
+  const [replaySessionId, setReplaySessionId] = useState<string | null>(null);
+  const [replaySessionStatus, setReplaySessionStatus] = useState<string>('Replay session: not created yet.');
+  const [replaySessionError, setReplaySessionError] = useState<string | null>(null);
+  const [replaySessionVisibleEventCount, setReplaySessionVisibleEventCount] = useState(0);
+  const [replaySessionCommandCount, setReplaySessionCommandCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -84,6 +94,13 @@ export function MatchLab() {
   const awayPlayerCards = useMemo(() => createPlayerAttributeCards(awayAssignments), [awayAssignments]);
   const homeWarnings = useMemo(() => roleMismatchWarnings(homeAssignments), [homeAssignments]);
   const awayWarnings = useMemo(() => roleMismatchWarnings(awayAssignments), [awayAssignments]);
+  const replayMetadata = useMemo(() => [
+    ...(viewModel?.replay ?? []),
+    replaySessionId ? `Replay session: ${replaySessionId}` : replaySessionStatus,
+    `Session visible events: ${replaySessionVisibleEventCount}`,
+    `Session command count: ${replaySessionCommandCount}`,
+    ...(replaySessionError ? [`Replay session error: ${replaySessionError}`] : [])
+  ], [replaySessionCommandCount, replaySessionError, replaySessionId, replaySessionStatus, replaySessionVisibleEventCount, viewModel]);
 
   function setHomeFormation(formation: Formation) {
     setHomeFormationState(formation);
@@ -128,6 +145,21 @@ export function MatchLab() {
       setManagerCommands([]);
       setAuthoritativeReplay([]);
       setAuthoritativeError(null);
+      setReplaySessionId(null);
+      setReplaySessionStatus('Creating replay session...');
+      setReplaySessionError(null);
+      setReplaySessionVisibleEventCount(0);
+      setReplaySessionCommandCount(0);
+      try {
+        const session = await createReplaySessionFromWeb({ seed });
+        setReplaySessionId(session.sessionId);
+        setReplaySessionVisibleEventCount(session.visibleEventCount);
+        setReplaySessionCommandCount(0);
+        setReplaySessionStatus(`Replay session ready for seed ${seed}.`);
+      } catch (sessionError) {
+        setReplaySessionStatus('Replay session creation failed.');
+        setReplaySessionError(sessionError instanceof Error ? sessionError.message : 'Replay session creation failed');
+      }
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Simulation request failed');
     } finally {
@@ -135,24 +167,47 @@ export function MatchLab() {
     }
   }
 
-  function recordManagerAction(action: string) {
+  async function recordManagerAction(action: string) {
     if (!interactiveState?.pauseEvent) return;
-    setManagerCommands((current) => appendManagerCommand(current, { action, pauseEvent: interactiveState.pauseEvent! }));
+    const nextCommands = appendManagerCommand(managerCommands, { action, pauseEvent: interactiveState.pauseEvent });
+    setManagerCommands(nextCommands);
     setAuthoritativeReplay([]);
     setAuthoritativeError(null);
+
+    const newCommand = nextCommands.at(-1);
+    if (!replaySessionId || nextCommands.length === managerCommands.length || !newCommand) return;
+
+    try {
+      const appended = await appendReplaySessionCommandFromWeb({
+        sessionId: replaySessionId,
+        command: newCommand
+      });
+      setReplaySessionCommandCount(appended.commandCount);
+      setReplaySessionStatus('Replay session command log synchronized.');
+      setReplaySessionError(null);
+    } catch (caught) {
+      setReplaySessionError(caught instanceof Error ? caught.message : 'Replay session command append failed');
+    }
   }
 
   async function requestAuthoritativeResume() {
     if (!interactiveState) return;
+    if (!replaySessionId) {
+      setAuthoritativeError('Replay session is not ready yet. Run a match again to create one.');
+      return;
+    }
     setIsAuthoritativeLoading(true);
     setAuthoritativeError(null);
 
     try {
-      const response = await resumeMatchFromWeb({
-        seed,
-        currentMinute: interactiveState.currentMinute,
-        visibleEvents: interactiveState.visibleEvents,
-        managerCommands
+      const synced = await syncReplaySessionVisibleEventsFromWeb({
+        sessionId: replaySessionId,
+        visibleEvents: interactiveState.visibleEvents
+      });
+      setReplaySessionVisibleEventCount(synced.visibleEventCount);
+      const response = await resumeReplaySessionFromWeb({
+        sessionId: replaySessionId,
+        currentMinute: interactiveState.currentMinute
       });
       setAuthoritativeReplay(formatAuthoritativeReplay({
         score: response.score,
@@ -161,6 +216,7 @@ export function MatchLab() {
         signature: response.signature,
         currentMinute: interactiveState.currentMinute
       }));
+      setReplaySessionStatus(`Replay session resumed with signature ${response.signature}.`);
     } catch (caught) {
       setAuthoritativeReplay([]);
       setAuthoritativeError(caught instanceof Error ? caught.message : 'Authoritative resume request failed');
@@ -239,7 +295,7 @@ export function MatchLab() {
               {interactiveViewModel?.continueLabel ?? 'Continue to next key event'}
             </button>
             <button type="button" onClick={() => { setIsInteractiveReplay(false); setAuthoritativeReplay([]); setAuthoritativeError(null); }}>Show full match</button>
-            <button type="button" disabled={!interactiveState || isAuthoritativeLoading} onClick={requestAuthoritativeResume}>
+            <button type="button" disabled={!interactiveState || isAuthoritativeLoading || !replaySessionId} onClick={requestAuthoritativeResume}>
               {isAuthoritativeLoading ? 'Requesting authoritative resume...' : 'Request authoritative resume'}
             </button>
           </div>
@@ -280,7 +336,7 @@ export function MatchLab() {
             {interactiveViewModel ? <InfoList title={section('projection').title} eyebrow={section('projection').eyebrow} items={interactiveViewModel.projectedReplay} /> : null}
             {interactiveViewModel ? <InfoList title="Server-authoritative replay" eyebrow="Server resume" items={authoritativeReplay.length > 0 ? authoritativeReplay : [authoritativeError ?? (isAuthoritativeLoading ? 'Requesting server-authoritative resume...' : 'Request an authoritative resume to compare against the client projection.')]} /> : null}
             <InfoList title={section('diagnostics').title} eyebrow={section('diagnostics').eyebrow} items={viewModel.diagnostics} />
-            <InfoList title={section('replay-metadata').title} eyebrow={section('replay-metadata').eyebrow} items={viewModel.replay} />
+            <InfoList title={section('replay-metadata').title} eyebrow={section('replay-metadata').eyebrow} items={replayMetadata} />
           </div>
         </section>
       ) : (

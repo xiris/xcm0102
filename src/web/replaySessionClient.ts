@@ -1,0 +1,95 @@
+import type { MatchEvent, MatchReport, MatchResult } from '../simulation/domain';
+import type { ManagerCommand } from '../simulation/managerCommands';
+
+export type WebReplaySessionCreateRequest = {
+  seed: number;
+  currentMinute?: number;
+};
+
+export type WebReplaySessionCreateResult = {
+  sessionId: string;
+  score: MatchResult['score'];
+  visibleEventCount: number;
+  replay: MatchReport['replay'];
+};
+
+export type WebReplaySessionCommandRequest = {
+  sessionId: string;
+  command: ManagerCommand;
+};
+
+export type WebReplaySessionCommandResult = {
+  sessionId: string;
+  commandCount: number;
+};
+
+export type WebReplaySessionVisibleEventsRequest = {
+  sessionId: string;
+  visibleEvents: MatchEvent[];
+};
+
+export type WebReplaySessionVisibleEventsResult = {
+  sessionId: string;
+  visibleEventCount: number;
+};
+
+export type WebReplaySessionResumeRequest = {
+  sessionId: string;
+  currentMinute: number;
+};
+
+export type WebReplaySessionResumeResult = {
+  sessionId: string;
+  authoritative: true;
+  score: MatchResult['score'];
+  stats: MatchResult['stats'];
+  events: MatchEvent[];
+  diagnostics: string[];
+  replay: MatchReport['replay'];
+  signature: string;
+};
+
+type FetchLike = (input: string, init: RequestInit) => Promise<{
+  ok: boolean;
+  status?: number;
+  json: () => Promise<unknown>;
+}>;
+
+function getFetch(fetcher?: FetchLike): FetchLike {
+  return fetcher ?? fetch as FetchLike;
+}
+
+export async function createReplaySessionFromWeb(request: WebReplaySessionCreateRequest, fetcher?: FetchLike): Promise<WebReplaySessionCreateResult> {
+  return postJson('/api/replay-sessions', request, fetcher) as Promise<WebReplaySessionCreateResult>;
+}
+
+export async function appendReplaySessionCommandFromWeb(request: WebReplaySessionCommandRequest, fetcher?: FetchLike): Promise<WebReplaySessionCommandResult> {
+  const { sessionId, command } = request;
+  return postJson(`/api/replay-sessions/${sessionId}/commands`, { command }, fetcher) as Promise<WebReplaySessionCommandResult>;
+}
+
+export async function syncReplaySessionVisibleEventsFromWeb(request: WebReplaySessionVisibleEventsRequest, fetcher?: FetchLike): Promise<WebReplaySessionVisibleEventsResult> {
+  const { sessionId, visibleEvents } = request;
+  return postJson(`/api/replay-sessions/${sessionId}/visible-events`, { visibleEvents }, fetcher) as Promise<WebReplaySessionVisibleEventsResult>;
+}
+
+export async function resumeReplaySessionFromWeb(request: WebReplaySessionResumeRequest, fetcher?: FetchLike): Promise<WebReplaySessionResumeResult> {
+  const { sessionId, currentMinute } = request;
+  return postJson(`/api/replay-sessions/${sessionId}/resume`, { currentMinute }, fetcher) as Promise<WebReplaySessionResumeResult>;
+}
+
+async function postJson(url: string, body: unknown, fetcher?: FetchLike): Promise<unknown> {
+  const response = await getFetch(fetcher)(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const payload = await response.json();
+
+  if (!response.ok) {
+    const message = payload && typeof payload === 'object' && 'error' in payload ? String(payload.error) : `HTTP ${response.status ?? 'error'}`;
+    throw new Error(`Replay session request failed: ${message}`);
+  }
+
+  return payload;
+}

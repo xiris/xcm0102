@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   appendReplaySessionCommandForApi,
   createReplaySessionForApi,
-  resumeReplaySessionForApi
+  resumeReplaySessionForApi,
+  syncReplaySessionVisibleEventsForApi
 } from '../../src/api/replaySessionEndpoint';
 import { createInMemoryReplaySessionRepository } from '../../src/api/replaySessionRepository';
 
@@ -36,6 +37,15 @@ describe('replay session API helpers', () => {
       ok: true,
       status: 200,
       body: { sessionId, commandCount: 1 }
+    });
+
+    const storedBeforeSync = repository.getSession(sessionId);
+    const synced = syncReplaySessionVisibleEventsForApi({ sessionId, visibleEvents: storedBeforeSync.visibleEvents }, repository);
+
+    expect(synced).toEqual({
+      ok: true,
+      status: 200,
+      body: { sessionId, visibleEventCount: storedBeforeSync.visibleEvents.length }
     });
 
     const resumed = resumeReplaySessionForApi({ sessionId, currentMinute: 50 }, repository);

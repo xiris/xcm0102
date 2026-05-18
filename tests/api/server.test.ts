@@ -204,15 +204,45 @@ describe('production API server', () => {
     expect(appended.statusCode).toBe(200);
     expect(appended.json()).toEqual({ sessionId, commandCount: 1 });
 
+    const synced = await server.inject({
+      method: 'POST',
+      url: `/api/replay-sessions/${sessionId}/visible-events`,
+      payload: { visibleEvents: [] }
+    });
+
+    expect(synced.statusCode).toBe(200);
+    expect(synced.json()).toEqual({ sessionId, visibleEventCount: 0 });
+
+    const resumeSession = await server.inject({
+      method: 'POST',
+      url: '/api/replay-sessions',
+      payload: { seed: 71, currentMinute: 50 }
+    });
+    const resumeSessionId = resumeSession.json().sessionId as string;
+    await server.inject({
+      method: 'POST',
+      url: `/api/replay-sessions/${resumeSessionId}/commands`,
+      payload: {
+        command: {
+          id: 'cmd-050-01-change-pressing',
+          minute: 50,
+          action: 'Change pressing',
+          eventType: 'goal',
+          eventDescription: 'Pause event.',
+          effectSummary: 'Recorded intent: change pressing at 50’.'
+        }
+      }
+    });
+
     const resumed = await server.inject({
       method: 'POST',
-      url: `/api/replay-sessions/${sessionId}/resume`,
+      url: `/api/replay-sessions/${resumeSessionId}/resume`,
       payload: { currentMinute: 50 }
     });
 
     expect(resumed.statusCode).toBe(200);
     expect(resumed.json()).toEqual(expect.objectContaining({
-      sessionId,
+      sessionId: resumeSessionId,
       authoritative: true,
       signature: expect.stringContaining('vh-'),
       diagnostics: expect.arrayContaining([
