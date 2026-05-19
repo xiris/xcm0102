@@ -501,6 +501,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 124: replay session tactic parity',
     args: ['vitest', 'run', 'tests/api/replaySessionEndpoint.test.ts', '-t', 'preserves custom tactical payloads']
+  },
+  {
+    label: 'MISSION 125: durable replay session hydration',
+    args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', '-t', 'exports and hydrates durable storage records']
   }
 ];
 

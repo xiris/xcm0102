@@ -71,6 +71,52 @@ describe('replay session repository', () => {
     }));
   });
 
+  it('exports and hydrates durable storage records', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const initialResult = matchResultFixture();
+    const baseInput = createSampleMatchInput({ seed: 42 });
+    const created = repository.createSession({
+      seed: 42,
+      baseInput,
+      initialResult,
+      visibleEvents: initialResult.events.filter((event) => event.minute <= 12)
+    });
+    repository.appendManagerCommand(created.sessionId, command);
+    repository.replaceVisibleEvents(created.sessionId, initialResult.events);
+    repository.recordAuthoritativeResume(created.sessionId, { currentMinute: 12, eventCount: 3, signature: '42|12|cmd|vh-test|3' });
+
+    const records = repository.listStorageRecords();
+    expect(records).toHaveLength(1);
+    const record = records[0];
+    if (!record) throw new Error('expected exported replay session record');
+    expect(record).toEqual(expect.objectContaining({
+      schemaVersion: 1,
+      sessionId: created.sessionId,
+      seed: 42,
+      baseInput,
+      initialResult,
+      visibleEvents: initialResult.events,
+      managerCommands: [command],
+      latestAuthoritativeSignature: '42|12|cmd|vh-test|3'
+    }));
+
+    record.visibleEvents.length = 0;
+    expect(repository.getSession(created.sessionId).visibleEvents).toHaveLength(3);
+
+    const hydrated = createInMemoryReplaySessionRepository();
+    hydrated.hydrateStorageRecords(repository.listStorageRecords());
+    expect(hydrated.getSession(created.sessionId)).toEqual(repository.getSession(created.sessionId));
+
+    const next = hydrated.createSession({ seed: 99, baseInput: createSampleMatchInput({ seed: 99 }), initialResult });
+    expect(next.sessionId).toBe('rs-000002');
+  });
+
+  it('rejects unsupported replay session storage schema versions', () => {
+    const repository = createInMemoryReplaySessionRepository();
+
+    expect(() => repository.hydrateStorageRecords([{ schemaVersion: 999, sessionId: 'rs-bad' } as never])).toThrow('Unsupported replay session storage schema version: 999');
+  });
+
   it('throws readable not-found errors for missing sessions', () => {
     const repository = createInMemoryReplaySessionRepository();
 

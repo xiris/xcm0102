@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next persistence/multiplayer slice: P16E Stabilization and Custom-Tactic Session Parity.
+- Latest completed local work before the next multiplayer/session ownership slice: P17A Durable Match Persistence Design and Repository Seam.
 
 ## Product Direction
 
@@ -50,6 +50,7 @@ The browser app currently exposes a Match Lab where the user can:
 - create server-owned replay sessions through the API and resume them authoritatively from stored visible history and command logs
 - create and hold a browser replay session ID, sync manager commands/visible events, and request authoritative resume through session-owned routes
 - preserve the full Match Lab tactical payload inside replay sessions so session-owned resume does not drift back to demo defaults
+- export and hydrate schema-versioned replay-session storage records so future durable persistence can reconstruct sessions without losing tactic/command parity
 
 ## Completed Production Slices
 
@@ -91,50 +92,47 @@ Completed:
 - Next app routes expose the same replay-session create/append/sync/resume contract for browser use.
 - Match Lab now creates a replay session after simulation, appends manager commands to that session, syncs visible replay events, and requests authoritative resume by session ID.
 - Replay-session creation now shares the simulation API input builder and stores the full `MatchInput`, preserving custom formations, tactical settings, movement/familiarity, and player assignments for session-owned resume.
+- Replay-session repositories now export and hydrate schema-versioned storage records, preserving base input, results, visible events, commands, audit log, timestamps, and generated ID continuity.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P16E Stabilization and Custom-Tactic Session Parity
+## Latest Slice: P17A Durable Match Persistence Design and Repository Seam
 
 Files added/updated:
 
-- `src/api/simulationEndpoint.ts`
 - `src/api/replaySessionRepository.ts`
 - `tests/api/replaySessionRepository.test.ts`
-- `src/api/replaySessionEndpoint.ts`
 - `tests/api/replaySessionEndpoint.test.ts`
-- `src/web/replaySessionClient.ts`
-- `tests/web/replaySessionClient.test.ts`
-- `src/web/MatchLab.tsx`
 - `scripts/run-mission-tests.ts`
-- `docs/37-production-replay-session-tactic-parity-contract.md`
-- `docs/plans/2026-05-18-replay-session-tactic-parity.md`
+- `docs/38-production-durable-replay-session-persistence-contract.md`
+- `docs/plans/2026-05-19-durable-replay-session-persistence.md`
 - `docs/README.md`
 
 Behavior implemented:
 
-- Extracted a shared simulation API `MatchInput` builder so `/api/simulate-match` and replay-session creation use identical parsing/default/team/tactic construction.
-- Replay sessions now store the authoritative base `MatchInput` alongside seed, initial result, visible events, commands, audit log, and latest signature.
-- Session-owned authoritative resume now uses `session.baseInput`, preserving custom Match Lab formations, mentalities, pressing, transitions, familiarity, movement, and player assignments.
-- Browser replay-session creation now posts the full simulation payload, and Match Lab builds that payload once for both simulation and session creation.
-- The duplicate mission 124 route coverage was replaced with a custom-tactic parity mission.
+- Added a schema-versioned `ReplaySessionStorageRecord` contract with `schemaVersion: 1`.
+- Extended replay-session repositories with `listStorageRecords()` and `hydrateStorageRecords(records)`.
+- Storage records preserve durable reconstruction state: session ID, seed, canonical base input, initial result, visible events, manager commands, latest authoritative signature, audit log, and timestamps.
+- Export and hydrate paths deep-clone record state so callers cannot mutate repository contents by holding exported references.
+- Hydration rejects unsupported schema versions with a readable error.
+- Hydration advances generated IDs past imported `rs-000001`-style session IDs.
+- Added API regression coverage proving a hydrated custom-tactic replay session resumes with the same authoritative output as the original repository.
 
 ## Latest Validation
 
-For P16E, run and verify:
+For P17A, run and verify:
 
 ```bash
-npx vitest run tests/api/replaySessionEndpoint.test.ts -t 'preserves custom tactical payloads'
-npx vitest run tests/web/replaySessionClient.test.ts -t 'creates appends synchronizes'
-npx vitest run tests/api/replaySessionRepository.test.ts
+npx vitest run tests/api/replaySessionRepository.test.ts -t 'exports and hydrates durable storage records|rejects unsupported'
+npx vitest run tests/api/replaySessionEndpoint.test.ts -t 'resumes custom tactical sessions after storage hydration'
 npm run test:missions
 npm test
 npx tsc --noEmit
 npm run build
 ```
 
-Expected mission count after P16E: ALL 124 MISSIONS PASSED.
+Expected mission count after P17A: ALL 125 MISSIONS PASSED.
 
 ## Important User Preferences
 
@@ -165,30 +163,30 @@ npx tsc --noEmit && npm run build
 
 ## Recommended Next Slice
 
-Recommended next work: **P17A Durable Match Persistence Design and Repository Seam**.
+Recommended next work: **P17B Session Ownership and Head-to-Head Lobby Contract**.
 
 Why this is next:
 
-Replay sessions now preserve browser tactics and command logs in memory, which completes the server-authoritative demo-session loop. The next production risk is durable reconstruction: matches, session base inputs, visible events, commands, reports, and audit entries need a storage-shaped repository contract before multiplayer lobbies or career save/load work can be trusted.
+Replay sessions now have durable-shaped reconstruction records, but they are still anonymous single-session objects. Before real multiplayer or career saves, the project needs ownership fields and a small lobby/match-session contract: who controls home/away, which side a command belongs to, and what state moves from setup to lock to kickoff/resume.
 
 Suggested goals:
 
-1. Add a storage-oriented repository contract for match/replay-session records that can later be backed by PostgreSQL/Drizzle/Prisma.
-2. Define stable serializable records for base match input, initial result, visible events, manager commands, latest authoritative output, and audit log.
-3. Keep the current in-memory implementation but shape it like durable storage boundaries.
-4. Add tests proving a session can be serialized/deserialized and resumed without losing tactic parity.
-5. Document persistence boundaries and migration/versioning notes.
+1. Introduce a provider-neutral head-to-head/session ownership domain contract without adding auth.
+2. Add typed owner/side metadata to replay-session storage records in a backward-compatible way.
+3. Split manager commands by side (`home`/`away`) at the API/repository boundary while keeping existing home-only UI behavior compatible.
+4. Add tests proving home and away command logs remain isolated and durable after hydration.
+5. Document lobby/session state transitions for future online play.
 
 Suggested docs:
 
-- `docs/38-production-durable-replay-session-persistence-contract.md`
-- `docs/plans/2026-05-18-durable-replay-session-persistence.md`
+- `docs/39-production-head-to-head-session-ownership-contract.md`
+- `docs/plans/2026-05-19-head-to-head-session-ownership.md`
 
 Suggested TDD sequence:
 
-1. Write RED repository tests for export/import or storage-record round trip.
-2. Add API/helper tests proving resume works after repository rehydration.
-3. Implement durable-shaped records in the in-memory repository.
+1. Write RED domain/repository tests for session side ownership and side-specific command logs.
+2. Implement typed ownership metadata and command-side storage with compatibility defaults.
+3. Add API/helper tests for side-aware command append and resume behavior.
 4. Update docs, mission runner, full validation, browser check, and local commit.
 
 ## Known Non-Blocking Follow-Ups

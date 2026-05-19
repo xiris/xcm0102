@@ -93,6 +93,72 @@ describe('replay session API helpers', () => {
     }));
   });
 
+  it('resumes custom tactical sessions after storage hydration', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const request = {
+      seed: 119,
+      homeFormation: '5-3-2',
+      awayFormation: '3-5-2',
+      homeMentality: 'defensive',
+      awayMentality: 'attacking',
+      homePressing: 'low',
+      awayPressing: 'high',
+      homeFamiliarity: 0.92,
+      awayFamiliarity: 0.35,
+      homeMovement: 'compact',
+      awayMovement: 'extreme',
+      homeTransitionStyle: 'hold_shape',
+      awayTransitionStyle: 'fast_break',
+      homeAssignments: {
+        gk: 'home-p1',
+        dl: 'home-p2',
+        dc1: 'home-p3',
+        dc2: 'home-p4',
+        dc3: 'home-p5',
+        dr: 'home-p6',
+        mc1: 'home-p7',
+        mc2: 'home-p8',
+        mc3: 'home-p9',
+        fc1: 'home-p10',
+        fc2: 'home-p11'
+      },
+      awayAssignments: {
+        gk: 'away-p1',
+        dc1: 'away-p2',
+        dc2: 'away-p3',
+        dc3: 'away-p4',
+        wbl: 'away-p5',
+        mc1: 'away-p6',
+        mc2: 'away-p7',
+        mc3: 'away-p8',
+        wbr: 'away-p9',
+        fc1: 'away-p10',
+        fc2: 'away-p11'
+      },
+      currentMinute: 45
+    };
+    const created = createReplaySessionForApi(request, repository);
+    if (!created.ok) throw new Error(created.body.error);
+    const sessionId = created.body.sessionId as string;
+    const stored = repository.getSession(sessionId);
+    repository.appendManagerCommand(sessionId, {
+      id: 'cmd-045-01-change-pressing',
+      minute: 45,
+      action: 'Change pressing',
+      eventType: 'goal',
+      eventDescription: 'Half-time tactical reset.',
+      effectSummary: 'Recorded intent: change pressing at 45’.'
+    });
+    repository.replaceVisibleEvents(sessionId, stored.visibleEvents);
+
+    const originalResume = resumeReplaySessionForApi({ sessionId, currentMinute: 45 }, repository);
+    const hydrated = createInMemoryReplaySessionRepository();
+    hydrated.hydrateStorageRecords(repository.listStorageRecords());
+    const hydratedResume = resumeReplaySessionForApi({ sessionId, currentMinute: 45 }, hydrated);
+
+    expect(hydratedResume).toEqual(originalResume);
+  });
+
   it('creates a demo session appends commands and resumes from stored server state', () => {
     const repository = createInMemoryReplaySessionRepository();
 

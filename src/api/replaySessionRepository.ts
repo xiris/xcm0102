@@ -29,6 +29,10 @@ export type ReplaySession = {
   updatedAt: string;
 };
 
+export type ReplaySessionStorageRecord = ReplaySession & {
+  schemaVersion: 1;
+};
+
 export type CreateReplaySessionInput = {
   seed: number;
   baseInput: MatchInput;
@@ -48,6 +52,8 @@ export type ReplaySessionRepository = {
   appendManagerCommand(sessionId: string, command: ManagerCommand): ReplaySession;
   replaceVisibleEvents(sessionId: string, visibleEvents: MatchEvent[]): ReplaySession;
   recordAuthoritativeResume(sessionId: string, input: AuthoritativeResumeAuditInput): ReplaySession;
+  listStorageRecords(): ReplaySessionStorageRecord[];
+  hydrateStorageRecords(records: ReplaySessionStorageRecord[]): void;
 };
 
 export function createInMemoryReplaySessionRepository(): ReplaySessionRepository {
@@ -67,6 +73,32 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
 
   function now(): string {
     return new Date().toISOString();
+  }
+
+  function clone<T>(value: T): T {
+    return structuredClone(value);
+  }
+
+  function sessionToRecord(session: ReplaySession): ReplaySessionStorageRecord {
+    return { schemaVersion: 1, ...clone(session) };
+  }
+
+  function recordToSession(record: ReplaySessionStorageRecord): ReplaySession {
+    if (record.schemaVersion !== 1) {
+      throw new Error(`Unsupported replay session storage schema version: ${String(record.schemaVersion)}`);
+    }
+    const { schemaVersion: _schemaVersion, ...session } = clone(record);
+    return session;
+  }
+
+  function nextIdAfterRecords(records: ReplaySessionStorageRecord[]): number {
+    return records.reduce((highest, record) => {
+      const match = /^rs-(\d+)$/.exec(record.sessionId);
+      if (!match) return highest;
+      const numericId = match[1];
+      if (!numericId) return highest;
+      return Math.max(highest, Number.parseInt(numericId, 10));
+    }, 0) + 1;
   }
 
   return {
@@ -124,6 +156,21 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
         ],
         updatedAt: now()
       });
+    },
+    listStorageRecords() {
+      return [...sessions.values()].map(sessionToRecord);
+    },
+    hydrateStorageRecords(records) {
+      const nextSessions = new Map<string, ReplaySession>();
+      for (const record of records) {
+        const session = recordToSession(record);
+        nextSessions.set(session.sessionId, session);
+      }
+      sessions.clear();
+      for (const [sessionId, session] of nextSessions.entries()) {
+        sessions.set(sessionId, session);
+      }
+      nextId = nextIdAfterRecords(records);
     }
   };
 }
