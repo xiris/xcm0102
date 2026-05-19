@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createInMemoryReplaySessionRepository } from '../../src/api/replaySessionRepository';
+import { createSampleMatchInput } from '../../src/simulation/sampleData';
 import type { MatchResult } from '../../src/simulation/domain';
 import type { ManagerCommand } from '../../src/simulation/managerCommands';
 
@@ -32,9 +33,11 @@ describe('replay session repository', () => {
   it('stores match result visible events commands and authoritative audit metadata', () => {
     const repository = createInMemoryReplaySessionRepository();
     const initialResult = matchResultFixture();
+    const baseInput = createSampleMatchInput({ seed: 42 });
 
     const created = repository.createSession({
       seed: 42,
+      baseInput,
       initialResult,
       visibleEvents: initialResult.events.filter((event) => event.minute <= 12)
     });
@@ -47,6 +50,7 @@ describe('replay session repository', () => {
     expect(stored).toEqual(expect.objectContaining({
       sessionId: expect.stringMatching(/^rs-/),
       seed: 42,
+      baseInput,
       initialResult,
       visibleEvents: initialResult.events,
       managerCommands: [command],

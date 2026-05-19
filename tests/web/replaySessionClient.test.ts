@@ -5,6 +5,7 @@ import {
   resumeReplaySessionFromWeb,
   syncReplaySessionVisibleEventsFromWeb
 } from '../../src/web/replaySessionClient';
+import { defaultTacticalState } from '../../src/web/tacticalPayload';
 
 const visibleEvents = [
   { minute: 1, type: 'kickoff' as const, description: 'Kickoff.' },
@@ -28,7 +29,8 @@ describe('replay session web client', () => {
       .mockResolvedValueOnce({ ok: true, json: async () => ({ sessionId: 'rs-0001', visibleEventCount: 2 }) })
       .mockResolvedValueOnce({ ok: true, json: async () => ({ sessionId: 'rs-0001', authoritative: true, score: { home: 2, away: 1 }, stats: { home: {}, away: {} }, events: visibleEvents, diagnostics: ['ok'], replay: { seed: 71, engineVersion: 'test-engine', commandCount: 1 }, signature: '71|50|cmd|vh-abcd|8' }) });
 
-    const created = await createReplaySessionFromWeb({ seed: 71 }, fetchMock);
+    const simulationRequest = { ...defaultTacticalState(), seed: 71, homeMentality: 'defensive' as const, awayPressing: 'high' as const };
+    const created = await createReplaySessionFromWeb(simulationRequest, fetchMock);
     const appended = await appendReplaySessionCommandFromWeb({ sessionId: created.sessionId, command }, fetchMock);
     const synced = await syncReplaySessionVisibleEventsFromWeb({ sessionId: created.sessionId, visibleEvents }, fetchMock);
     const resumed = await resumeReplaySessionFromWeb({ sessionId: created.sessionId, currentMinute: 50 }, fetchMock);
@@ -36,7 +38,7 @@ describe('replay session web client', () => {
     expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/replay-sessions', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ seed: 71 })
+      body: JSON.stringify(simulationRequest)
     });
     expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/replay-sessions/rs-0001/commands', {
       method: 'POST',

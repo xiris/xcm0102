@@ -1,7 +1,8 @@
 import type { MatchEvent, MatchReport, MatchResult } from '../simulation/domain';
 import type { ManagerCommand } from '../simulation/managerCommands';
+import type { WebSimulationRequest } from './simulationClient';
 
-export type WebReplaySessionCreateRequest = {
+export type WebReplaySessionCreateRequest = WebSimulationRequest & {
   seed: number;
   currentMinute?: number;
 };

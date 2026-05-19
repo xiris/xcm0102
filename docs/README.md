@@ -41,6 +41,7 @@ Documentation map:
 - 34-authoritative-resume-ui-contract.md — browser client and Match Lab UI contract for server-authoritative resume output.
 - 35-production-replay-session-persistence-contract.md — in-memory replay-session persistence seam for stored authoritative resume state.
 - 36-browser-replay-session-ui-contract.md — Match Lab browser integration contract for session-owned authoritative resume.
+- 37-production-replay-session-tactic-parity-contract.md — replay-session contract for preserving full Match Lab tactical payloads.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -65,6 +66,7 @@ Documentation map:
 - plans/2026-05-18-authoritative-resume-ui-integration.md — implementation plan for Match Lab server-authoritative resume UI integration.
 - plans/2026-05-18-replay-session-persistence-foundation.md — implementation plan for stored replay-session persistence foundation.
 - plans/2026-05-18-browser-replay-session-ui-integration.md — implementation plan for Match Lab replay-session ID and session-owned resume integration.
+- plans/2026-05-18-replay-session-tactic-parity.md — implementation plan for replay-session full tactical payload parity.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

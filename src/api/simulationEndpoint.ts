@@ -1,4 +1,4 @@
-import type { Formation, Mentality, Pressing, TransitionStyle } from '../simulation/domain';
+import type { Formation, MatchInput, Mentality, Pressing, Team, TransitionStyle } from '../simulation/domain';
 import { getFormationGeometry } from '../simulation/formationGeometry';
 import { createHistoricTeam } from '../simulation/historicSquads';
 import { createSampleMatchInput, createSampleTacticBook, type MovementStyle, type TeamQuality } from '../simulation/sampleData';
@@ -179,49 +179,60 @@ function parseRequest(payload: unknown) {
   };
 }
 
-export function simulateMatchForApi(payload: unknown) {
+export type SimulationMatchInputForApiResult =
+  | { ok: true; input: MatchInput; teams: { home: Team; away: Team } }
+  | { ok: false; errors: string[] };
+
+export function buildSimulationMatchInputForApi(payload: unknown): SimulationMatchInputForApiResult {
   const parsed = parseRequest(payload === undefined ? {} : payload);
-  if (!parsed.ok) {
-    return { ok: false as const, status: 400, body: { error: parsed.errors.join('; ') } };
-  }
+  if (!parsed.ok) return parsed;
 
   const home = createHistoricTeam('home');
   const away = createHistoricTeam('away');
-  const result = simulateMatch(
-    createSampleMatchInput({
-      seed: parsed.value.seed,
-      home,
-      away,
-      homeTactic: createSampleTacticBook({
-        id: 'home-tactic',
-        formation: parsed.value.homeFormation,
-        mentality: parsed.value.homeMentality,
-        pressing: parsed.value.homePressing,
-        transitionStyle: parsed.value.homeTransitionStyle,
-        familiarity: parsed.value.homeFamiliarity,
-        movement: parsed.value.homeMovement,
-        playerIds: home.players.map((player) => player.id),
-        assignments: parsed.value.homeAssignments
-      }),
-      awayTactic: createSampleTacticBook({
-        id: 'away-tactic',
-        formation: parsed.value.awayFormation,
-        mentality: parsed.value.awayMentality,
-        pressing: parsed.value.awayPressing,
-        transitionStyle: parsed.value.awayTransitionStyle,
-        familiarity: parsed.value.awayFamiliarity,
-        movement: parsed.value.awayMovement,
-        playerIds: away.players.map((player) => player.id),
-        assignments: parsed.value.awayAssignments
-      })
+  const input = createSampleMatchInput({
+    seed: parsed.value.seed,
+    home,
+    away,
+    homeTactic: createSampleTacticBook({
+      id: 'home-tactic',
+      formation: parsed.value.homeFormation,
+      mentality: parsed.value.homeMentality,
+      pressing: parsed.value.homePressing,
+      transitionStyle: parsed.value.homeTransitionStyle,
+      familiarity: parsed.value.homeFamiliarity,
+      movement: parsed.value.homeMovement,
+      playerIds: home.players.map((player) => player.id),
+      assignments: parsed.value.homeAssignments
+    }),
+    awayTactic: createSampleTacticBook({
+      id: 'away-tactic',
+      formation: parsed.value.awayFormation,
+      mentality: parsed.value.awayMentality,
+      pressing: parsed.value.awayPressing,
+      transitionStyle: parsed.value.awayTransitionStyle,
+      familiarity: parsed.value.awayFamiliarity,
+      movement: parsed.value.awayMovement,
+      playerIds: away.players.map((player) => player.id),
+      assignments: parsed.value.awayAssignments
     })
-  );
+  });
+
+  return { ok: true, input, teams: { home, away } };
+}
+
+export function simulateMatchForApi(payload: unknown) {
+  const built = buildSimulationMatchInputForApi(payload);
+  if (!built.ok) {
+    return { ok: false as const, status: 400, body: { error: built.errors.join('; ') } };
+  }
+
+  const result = simulateMatch(built.input);
 
   return {
     ok: true as const,
     status: 200,
     body: {
-      teams: { home, away },
+      teams: built.teams,
       score: result.score,
       stats: result.stats,
       events: result.events,

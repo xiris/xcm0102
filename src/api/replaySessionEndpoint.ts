@@ -1,10 +1,9 @@
 import type { MatchEvent } from '../simulation/domain';
 import { resumeMatchAuthoritatively } from '../simulation/authoritativeResume';
 import { translateManagerCommandsToMatchCommands } from '../simulation/authoritativeCommandAdapter';
-import { createHistoricTeam } from '../simulation/historicSquads';
 import type { ManagerCommand } from '../simulation/managerCommands';
-import { createSampleMatchInput, createSampleTacticBook } from '../simulation/sampleData';
 import { simulateMatch } from '../simulation/simulateMatch';
+import { buildSimulationMatchInputForApi } from './simulationEndpoint';
 import type { ReplaySessionRepository } from './replaySessionRepository';
 
 export type ReplaySessionApiResult =
@@ -14,11 +13,12 @@ export type ReplaySessionApiResult =
 export function createReplaySessionForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
   const parsed = parseCreateSessionRequest(payload);
   if (!parsed.ok) return badRequest(parsed.errors.join('; '));
+  const built = buildSimulationMatchInputForApi(payload);
+  if (!built.ok) return badRequest(built.errors.join('; '));
 
-  const baseInput = createDemoMatchInput(parsed.value.seed);
-  const initialResult = simulateMatch(baseInput);
+  const initialResult = simulateMatch(built.input);
   const visibleEvents = initialResult.events.filter((event) => event.minute <= parsed.value.currentMinute);
-  const session = repository.createSession({ seed: parsed.value.seed, initialResult, visibleEvents });
+  const session = repository.createSession({ seed: built.input.seed, baseInput: built.input, initialResult, visibleEvents });
 
   return {
     ok: true,
@@ -72,7 +72,7 @@ export function resumeReplaySessionForApi(payload: unknown, repository: ReplaySe
     const session = repository.getSession(parsed.value.sessionId);
     const commands = translateManagerCommandsToMatchCommands(session.managerCommands, 'home');
     const result = resumeMatchAuthoritatively({
-      baseInput: createDemoMatchInput(session.seed),
+      baseInput: session.baseInput,
       currentMinute: parsed.value.currentMinute,
       visibleEvents: session.visibleEvents,
       commands
@@ -100,18 +100,6 @@ export function resumeReplaySessionForApi(payload: unknown, repository: ReplaySe
   } catch (error) {
     return error instanceof Error && error.message.startsWith('Replay session not found:') ? notFound(error) : badRequest(error instanceof Error ? error.message : 'replay session resume failed');
   }
-}
-
-function createDemoMatchInput(seed: number) {
-  const home = createHistoricTeam('home');
-  const away = createHistoricTeam('away');
-  return createSampleMatchInput({
-    seed,
-    home,
-    away,
-    homeTactic: createSampleTacticBook({ id: 'home-tactic', playerIds: home.players.map((player) => player.id) }),
-    awayTactic: createSampleTacticBook({ id: 'away-tactic', playerIds: away.players.map((player) => player.id) })
-  });
 }
 
 function parseCreateSessionRequest(payload: unknown) {

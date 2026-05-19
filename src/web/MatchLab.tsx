@@ -118,27 +118,26 @@ export function MatchLab() {
     setError(null);
 
     try {
-      const nextResult = await simulateMatchFromWeb(
-        buildSimulationPayload({
-          seed,
-          homeQuality,
-          awayQuality,
-          homeFamiliarity,
-          awayFamiliarity,
-          homeFormation,
-          awayFormation,
-          homeMentality,
-          awayMentality,
-          homePressing,
-          awayPressing,
-          homeTransitionStyle,
-          awayTransitionStyle,
-          homeMovement,
-          awayMovement,
-          homeAssignments: homeAssignments.assignments,
-          awayAssignments: awayAssignments.assignments
-        })
-      );
+      const simulationPayload = buildSimulationPayload({
+        seed,
+        homeQuality,
+        awayQuality,
+        homeFamiliarity,
+        awayFamiliarity,
+        homeFormation,
+        awayFormation,
+        homeMentality,
+        awayMentality,
+        homePressing,
+        awayPressing,
+        homeTransitionStyle,
+        awayTransitionStyle,
+        homeMovement,
+        awayMovement,
+        homeAssignments: homeAssignments.assignments,
+        awayAssignments: awayAssignments.assignments
+      });
+      const nextResult = await simulateMatchFromWeb(simulationPayload);
       setResult(nextResult);
       setIsInteractiveReplay(false);
       setInteractiveMinute(0);
@@ -151,7 +150,7 @@ export function MatchLab() {
       setReplaySessionVisibleEventCount(0);
       setReplaySessionCommandCount(0);
       try {
-        const session = await createReplaySessionFromWeb({ seed });
+        const session = await createReplaySessionFromWeb(simulationPayload);
         setReplaySessionId(session.sessionId);
         setReplaySessionVisibleEventCount(session.visibleEventCount);
         setReplaySessionCommandCount(0);

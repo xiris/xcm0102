@@ -1,4 +1,4 @@
-import type { MatchEvent, MatchResult } from '../simulation/domain';
+import type { MatchEvent, MatchInput, MatchResult } from '../simulation/domain';
 import type { ManagerCommand } from '../simulation/managerCommands';
 
 export type ReplaySessionAuditType =
@@ -19,6 +19,7 @@ export type ReplaySessionAuditEntry = {
 export type ReplaySession = {
   sessionId: string;
   seed: number;
+  baseInput: MatchInput;
   initialResult: MatchResult;
   visibleEvents: MatchEvent[];
   managerCommands: ManagerCommand[];
@@ -30,6 +31,7 @@ export type ReplaySession = {
 
 export type CreateReplaySessionInput = {
   seed: number;
+  baseInput: MatchInput;
   initialResult: MatchResult;
   visibleEvents?: MatchEvent[];
 };
@@ -75,6 +77,7 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
       return save({
         sessionId,
         seed: input.seed,
+        baseInput: input.baseInput,
         initialResult: input.initialResult,
         visibleEvents: input.visibleEvents ?? [],
         managerCommands: [],
