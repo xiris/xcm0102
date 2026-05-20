@@ -202,7 +202,7 @@ describe('production API server', () => {
     });
 
     expect(appended.statusCode).toBe(200);
-    expect(appended.json()).toEqual({ sessionId, commandCount: 1 });
+    expect(appended.json()).toEqual({ sessionId, commandCount: 1, commandCounts: { home: 1, away: 0 } });
 
     const synced = await server.inject({
       method: 'POST',

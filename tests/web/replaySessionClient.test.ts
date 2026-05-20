@@ -60,6 +60,22 @@ describe('replay session web client', () => {
     expect(resumed.signature).toBe('71|50|cmd|vh-abcd|8');
   });
 
+  it('posts side-aware command append requests for future head-to-head lobbies', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ sessionId: 'rs-0001', commandCount: 1, commandCounts: { home: 0, away: 1 } })
+    });
+
+    const appended = await appendReplaySessionCommandFromWeb({ sessionId: 'rs-0001', side: 'away', command }, fetchMock);
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/replay-sessions/rs-0001/commands', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ command, side: 'away' })
+    });
+    expect(appended).toEqual({ sessionId: 'rs-0001', commandCount: 1, commandCounts: { home: 0, away: 1 } });
+  });
+
   it('throws readable session errors from server payloads', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: false,

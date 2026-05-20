@@ -1,6 +1,26 @@
 import type { MatchEvent, MatchInput, MatchResult } from '../simulation/domain';
 import type { ManagerCommand } from '../simulation/managerCommands';
 
+export type MatchSide = 'home' | 'away';
+
+export type ReplaySessionLobbyState = 'setup' | 'locked' | 'in_match' | 'complete';
+
+export type ReplaySessionSideOwner = {
+  managerId: string;
+  displayName: string;
+};
+
+export type ReplaySessionOwnership = {
+  mode: 'single_manager' | 'head_to_head';
+  lobbyState: ReplaySessionLobbyState;
+  sides: {
+    home?: ReplaySessionSideOwner;
+    away?: ReplaySessionSideOwner;
+  };
+};
+
+export type ReplaySessionSideCommandLogs = Record<MatchSide, ManagerCommand[]>;
+
 export type ReplaySessionAuditType =
   | 'session_created'
   | 'manager_command_appended'
@@ -14,6 +34,7 @@ export type ReplaySessionAuditEntry = {
   eventCount?: number;
   signature?: string;
   commandId?: string;
+  commandSide?: MatchSide;
 };
 
 export type ReplaySession = {
@@ -23,6 +44,8 @@ export type ReplaySession = {
   initialResult: MatchResult;
   visibleEvents: MatchEvent[];
   managerCommands: ManagerCommand[];
+  sideManagerCommands: ReplaySessionSideCommandLogs;
+  ownership: ReplaySessionOwnership;
   latestAuthoritativeSignature?: string;
   auditLog: ReplaySessionAuditEntry[];
   createdAt: string;
@@ -38,6 +61,7 @@ export type CreateReplaySessionInput = {
   baseInput: MatchInput;
   initialResult: MatchResult;
   visibleEvents?: MatchEvent[];
+  ownership?: ReplaySessionOwnership;
 };
 
 export type AuthoritativeResumeAuditInput = {
@@ -49,7 +73,7 @@ export type AuthoritativeResumeAuditInput = {
 export type ReplaySessionRepository = {
   createSession(input: CreateReplaySessionInput): ReplaySession;
   getSession(sessionId: string): ReplaySession;
-  appendManagerCommand(sessionId: string, command: ManagerCommand): ReplaySession;
+  appendManagerCommand(sessionId: string, command: ManagerCommand, side?: MatchSide): ReplaySession;
   replaceVisibleEvents(sessionId: string, visibleEvents: MatchEvent[]): ReplaySession;
   recordAuthoritativeResume(sessionId: string, input: AuthoritativeResumeAuditInput): ReplaySession;
   listStorageRecords(): ReplaySessionStorageRecord[];
@@ -77,6 +101,22 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
 
   function clone<T>(value: T): T {
     return structuredClone(value);
+  }
+
+  function defaultOwnership(): ReplaySessionOwnership {
+    return {
+      mode: 'single_manager',
+      lobbyState: 'in_match',
+      sides: { home: { managerId: 'local-home', displayName: 'Local manager' } }
+    };
+  }
+
+  function emptySideCommands(): ReplaySessionSideCommandLogs {
+    return { home: [], away: [] };
+  }
+
+  function commandCounts(session: ReplaySession): Record<MatchSide, number> {
+    return { home: session.sideManagerCommands.home.length, away: session.sideManagerCommands.away.length };
   }
 
   function sessionToRecord(session: ReplaySession): ReplaySessionStorageRecord {
@@ -113,6 +153,8 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
         initialResult: input.initialResult,
         visibleEvents: input.visibleEvents ?? [],
         managerCommands: [],
+        sideManagerCommands: emptySideCommands(),
+        ownership: input.ownership ?? defaultOwnership(),
         auditLog: [{ type: 'session_created', timestamp, eventCount: input.visibleEvents?.length ?? 0 }],
         createdAt: timestamp,
         updatedAt: timestamp
@@ -121,12 +163,17 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
     getSession(sessionId) {
       return requireSession(sessionId);
     },
-    appendManagerCommand(sessionId, command) {
+    appendManagerCommand(sessionId, command, side = 'home') {
       const session = requireSession(sessionId);
+      const sideManagerCommands = {
+        ...session.sideManagerCommands,
+        [side]: [...session.sideManagerCommands[side], command]
+      };
       return save({
         ...session,
-        managerCommands: [...session.managerCommands, command],
-        auditLog: [...session.auditLog, { type: 'manager_command_appended', timestamp: now(), currentMinute: command.minute, commandId: command.id }],
+        managerCommands: sideManagerCommands.home,
+        sideManagerCommands,
+        auditLog: [...session.auditLog, { type: 'manager_command_appended', timestamp: now(), currentMinute: command.minute, commandId: command.id, commandSide: side }],
         updatedAt: now()
       });
     },

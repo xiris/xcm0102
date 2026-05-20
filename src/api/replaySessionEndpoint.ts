@@ -4,7 +4,7 @@ import { translateManagerCommandsToMatchCommands } from '../simulation/authorita
 import type { ManagerCommand } from '../simulation/managerCommands';
 import { simulateMatch } from '../simulation/simulateMatch';
 import { buildSimulationMatchInputForApi } from './simulationEndpoint';
-import type { ReplaySessionRepository } from './replaySessionRepository';
+import type { MatchSide, ReplaySessionRepository } from './replaySessionRepository';
 
 export type ReplaySessionApiResult =
   | { ok: true; status: 200; body: Record<string, unknown> }
@@ -37,11 +37,15 @@ export function appendReplaySessionCommandForApi(payload: unknown, repository: R
   if (!parsed.ok) return badRequest(parsed.errors.join('; '));
 
   try {
-    const session = repository.appendManagerCommand(parsed.value.sessionId, parsed.value.command);
+    const session = repository.appendManagerCommand(parsed.value.sessionId, parsed.value.command, parsed.value.side);
+    const commandCounts = {
+      home: session.sideManagerCommands.home.length,
+      away: session.sideManagerCommands.away.length
+    };
     return {
       ok: true,
       status: 200,
-      body: { sessionId: session.sessionId, commandCount: session.managerCommands.length }
+      body: { sessionId: session.sessionId, commandCount: commandCounts.home + commandCounts.away, commandCounts }
     };
   } catch (error) {
     return notFound(error);
@@ -70,7 +74,9 @@ export function resumeReplaySessionForApi(payload: unknown, repository: ReplaySe
 
   try {
     const session = repository.getSession(parsed.value.sessionId);
-    const commands = translateManagerCommandsToMatchCommands(session.managerCommands, 'home');
+    const homeCommands = translateManagerCommandsToMatchCommands(session.sideManagerCommands.home, session.baseInput.home.id);
+    const awayCommands = translateManagerCommandsToMatchCommands(session.sideManagerCommands.away, session.baseInput.away.id);
+    const commands = [...homeCommands, ...awayCommands].sort((left, right) => left.minute - right.minute);
     const result = resumeMatchAuthoritatively({
       baseInput: session.baseInput,
       currentMinute: parsed.value.currentMinute,
@@ -117,9 +123,10 @@ function parseAppendCommandRequest(payload: unknown) {
   if (!body.ok) return body;
   const errors: string[] = [];
   if (typeof body.value.sessionId !== 'string' || body.value.sessionId.length === 0) errors.push('sessionId must be a non-empty string');
+  if (body.value.side !== undefined && !isMatchSide(body.value.side)) errors.push('side must be home or away');
   if (!isManagerCommandLike(body.value.command)) errors.push('command must be a manager command');
   if (errors.length > 0) return { ok: false as const, errors };
-  return { ok: true as const, value: { sessionId: body.value.sessionId as string, command: body.value.command as ManagerCommand } };
+  return { ok: true as const, value: { sessionId: body.value.sessionId as string, side: (body.value.side ?? 'home') as MatchSide, command: body.value.command as ManagerCommand } };
 }
 
 function parseVisibleEventsRequest(payload: unknown) {
@@ -147,6 +154,10 @@ function asObject(payload: unknown) {
     return { ok: false as const, errors: ['request body must be a JSON object'] };
   }
   return { ok: true as const, value: payload as Record<string, unknown> };
+}
+
+function isMatchSide(value: unknown): value is MatchSide {
+  return value === 'home' || value === 'away';
 }
 
 function isMinute(value: unknown): boolean {

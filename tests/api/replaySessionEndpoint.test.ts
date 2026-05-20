@@ -17,7 +17,65 @@ const command = {
   effectSummary: 'Recorded intent: change pressing at 50’.'
 };
 
+const awayCommand = {
+  id: 'cmd-050-02-adjust-defensive-line',
+  minute: 50,
+  action: 'Adjust defensive line',
+  eventType: 'goal',
+  eventDescription: 'Away pause event.',
+  effectSummary: 'Recorded intent: adjust defensive line at 50’.'
+};
+
 describe('replay session API helpers', () => {
+  it('applies away-side replay session commands independently from home commands', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({ seed: 71, currentMinute: 50 }, repository);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    const homeAppend = appendReplaySessionCommandForApi({ sessionId, command }, repository);
+    const awayAppend = appendReplaySessionCommandForApi({ sessionId, side: 'away', command: awayCommand }, repository);
+
+    expect(homeAppend).toEqual({
+      ok: true,
+      status: 200,
+      body: { sessionId, commandCount: 1, commandCounts: { home: 1, away: 0 } }
+    });
+    expect(awayAppend).toEqual({
+      ok: true,
+      status: 200,
+      body: { sessionId, commandCount: 2, commandCounts: { home: 1, away: 1 } }
+    });
+    expect(repository.getSession(sessionId).sideManagerCommands).toEqual({ home: [command], away: [awayCommand] });
+
+    const stored = repository.getSession(sessionId);
+    syncReplaySessionVisibleEventsForApi({ sessionId, visibleEvents: stored.visibleEvents }, repository);
+    const resumed = resumeReplaySessionForApi({ sessionId, currentMinute: 50 }, repository);
+
+    expect(resumed.status).toBe(200);
+    expect(resumed.body).toEqual(expect.objectContaining({
+      authoritative: true,
+      diagnostics: expect.arrayContaining([
+        '50’ home change_pressing command set pressing to high for regenerated future simulation.',
+        '50’ away change_transition_style command set transition style to hold_shape for regenerated future simulation.'
+      ]),
+      replay: expect.objectContaining({ commandCount: 2 })
+    }));
+  });
+
+  it('rejects invalid replay session command sides', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({ seed: 71, currentMinute: 50 }, repository);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    expect(appendReplaySessionCommandForApi({ sessionId, side: 'bench', command }, repository)).toEqual({
+      ok: false,
+      status: 400,
+      body: { error: 'side must be home or away' }
+    });
+  });
+
   it('preserves custom tactical payloads for session creation and resume parity', () => {
     const repository = createInMemoryReplaySessionRepository();
     const customPayload = {
@@ -178,7 +236,7 @@ describe('replay session API helpers', () => {
     expect(appended).toEqual({
       ok: true,
       status: 200,
-      body: { sessionId, commandCount: 1 }
+      body: { sessionId, commandCount: 1, commandCounts: { home: 1, away: 0 } }
     });
 
     const storedBeforeSync = repository.getSession(sessionId);

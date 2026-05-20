@@ -43,6 +43,7 @@ Documentation map:
 - 36-browser-replay-session-ui-contract.md — Match Lab browser integration contract for session-owned authoritative resume.
 - 37-production-replay-session-tactic-parity-contract.md — replay-session contract for preserving full Match Lab tactical payloads.
 - 38-production-durable-replay-session-persistence-contract.md — storage-shaped replay-session export/hydration contract for future durable persistence.
+- 39-production-head-to-head-session-ownership-contract.md — replay-session side ownership and head-to-head command-log contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -69,6 +70,7 @@ Documentation map:
 - plans/2026-05-18-browser-replay-session-ui-integration.md — implementation plan for Match Lab replay-session ID and session-owned resume integration.
 - plans/2026-05-18-replay-session-tactic-parity.md — implementation plan for replay-session full tactical payload parity.
 - plans/2026-05-19-durable-replay-session-persistence.md — implementation plan for storage-shaped replay-session export/hydration.
+- plans/2026-05-19-head-to-head-session-ownership.md — implementation plan for replay-session side ownership and future head-to-head lobbies.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

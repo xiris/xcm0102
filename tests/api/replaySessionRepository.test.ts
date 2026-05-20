@@ -29,7 +29,60 @@ const command: ManagerCommand = {
   effectSummary: 'Recorded intent: change pressing at 12’.'
 };
 
+const awayCommand: ManagerCommand = {
+  id: 'cmd-060-01-adjust-defensive-line',
+  minute: 60,
+  action: 'Adjust defensive line',
+  eventType: 'goal',
+  eventDescription: 'Away tactical reset.',
+  effectSummary: 'Recorded intent: adjust defensive line at 60’.'
+};
+
 describe('replay session repository', () => {
+  it('stores ownership metadata and side-specific command logs', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const initialResult = matchResultFixture();
+    const baseInput = createSampleMatchInput({ seed: 42 });
+
+    const created = repository.createSession({
+      seed: 42,
+      baseInput,
+      initialResult,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'in_match',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    });
+    repository.appendManagerCommand(created.sessionId, command, 'home');
+    repository.appendManagerCommand(created.sessionId, awayCommand, 'away');
+
+    const stored = repository.getSession(created.sessionId);
+    expect(stored.ownership).toEqual({
+      mode: 'head_to_head',
+      lobbyState: 'in_match',
+      sides: {
+        home: { managerId: 'manager-home', displayName: 'Home Boss' },
+        away: { managerId: 'manager-away', displayName: 'Away Boss' }
+      }
+    });
+    expect(stored.sideManagerCommands).toEqual({ home: [command], away: [awayCommand] });
+    expect(stored.managerCommands).toEqual([command]);
+    expect(stored.auditLog.filter((entry) => entry.type === 'manager_command_appended')).toEqual([
+      expect.objectContaining({ commandId: command.id, commandSide: 'home' }),
+      expect.objectContaining({ commandId: awayCommand.id, commandSide: 'away' })
+    ]);
+
+    const records = repository.listStorageRecords();
+    const hydrated = createInMemoryReplaySessionRepository();
+    hydrated.hydrateStorageRecords(records);
+    expect(hydrated.getSession(created.sessionId).ownership).toEqual(stored.ownership);
+    expect(hydrated.getSession(created.sessionId).sideManagerCommands).toEqual(stored.sideManagerCommands);
+  });
+
   it('stores match result visible events commands and authoritative audit metadata', () => {
     const repository = createInMemoryReplaySessionRepository();
     const initialResult = matchResultFixture();
@@ -99,6 +152,12 @@ describe('replay session repository', () => {
       managerCommands: [command],
       latestAuthoritativeSignature: '42|12|cmd|vh-test|3'
     }));
+    expect(record.ownership).toEqual({
+      mode: 'single_manager',
+      lobbyState: 'in_match',
+      sides: { home: { managerId: 'local-home', displayName: 'Local manager' } }
+    });
+    expect(record.sideManagerCommands).toEqual({ home: [command], away: [] });
 
     record.visibleEvents.length = 0;
     expect(repository.getSession(created.sessionId).visibleEvents).toHaveLength(3);

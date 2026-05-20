@@ -1,3 +1,4 @@
+import type { MatchSide } from '../api/replaySessionRepository';
 import type { MatchEvent, MatchReport, MatchResult } from '../simulation/domain';
 import type { ManagerCommand } from '../simulation/managerCommands';
 import type { WebSimulationRequest } from './simulationClient';
@@ -17,11 +18,13 @@ export type WebReplaySessionCreateResult = {
 export type WebReplaySessionCommandRequest = {
   sessionId: string;
   command: ManagerCommand;
+  side?: MatchSide;
 };
 
 export type WebReplaySessionCommandResult = {
   sessionId: string;
   commandCount: number;
+  commandCounts?: Record<MatchSide, number>;
 };
 
 export type WebReplaySessionVisibleEventsRequest = {
@@ -65,8 +68,8 @@ export async function createReplaySessionFromWeb(request: WebReplaySessionCreate
 }
 
 export async function appendReplaySessionCommandFromWeb(request: WebReplaySessionCommandRequest, fetcher?: FetchLike): Promise<WebReplaySessionCommandResult> {
-  const { sessionId, command } = request;
-  return postJson(`/api/replay-sessions/${sessionId}/commands`, { command }, fetcher) as Promise<WebReplaySessionCommandResult>;
+  const { sessionId, command, side } = request;
+  return postJson(`/api/replay-sessions/${sessionId}/commands`, side === undefined ? { command } : { command, side }, fetcher) as Promise<WebReplaySessionCommandResult>;
 }
 
 export async function syncReplaySessionVisibleEventsFromWeb(request: WebReplaySessionVisibleEventsRequest, fetcher?: FetchLike): Promise<WebReplaySessionVisibleEventsResult> {

@@ -505,6 +505,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 125: durable replay session hydration',
     args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', '-t', 'exports and hydrates durable storage records']
+  },
+  {
+    label: 'MISSION 126: replay session side ownership',
+    args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', '-t', 'stores ownership metadata and side-specific command logs']
   }
 ];
 

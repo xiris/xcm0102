@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next multiplayer/session ownership slice: P17A Durable Match Persistence Design and Repository Seam.
+- Latest completed local work before the next persistence/multiplayer slice: P17B Session Ownership and Head-to-Head Lobby Contract.
 
 ## Product Direction
 
@@ -51,6 +51,7 @@ The browser app currently exposes a Match Lab where the user can:
 - create and hold a browser replay session ID, sync manager commands/visible events, and request authoritative resume through session-owned routes
 - preserve the full Match Lab tactical payload inside replay sessions so session-owned resume does not drift back to demo defaults
 - export and hydrate schema-versioned replay-session storage records so future durable persistence can reconstruct sessions without losing tactic/command parity
+- store replay-session ownership metadata and side-specific home/away command logs for future head-to-head lobbies while preserving the current home-only Match Lab flow
 
 ## Completed Production Slices
 
@@ -93,46 +94,73 @@ Completed:
 - Match Lab now creates a replay session after simulation, appends manager commands to that session, syncs visible replay events, and requests authoritative resume by session ID.
 - Replay-session creation now shares the simulation API input builder and stores the full `MatchInput`, preserving custom formations, tactical settings, movement/familiarity, and player assignments for session-owned resume.
 - Replay-session repositories now export and hydrate schema-versioned storage records, preserving base input, results, visible events, commands, audit log, timestamps, and generated ID continuity.
+- Replay-session repositories now store ownership metadata plus side-specific home/away command logs, while legacy home-only `managerCommands` remains a compatibility alias.
+- Session-owned authoritative resume now applies home commands to the home team and away commands to the away team, preserving side isolation for future head-to-head play.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P17A Durable Match Persistence Design and Repository Seam
+## Latest Slice: P17B Session Ownership and Head-to-Head Lobby Contract
 
 Files added/updated:
 
 - `src/api/replaySessionRepository.ts`
+- `src/api/replaySessionEndpoint.ts`
+- `src/web/replaySessionClient.ts`
 - `tests/api/replaySessionRepository.test.ts`
 - `tests/api/replaySessionEndpoint.test.ts`
+- `tests/api/server.test.ts`
+- `tests/web/replaySessionClient.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/38-production-durable-replay-session-persistence-contract.md`
-- `docs/plans/2026-05-19-durable-replay-session-persistence.md`
+- `docs/39-production-head-to-head-session-ownership-contract.md`
+- `docs/plans/2026-05-19-head-to-head-session-ownership.md`
 - `docs/README.md`
 
 Behavior implemented:
 
-- Added a schema-versioned `ReplaySessionStorageRecord` contract with `schemaVersion: 1`.
-- Extended replay-session repositories with `listStorageRecords()` and `hydrateStorageRecords(records)`.
-- Storage records preserve durable reconstruction state: session ID, seed, canonical base input, initial result, visible events, manager commands, latest authoritative signature, audit log, and timestamps.
-- Export and hydrate paths deep-clone record state so callers cannot mutate repository contents by holding exported references.
-- Hydration rejects unsupported schema versions with a readable error.
-- Hydration advances generated IDs past imported `rs-000001`-style session IDs.
-- Added API regression coverage proving a hydrated custom-tactic replay session resumes with the same authoritative output as the original repository.
+- Added replay-session ownership metadata for `single_manager` and `head_to_head` modes.
+- Added `MatchSide`, `ReplaySessionOwnership`, `ReplaySessionSideOwner`, `ReplaySessionLobbyState`, and `ReplaySessionSideCommandLogs` domain types.
+- Added side-specific command logs at `sideManagerCommands.home` and `sideManagerCommands.away`.
+- Kept legacy `managerCommands` as a home-side compatibility alias for the existing Match Lab browser flow.
+- Existing command append calls without `side` still default to home.
+- API command append accepts optional `side: 'home' | 'away'` and rejects invalid side values.
+- Command append responses now include total `commandCount` plus `commandCounts: { home, away }`.
+- Session-owned authoritative resume translates home-side manager commands to the home team and away-side manager commands to the away team.
+- Storage-record export/hydration preserves ownership metadata, side command logs, legacy command alias, audit log, and ID continuity.
+- Command audit entries now include `commandSide` for home/away traceability.
+- Browser replay-session client can post optional side-aware command append requests, while the current Match Lab remains home-default.
 
 ## Latest Validation
 
-For P17A, run and verify:
+For P17B, run and verify:
 
 ```bash
-npx vitest run tests/api/replaySessionRepository.test.ts -t 'exports and hydrates durable storage records|rejects unsupported'
-npx vitest run tests/api/replaySessionEndpoint.test.ts -t 'resumes custom tactical sessions after storage hydration'
+npx vitest run tests/api/replaySessionRepository.test.ts -t 'stores ownership metadata and side-specific command logs'
+npx vitest run tests/api/replaySessionEndpoint.test.ts -t 'applies away-side replay session commands|rejects invalid replay session command sides'
+npx vitest run tests/web/replaySessionClient.test.ts -t 'posts side-aware command append requests'
 npm run test:missions
 npm test
 npx tsc --noEmit
 npm run build
+git diff --check
 ```
 
-Expected mission count after P17A: ALL 125 MISSIONS PASSED.
+Expected mission count after P17B: ALL 126 MISSIONS PASSED.
+
+## Recommended Next Slice
+
+Recommended next work: **P17C Session Ownership Server Route Parity and Lobby State Smoke**.
+
+Why this is next:
+
+Replay-session API helpers and browser clients now understand side ownership, but the production route tests still mainly validate the home-default path. Before adding lobby UI or durable database adapters, the Fastify/Next route boundary should get explicit side-aware coverage and a small lobby-state smoke contract so future multiplayer work cannot regress command ownership.
+
+Suggested goals:
+
+1. Add route-level tests for `side: 'away'` command append and invalid side rejection.
+2. Add a small API/view-model read shape for replay-session ownership metadata.
+3. Document the setup → locked → in_match → complete lobby-state transition expectations.
+4. Keep browser Match Lab behavior home-default until a real head-to-head UI exists.
 
 ## Important User Preferences
 
