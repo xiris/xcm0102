@@ -23,6 +23,7 @@ describe('createMatchLabLayoutViewModel', () => {
       'manager-commands',
       'projection',
       'diagnostics',
+      'lobby-status',
       'replay-metadata'
     ]);
     expect(viewModel.sections.find((section) => section.id === 'match-console')).toEqual({

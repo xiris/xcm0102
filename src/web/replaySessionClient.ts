@@ -1,6 +1,7 @@
 import type { MatchSide } from '../api/replaySessionRepository';
 import type { MatchEvent, MatchReport, MatchResult } from '../simulation/domain';
 import type { ManagerCommand } from '../simulation/managerCommands';
+import type { ReplaySessionLobbySummary } from './replaySessionLobbyStatusViewModel';
 import type { WebSimulationRequest } from './simulationClient';
 
 export type WebReplaySessionCreateRequest = WebSimulationRequest & {
@@ -82,12 +83,28 @@ export async function resumeReplaySessionFromWeb(request: WebReplaySessionResume
   return postJson(`/api/replay-sessions/${sessionId}/resume`, { currentMinute }, fetcher) as Promise<WebReplaySessionResumeResult>;
 }
 
+export async function getReplaySessionSummaryFromWeb(sessionId: string, fetcher?: FetchLike): Promise<ReplaySessionLobbySummary> {
+  return getJson(`/api/replay-sessions/${sessionId}`, fetcher) as Promise<ReplaySessionLobbySummary>;
+}
+
+async function getJson(url: string, fetcher?: FetchLike): Promise<unknown> {
+  const response = await getFetch(fetcher)(url, {
+    method: 'GET',
+    headers: { 'content-type': 'application/json' }
+  });
+  return parseJsonResponse(response);
+}
+
 async function postJson(url: string, body: unknown, fetcher?: FetchLike): Promise<unknown> {
   const response = await getFetch(fetcher)(url, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
   });
+  return parseJsonResponse(response);
+}
+
+async function parseJsonResponse(response: Awaited<ReturnType<FetchLike>>): Promise<unknown> {
   const payload = await response.json();
 
   if (!response.ok) {

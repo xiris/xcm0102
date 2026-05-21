@@ -7,6 +7,7 @@ export type MatchLabSectionId =
   | 'manager-commands'
   | 'projection'
   | 'diagnostics'
+  | 'lobby-status'
   | 'replay-metadata';
 
 export type MatchLabSection = {
@@ -85,6 +86,12 @@ const sections: MatchLabSection[] = [
     eyebrow: 'Analyst notes',
     title: 'Diagnostics',
     summary: 'Readable explanations for tactical and simulation outcomes.'
+  },
+  {
+    id: 'lobby-status',
+    eyebrow: 'Lobby desk',
+    title: 'Session lobby status',
+    summary: 'Read-only ownership, lobby state, command-log counts, and server replay status.'
   },
   {
     id: 'replay-metadata',

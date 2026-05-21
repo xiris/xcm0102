@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P17D Lobby State Transition Commands.
+- Latest completed local work before the next lobby/multiplayer slice: P18A Lobby Setup View Model and Read-Only Status Panel.
 
 ## Product Direction
 
@@ -54,6 +54,7 @@ The browser app currently exposes a Match Lab where the user can:
 - store replay-session ownership metadata and side-specific home/away command logs for future head-to-head lobbies while preserving the current home-only Match Lab flow
 - expose side-aware replay-session route parity and a read-only lobby/session summary shape for future head-to-head UI
 - advance replay-session lobby state through server-owned transition commands and prevent late manager commands after completion
+- view a read-only replay-session lobby status panel with server-derived state, ownership, command counts, visible event count, and latest authoritative signature metadata
 
 ## Completed Production Slices
 
@@ -100,50 +101,48 @@ Completed:
 - Session-owned authoritative resume now applies home commands to the home team and away commands to the away team, preserving side isolation for future head-to-head play.
 - Fastify and Next route boundaries now preserve away-side command appends and expose a public replay-session lobby summary with ownership, lobby state, command counts, visible event count, seed, and latest signature metadata.
 - Replay sessions now support server-owned lobby-state transitions (`setup` → `locked` → `in_match` → `complete`) with audit entries and completed-session command guards.
+- Match Lab now renders a read-only replay-session lobby status panel from the summary route after session creation, manager-command sync, and authoritative resume.
+- The lobby status panel shows server-derived lobby state, mode, side owners, command counts, visible event count, seed, and optional latest signature without adding mutating browser controls.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P17D Lobby State Transition Commands
+## Latest Slice: P18A Lobby Setup View Model and Read-Only Status Panel
 
 Files added/updated:
 
-- `src/api/replaySessionRepository.ts`
-- `src/api/replaySessionEndpoint.ts`
-- `src/api/server.ts`
-- `app/api/replay-sessions/[sessionId]/lobby-state/route.ts`
-- `tests/api/replaySessionRepository.test.ts`
-- `tests/api/replaySessionEndpoint.test.ts`
-- `tests/api/server.test.ts`
-- `tests/api/replaySessionNextRoutes.test.ts`
+- `src/web/replaySessionLobbyStatusViewModel.ts`
+- `src/web/replaySessionClient.ts`
+- `src/web/MatchLab.tsx`
+- `src/web/matchLabLayoutViewModel.ts`
+- `app/globals.css`
+- `tests/web/replaySessionLobbyStatusViewModel.test.ts`
+- `tests/web/replaySessionClient.test.ts`
+- `tests/web/matchLabLayoutViewModel.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/41-production-lobby-state-transition-contract.md`
-- `docs/plans/2026-05-21-lobby-state-transition-commands.md`
+- `docs/42-production-lobby-status-panel-contract.md`
+- `docs/plans/2026-05-21-lobby-setup-status-panel.md`
 - `docs/README.md`
 
 Behavior implemented:
 
-- Added repository-owned lobby-state transitions for replay sessions.
-- Valid transition path is `setup` → `locked` → `in_match` → `complete`.
-- Current Match Lab sessions still default to `in_match` for compatibility and may transition to `complete`.
-- Invalid skipped/backward/repeated transitions return readable `Invalid replay session lobby transition: <from> -> <to>` errors.
-- Successful transitions update `ownership.lobbyState`, `updatedAt`, and append `lobby_state_transitioned` audit entries with `fromLobbyState` and `toLobbyState`.
-- Storage export/hydration preserves transitioned lobby state and transition audit entries.
-- Completed replay sessions reject new manager commands with `Replay session is complete and cannot accept manager commands`.
-- Added shared `transitionReplaySessionLobbyStateForApi` helper with parse validation and not-found/invalid-transition responses.
-- Added Fastify `PATCH /api/replay-sessions/:sessionId/lobby-state` route.
-- Added Next app-route `PATCH /api/replay-sessions/[sessionId]/lobby-state` route.
-- Added route tests proving transition success and late-command rejection.
+- Added a pure replay-session lobby status view model for server-derived summary display.
+- Added a browser GET client for `/api/replay-sessions/:sessionId` with shared replay-session error handling.
+- Match Lab now fetches session summary after replay-session creation and renders a read-only lobby status panel.
+- Match Lab refreshes the summary after manager-command append and authoritative resume so command counts and latest signature remain server-derived.
+- The panel displays lobby state, mode, home/away owner labels, command counts, visible event count, seed, and optional latest authoritative signature.
+- The panel explicitly stays read-only; lobby transitions remain API/server-command-only until a future UX slice.
+- Added original dense-console CSS for lobby-state pill and status rows.
+- Mission runner now includes the new lobby status view-model and summary-client tests.
 
 ## Latest Validation
 
-For P17D, run and verify:
+For P18A, run and verify:
 
 ```bash
-npx vitest run tests/api/replaySessionRepository.test.ts -t 'transitions lobby state|rejects invalid lobby transitions|rejects manager commands after completion'
-npx vitest run tests/api/replaySessionEndpoint.test.ts -t 'transitions replay session lobby state|rejects invalid replay session lobby state requests'
-npx vitest run tests/api/server.test.ts -t 'replay session lobby-state route completes sessions'
-npx vitest run tests/api/replaySessionNextRoutes.test.ts -t 'transitions replay session lobby state'
+npx vitest run tests/web/replaySessionLobbyStatusViewModel.test.ts
+npx vitest run tests/web/replaySessionClient.test.ts -t 'gets read-only replay session summaries|throws readable session errors'
+npx vitest run tests/web/matchLabLayoutViewModel.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -151,22 +150,29 @@ npm run build
 git diff --check
 ```
 
-Expected mission count after P17D: ALL 131 MISSIONS PASSED.
+Browser smoke verified on `http://localhost:3000`:
+
+- submitted the Match Lab form
+- confirmed the read-only `Replay session lobby` panel appears
+- confirmed it shows `IN MATCH`, `Single manager`, `Local manager`, `Unassigned`, command counts, visible events, and read-only transition copy
+- confirmed browser console had no messages/errors after verification
+
+Expected mission count after P18A: ALL 133 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work: **P18A Lobby Setup View Model and Read-Only Status Panel**.
+Recommended next work: **P18B Side-Aware Lobby Readiness View Model**.
 
 Why this is next:
 
-Replay sessions now have ownership, side-specific command logs, summary routes, and server-owned lobby transitions. The next small UI-safe slice should surface this lobby/session state in a read-only browser panel before adding manager invites, auth, sockets, or interactive lobby controls.
+The Match Lab now exposes read-only session summary state in the browser, but it still compresses side ownership into a compact generic panel. The next small UI-safe slice should make head-to-head readiness easier to understand without adding lobby mutations: a pure side-card view model that separates home and away manager/command/readiness facts and can later host lock/ready controls.
 
 Suggested goals:
 
-1. Add a pure lobby summary view model for session ownership, state, command counts, and completion status.
-2. Render a compact read-only status panel in Match Lab after replay-session creation.
-3. Keep the panel original and aligned with the modern football-manager console direction.
-4. Do not add mutating lobby controls yet; keep transition routes API-only until UX is designed.
+1. Add a pure side-aware lobby readiness view model for home/away owner labels, assignment state, command counts, and lobby-state-specific readiness copy.
+2. Render two compact read-only side cards inside or beside the lobby status panel.
+3. Keep Match Lab single-manager compatible by showing the home side as local and the away side as unassigned.
+4. Do not add invite, lock, ready, or transition buttons yet; keep all mutation routes API-only until the side-card contract is stable.
 
 ## Important User Preferences
 

@@ -529,6 +529,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 131: replay session lobby transition routes',
     args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'replay session lobby-state route completes sessions']
+  },
+  {
+    label: 'MISSION 132: replay session lobby status view model',
+    args: ['vitest', 'run', 'tests/web/replaySessionLobbyStatusViewModel.test.ts']
+  },
+  {
+    label: 'MISSION 133: replay session summary web client',
+    args: ['vitest', 'run', 'tests/web/replaySessionClient.test.ts', '-t', 'gets read-only replay session summaries']
   }
 ];
 

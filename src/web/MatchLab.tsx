@@ -23,10 +23,12 @@ import { createPitchAssignmentViewModel, type PitchAssignmentViewModel } from '.
 import {
   appendReplaySessionCommandFromWeb,
   createReplaySessionFromWeb,
+  getReplaySessionSummaryFromWeb,
   resumeReplaySessionFromWeb,
   syncReplaySessionVisibleEventsFromWeb
 } from './replaySessionClient';
 import { createPlayerAttributeCards, type PlayerAttributeCard } from './playerAttributeCards';
+import { createReplaySessionLobbyStatusViewModel, type ReplaySessionLobbySummary, type ReplaySessionLobbyStatusViewModel } from './replaySessionLobbyStatusViewModel';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
   simulateMatchFromWeb,
@@ -77,6 +79,7 @@ export function MatchLab() {
   const [replaySessionError, setReplaySessionError] = useState<string | null>(null);
   const [replaySessionVisibleEventCount, setReplaySessionVisibleEventCount] = useState(0);
   const [replaySessionCommandCount, setReplaySessionCommandCount] = useState(0);
+  const [replaySessionSummary, setReplaySessionSummary] = useState<ReplaySessionLobbySummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -94,6 +97,7 @@ export function MatchLab() {
   const awayPlayerCards = useMemo(() => createPlayerAttributeCards(awayAssignments), [awayAssignments]);
   const homeWarnings = useMemo(() => roleMismatchWarnings(homeAssignments), [homeAssignments]);
   const awayWarnings = useMemo(() => roleMismatchWarnings(awayAssignments), [awayAssignments]);
+  const lobbyStatus = useMemo(() => (replaySessionSummary ? createReplaySessionLobbyStatusViewModel(replaySessionSummary) : null), [replaySessionSummary]);
   const replayMetadata = useMemo(() => [
     ...(viewModel?.replay ?? []),
     replaySessionId ? `Replay session: ${replaySessionId}` : replaySessionStatus,
@@ -149,11 +153,14 @@ export function MatchLab() {
       setReplaySessionError(null);
       setReplaySessionVisibleEventCount(0);
       setReplaySessionCommandCount(0);
+      setReplaySessionSummary(null);
       try {
         const session = await createReplaySessionFromWeb(simulationPayload);
         setReplaySessionId(session.sessionId);
         setReplaySessionVisibleEventCount(session.visibleEventCount);
         setReplaySessionCommandCount(0);
+        const summary = await getReplaySessionSummaryFromWeb(session.sessionId);
+        setReplaySessionSummary(summary);
         setReplaySessionStatus(`Replay session ready for seed ${seed}.`);
       } catch (sessionError) {
         setReplaySessionStatus('Replay session creation failed.');
@@ -182,6 +189,8 @@ export function MatchLab() {
         command: newCommand
       });
       setReplaySessionCommandCount(appended.commandCount);
+      const summary = await getReplaySessionSummaryFromWeb(replaySessionId);
+      setReplaySessionSummary(summary);
       setReplaySessionStatus('Replay session command log synchronized.');
       setReplaySessionError(null);
     } catch (caught) {
@@ -215,6 +224,8 @@ export function MatchLab() {
         signature: response.signature,
         currentMinute: interactiveState.currentMinute
       }));
+      const summary = await getReplaySessionSummaryFromWeb(replaySessionId);
+      setReplaySessionSummary(summary);
       setReplaySessionStatus(`Replay session resumed with signature ${response.signature}.`);
     } catch (caught) {
       setAuthoritativeReplay([]);
@@ -335,6 +346,7 @@ export function MatchLab() {
             {interactiveViewModel ? <InfoList title={section('projection').title} eyebrow={section('projection').eyebrow} items={interactiveViewModel.projectedReplay} /> : null}
             {interactiveViewModel ? <InfoList title="Server-authoritative replay" eyebrow="Server resume" items={authoritativeReplay.length > 0 ? authoritativeReplay : [authoritativeError ?? (isAuthoritativeLoading ? 'Requesting server-authoritative resume...' : 'Request an authoritative resume to compare against the client projection.')]} /> : null}
             <InfoList title={section('diagnostics').title} eyebrow={section('diagnostics').eyebrow} items={viewModel.diagnostics} />
+            {lobbyStatus ? <LobbyStatusCard status={lobbyStatus} /> : null}
             <InfoList title={section('replay-metadata').title} eyebrow={section('replay-metadata').eyebrow} items={replayMetadata} />
           </div>
         </section>
@@ -483,6 +495,27 @@ function AssignmentEditor({
         </ul>
       ) : <p className="ok-note">No major role mismatches.</p>}
     </article>
+  );
+}
+
+function LobbyStatusCard({ status }: { status: ReplaySessionLobbyStatusViewModel }) {
+  return (
+    <section className={`info-list lobby-status lobby-status-${status.stateTone}`} aria-label="Replay session lobby status">
+      <p className="eyebrow">{status.eyebrow}</p>
+      <h3>{status.title}</h3>
+      <strong className="lobby-state-pill">{status.stateLabel}</strong>
+      <dl className="lobby-status-rows">
+        {status.rows.map((row) => (
+          <div key={row.label}>
+            <dt>{row.label}</dt>
+            <dd>{row.value}</dd>
+          </div>
+        ))}
+      </dl>
+      <ul>
+        {status.notes.map((note) => <li key={note}>{note}</li>)}
+      </ul>
+    </section>
   );
 }
 

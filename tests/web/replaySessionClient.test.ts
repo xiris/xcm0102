@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   appendReplaySessionCommandFromWeb,
   createReplaySessionFromWeb,
+  getReplaySessionSummaryFromWeb,
   resumeReplaySessionFromWeb,
   syncReplaySessionVisibleEventsFromWeb
 } from '../../src/web/replaySessionClient';
@@ -74,6 +75,34 @@ describe('replay session web client', () => {
       body: JSON.stringify({ command, side: 'away' })
     });
     expect(appended).toEqual({ sessionId: 'rs-0001', commandCount: 1, commandCounts: { home: 0, away: 1 } });
+  });
+
+  it('gets read-only replay session summaries for lobby status panels', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        sessionId: 'rs-0001',
+        seed: 71,
+        ownership: {
+          mode: 'single_manager',
+          lobbyState: 'in_match',
+          sides: { home: { managerId: 'local-home', displayName: 'Local manager' } }
+        },
+        lobbyState: 'in_match',
+        commandCounts: { home: 1, away: 0 },
+        visibleEventCount: 2,
+        latestAuthoritativeSignature: '71|50|cmd|vh-abcd|8'
+      })
+    });
+
+    const summary = await getReplaySessionSummaryFromWeb('rs-0001', fetchMock);
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/replay-sessions/rs-0001', {
+      method: 'GET',
+      headers: { 'content-type': 'application/json' }
+    });
+    expect(summary.commandCounts).toEqual({ home: 1, away: 0 });
+    expect(summary.latestAuthoritativeSignature).toBe('71|50|cmd|vh-abcd|8');
   });
 
   it('throws readable session errors from server payloads', async () => {

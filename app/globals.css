@@ -468,6 +468,58 @@ td:not(:first-child) { text-align: right; }
 
 .info-list h3 { margin-bottom: 10px; }
 
+.lobby-status {
+  border-color: rgb(255 209 102 / 0.28);
+}
+
+.lobby-state-pill {
+  background: rgb(182 255 99 / 0.12);
+  border: 1px solid rgb(182 255 99 / 0.34);
+  border-radius: 999px;
+  color: var(--accent);
+  display: inline-flex;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  padding: 6px 10px;
+  text-transform: uppercase;
+}
+
+.lobby-status-waiting .lobby-state-pill { color: var(--accent-2); border-color: rgb(255 209 102 / 0.38); }
+.lobby-status-complete .lobby-state-pill { color: var(--success); border-color: rgb(102 227 143 / 0.38); }
+
+.lobby-status-rows {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.lobby-status-rows div {
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding-bottom: 8px;
+}
+
+.lobby-status-rows dt {
+  color: var(--subtle);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.lobby-status-rows dd {
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 760;
+  margin: 0;
+  max-width: 60%;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
 ul {
   margin: 0;
   padding-left: 18px;
