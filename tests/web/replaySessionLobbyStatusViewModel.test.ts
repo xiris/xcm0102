@@ -35,6 +35,26 @@ describe('createReplaySessionLobbyStatusViewModel', () => {
         { label: 'Visible events', value: '5' },
         { label: 'Latest signature', value: '71|50|cmd|vh-abcd|8' }
       ],
+      sideCards: [
+        {
+          side: 'home',
+          title: 'Home side',
+          managerLabel: 'Home Manager',
+          assignmentLabel: 'Assigned',
+          commandCountLabel: '2 commands',
+          readinessLabel: 'Locked for kickoff',
+          readinessTone: 'waiting'
+        },
+        {
+          side: 'away',
+          title: 'Away side',
+          managerLabel: 'Away Manager',
+          assignmentLabel: 'Assigned',
+          commandCountLabel: '1 command',
+          readinessLabel: 'Locked for kickoff',
+          readinessTone: 'waiting'
+        }
+      ],
       notes: [
         'Pre-match setup has been locked; kickoff is waiting on the server-owned transition.',
         'This panel is read-only. Lobby transitions still happen through tested server commands.'
@@ -68,10 +88,53 @@ describe('createReplaySessionLobbyStatusViewModel', () => {
         { label: 'Command logs', value: 'Home 0 · Away 0' },
         { label: 'Visible events', value: '5' }
       ],
+      sideCards: [
+        {
+          side: 'home',
+          title: 'Home side',
+          managerLabel: 'Local manager',
+          assignmentLabel: 'Assigned',
+          commandCountLabel: '0 commands',
+          readinessLabel: 'In-match commands available',
+          readinessTone: 'active'
+        },
+        {
+          side: 'away',
+          title: 'Away side',
+          managerLabel: 'Unassigned',
+          assignmentLabel: 'Needs manager',
+          commandCountLabel: '0 commands',
+          readinessLabel: 'AI/default side for this single-manager session',
+          readinessTone: 'unassigned'
+        }
+      ],
       notes: [
         'Match replay is active; in-match manager commands may still be recorded.',
         'This panel is read-only. Lobby transitions still happen through tested server commands.'
       ]
     });
+  });
+
+  it('formats side readiness cards for a head-to-head locked lobby', () => {
+    expect(createReplaySessionLobbyStatusViewModel(summary).sideCards).toEqual([
+      {
+        side: 'home',
+        title: 'Home side',
+        managerLabel: 'Home Manager',
+        assignmentLabel: 'Assigned',
+        commandCountLabel: '2 commands',
+        readinessLabel: 'Locked for kickoff',
+        readinessTone: 'waiting'
+      },
+      {
+        side: 'away',
+        title: 'Away side',
+        managerLabel: 'Away Manager',
+        assignmentLabel: 'Assigned',
+        commandCountLabel: '1 command',
+        readinessLabel: 'Locked for kickoff',
+        readinessTone: 'waiting'
+      }
+    ]);
   });
 });

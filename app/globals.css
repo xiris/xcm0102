@@ -520,6 +520,43 @@ td:not(:first-child) { text-align: right; }
   text-align: right;
 }
 
+.lobby-side-cards {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0 0 14px;
+}
+
+.lobby-side-card {
+  background: rgb(6 16 19 / 0.72);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+}
+
+.lobby-side-card h4 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.lobby-side-card strong {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.lobby-side-card span,
+.lobby-side-card small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.lobby-side-card-waiting { border-color: rgb(255 209 102 / 0.36); }
+.lobby-side-card-active { border-color: rgb(51 196 255 / 0.34); }
+.lobby-side-card-complete { border-color: rgb(102 227 143 / 0.34); }
+.lobby-side-card-unassigned { border-color: rgb(255 255 255 / 0.12); opacity: 0.86; }
+
 ul {
   margin: 0;
   padding-left: 18px;
@@ -537,6 +574,7 @@ li + li { margin-top: 5px; }
 
   .panel { padding: 16px; }
   .assignment-grid { grid-template-columns: 1fr; }
+  .lobby-side-cards { grid-template-columns: 1fr; }
   .pitch-board { min-height: 430px; }
   .score-strip { display: grid; }
   .replay-controls button { width: 100%; }

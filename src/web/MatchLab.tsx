@@ -512,6 +512,19 @@ function LobbyStatusCard({ status }: { status: ReplaySessionLobbyStatusViewModel
           </div>
         ))}
       </dl>
+      <div className="lobby-side-cards" aria-label="Replay session side readiness">
+        {status.sideCards.map((card) => (
+          <article className={`lobby-side-card lobby-side-card-${card.readinessTone}`} key={card.side}>
+            <div>
+              <p className="eyebrow">{card.assignmentLabel}</p>
+              <h4>{card.title}</h4>
+            </div>
+            <strong>{card.managerLabel}</strong>
+            <span>{card.commandCountLabel}</span>
+            <small>{card.readinessLabel}</small>
+          </article>
+        ))}
+      </div>
       <ul>
         {status.notes.map((note) => <li key={note}>{note}</li>)}
       </ul>

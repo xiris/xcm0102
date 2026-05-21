@@ -47,6 +47,7 @@ Documentation map:
 - 40-production-session-route-parity-lobby-state-contract.md — route-boundary parity and lobby-state summary contract for replay sessions.
 - 41-production-lobby-state-transition-contract.md — server-owned replay-session lobby-state transition command contract.
 - 42-production-lobby-status-panel-contract.md — read-only Match Lab replay-session lobby/status panel contract.
+- 43-production-side-aware-lobby-readiness-contract.md — read-only home/away lobby readiness cards contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.

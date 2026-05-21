@@ -15,12 +15,23 @@ export type ReplaySessionLobbyStatusRow = {
   value: string;
 };
 
+export type ReplaySessionLobbySideCard = {
+  side: MatchSide;
+  title: string;
+  managerLabel: string;
+  assignmentLabel: 'Assigned' | 'Needs manager';
+  commandCountLabel: string;
+  readinessLabel: string;
+  readinessTone: 'setup' | 'waiting' | 'active' | 'complete' | 'unassigned';
+};
+
 export type ReplaySessionLobbyStatusViewModel = {
   title: string;
   eyebrow: string;
   stateLabel: string;
   stateTone: 'setup' | 'waiting' | 'active' | 'complete';
   rows: ReplaySessionLobbyStatusRow[];
+  sideCards: ReplaySessionLobbySideCard[];
   notes: string[];
 };
 
@@ -69,11 +80,55 @@ export function createReplaySessionLobbyStatusViewModel(summary: ReplaySessionLo
     stateLabel: state.label,
     stateTone: state.tone,
     rows,
+    sideCards: createSideCards(summary),
     notes: [
       state.note,
       'This panel is read-only. Lobby transitions still happen through tested server commands.'
     ]
   };
+}
+
+function createSideCards(summary: ReplaySessionLobbySummary): ReplaySessionLobbySideCard[] {
+  const sides: MatchSide[] = ['home', 'away'];
+  return sides.map((side) => createSideCard(summary, side));
+}
+
+function createSideCard(summary: ReplaySessionLobbySummary, side: MatchSide): ReplaySessionLobbySideCard {
+  const owner = summary.ownership.sides[side];
+  const isAssigned = owner !== undefined;
+  const readiness = formatSideReadiness(summary, side, isAssigned);
+
+  return {
+    side,
+    title: `${capitalize(side)} side`,
+    managerLabel: owner?.displayName ?? 'Unassigned',
+    assignmentLabel: isAssigned ? 'Assigned' : 'Needs manager',
+    commandCountLabel: formatCommandCount(summary.commandCounts[side]),
+    readinessLabel: readiness.label,
+    readinessTone: readiness.tone
+  };
+}
+
+function formatSideReadiness(summary: ReplaySessionLobbySummary, side: MatchSide, isAssigned: boolean): { label: string; tone: ReplaySessionLobbySideCard['readinessTone'] } {
+  if (!isAssigned) {
+    if (summary.ownership.mode === 'single_manager' && side === 'away') {
+      return { label: 'AI/default side for this single-manager session', tone: 'unassigned' };
+    }
+    return { label: 'Waiting for manager assignment', tone: 'unassigned' };
+  }
+
+  if (summary.lobbyState === 'setup') return { label: 'Setup still open', tone: 'setup' };
+  if (summary.lobbyState === 'locked') return { label: 'Locked for kickoff', tone: 'waiting' };
+  if (summary.lobbyState === 'complete') return { label: 'Result complete', tone: 'complete' };
+  return { label: 'In-match commands available', tone: 'active' };
+}
+
+function formatCommandCount(count: number): string {
+  return `${count} ${count === 1 ? 'command' : 'commands'}`;
+}
+
+function capitalize(value: MatchSide): string {
+  return value === 'home' ? 'Home' : 'Away';
 }
 
 function formatMode(mode: ReplaySessionOwnership['mode']): string {

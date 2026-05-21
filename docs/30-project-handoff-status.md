@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18A Lobby Setup View Model and Read-Only Status Panel.
+- Latest completed local work before the next lobby/multiplayer slice: P18B Side-Aware Lobby Readiness View Model.
 
 ## Product Direction
 
@@ -55,6 +55,7 @@ The browser app currently exposes a Match Lab where the user can:
 - expose side-aware replay-session route parity and a read-only lobby/session summary shape for future head-to-head UI
 - advance replay-session lobby state through server-owned transition commands and prevent late manager commands after completion
 - view a read-only replay-session lobby status panel with server-derived state, ownership, command counts, visible event count, and latest authoritative signature metadata
+- view read-only home/away lobby readiness cards that separate manager assignment, command counts, and state-specific readiness copy for future head-to-head lobbies
 
 ## Completed Production Slices
 
@@ -103,46 +104,42 @@ Completed:
 - Replay sessions now support server-owned lobby-state transitions (`setup` → `locked` → `in_match` → `complete`) with audit entries and completed-session command guards.
 - Match Lab now renders a read-only replay-session lobby status panel from the summary route after session creation, manager-command sync, and authoritative resume.
 - The lobby status panel shows server-derived lobby state, mode, side owners, command counts, visible event count, seed, and optional latest signature without adding mutating browser controls.
+- The lobby status panel now includes read-only home/away side readiness cards with manager assignment, command counts, and lobby-state-specific readiness copy.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18A Lobby Setup View Model and Read-Only Status Panel
+## Latest Slice: P18B Side-Aware Lobby Readiness View Model
 
 Files added/updated:
 
 - `src/web/replaySessionLobbyStatusViewModel.ts`
-- `src/web/replaySessionClient.ts`
 - `src/web/MatchLab.tsx`
-- `src/web/matchLabLayoutViewModel.ts`
 - `app/globals.css`
 - `tests/web/replaySessionLobbyStatusViewModel.test.ts`
-- `tests/web/replaySessionClient.test.ts`
-- `tests/web/matchLabLayoutViewModel.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/42-production-lobby-status-panel-contract.md`
-- `docs/plans/2026-05-21-lobby-setup-status-panel.md`
+- `docs/43-production-side-aware-lobby-readiness-contract.md`
+- `docs/plans/2026-05-21-side-aware-lobby-readiness.md`
 - `docs/README.md`
+- `docs/30-project-handoff-status.md`
 
 Behavior implemented:
 
-- Added a pure replay-session lobby status view model for server-derived summary display.
-- Added a browser GET client for `/api/replay-sessions/:sessionId` with shared replay-session error handling.
-- Match Lab now fetches session summary after replay-session creation and renders a read-only lobby status panel.
-- Match Lab refreshes the summary after manager-command append and authoritative resume so command counts and latest signature remain server-derived.
-- The panel displays lobby state, mode, home/away owner labels, command counts, visible event count, seed, and optional latest authoritative signature.
-- The panel explicitly stays read-only; lobby transitions remain API/server-command-only until a future UX slice.
-- Added original dense-console CSS for lobby-state pill and status rows.
-- Mission runner now includes the new lobby status view-model and summary-client tests.
+- Extended the pure replay-session lobby status view model with ordered home/away side cards.
+- Each side card shows manager assignment, assigned/unassigned state, side command count with singular/plural copy, and lobby-state-specific readiness copy.
+- Head-to-head locked sessions show both sides as assigned and locked for kickoff.
+- Single-manager in-match sessions keep home assigned to the local manager and make the away side explicitly `Unassigned` / `AI/default side for this single-manager session`.
+- Match Lab renders the side cards inside the existing read-only replay-session lobby panel without adding mutation controls.
+- Added original dense-console CSS for side cards and responsive one-column behavior.
+- Mission runner now includes a named side-readiness mission.
 
 ## Latest Validation
 
-For P18A, run and verify:
+For P18B, run and verify:
 
 ```bash
+npx vitest run tests/web/replaySessionLobbyStatusViewModel.test.ts -t 'side readiness cards'
 npx vitest run tests/web/replaySessionLobbyStatusViewModel.test.ts
-npx vitest run tests/web/replaySessionClient.test.ts -t 'gets read-only replay session summaries|throws readable session errors'
-npx vitest run tests/web/matchLabLayoutViewModel.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -152,27 +149,30 @@ git diff --check
 
 Browser smoke verified on `http://localhost:3000`:
 
-- submitted the Match Lab form
+- submitted the Match Lab form through the browser
 - confirmed the read-only `Replay session lobby` panel appears
 - confirmed it shows `IN MATCH`, `Single manager`, `Local manager`, `Unassigned`, command counts, visible events, and read-only transition copy
+- confirmed the new `Home side` and `Away side` cards appear
+- confirmed the home side shows `Assigned`, `Local manager`, `0 commands`, and `In-match commands available`
+- confirmed the away side shows `Needs manager`, `Unassigned`, `0 commands`, and `AI/default side for this single-manager session`
 - confirmed browser console had no messages/errors after verification
 
-Expected mission count after P18A: ALL 133 MISSIONS PASSED.
+Expected mission count after P18B: ALL 134 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work: **P18B Side-Aware Lobby Readiness View Model**.
+Recommended next work: **P18C Lobby Setup/Lock Readiness API Smoke**.
 
 Why this is next:
 
-The Match Lab now exposes read-only session summary state in the browser, but it still compresses side ownership into a compact generic panel. The next small UI-safe slice should make head-to-head readiness easier to understand without adding lobby mutations: a pure side-card view model that separates home and away manager/command/readiness facts and can later host lock/ready controls.
+The browser now has a stable read-only side-card contract, but Match Lab still creates sessions directly in `in_match`. The next small server-first slice should create a setup/locked smoke path at the API/helper layer so future browser controls can prove readiness and lock behavior without yet adding mutating UI buttons.
 
 Suggested goals:
 
-1. Add a pure side-aware lobby readiness view model for home/away owner labels, assignment state, command counts, and lobby-state-specific readiness copy.
-2. Render two compact read-only side cards inside or beside the lobby status panel.
-3. Keep Match Lab single-manager compatible by showing the home side as local and the away side as unassigned.
-4. Do not add invite, lock, ready, or transition buttons yet; keep all mutation routes API-only until the side-card contract is stable.
+1. Add a server/API helper or repository fixture path that can create a replay session in `setup` for lobby-readiness smoke tests while preserving current Match Lab `in_match` compatibility.
+2. Prove allowed `setup -> locked -> in_match` transitions against side assignment/readiness metadata through pure API or route tests.
+3. Keep browser controls read-only; do not add invite, ready, lock, or kickoff buttons until the setup/lock route behavior is stable.
+4. Document how setup/locked sessions differ from the current post-simulation Match Lab sessions.
 
 ## Important User Preferences
 

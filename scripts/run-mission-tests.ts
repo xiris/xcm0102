@@ -535,7 +535,11 @@ const missions: Mission[] = [
     args: ['vitest', 'run', 'tests/web/replaySessionLobbyStatusViewModel.test.ts']
   },
   {
-    label: 'MISSION 133: replay session summary web client',
+    label: 'MISSION 133: replay session lobby side readiness cards',
+    args: ['vitest', 'run', 'tests/web/replaySessionLobbyStatusViewModel.test.ts', '-t', 'side readiness cards']
+  },
+  {
+    label: 'MISSION 134: replay session summary web client',
     args: ['vitest', 'run', 'tests/web/replaySessionClient.test.ts', '-t', 'gets read-only replay session summaries']
   }
 ];
