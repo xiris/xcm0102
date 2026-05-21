@@ -509,6 +509,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 126: replay session side ownership',
     args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', '-t', 'stores ownership metadata and side-specific command logs']
+  },
+  {
+    label: 'MISSION 127: replay session route side parity',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'replay session routes preserve away-side commands|replay session routes reject invalid command sides']
+  },
+  {
+    label: 'MISSION 128: replay session lobby summary routes',
+    args: ['vitest', 'run', 'tests/api/replaySessionNextRoutes.test.ts']
   }
 ];
 

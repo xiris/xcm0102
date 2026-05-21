@@ -251,6 +251,96 @@ describe('production API server', () => {
     }));
   });
 
+  it('replay session routes preserve away-side commands and expose lobby summary', async () => {
+    const server = buildServer();
+    const created = await server.inject({
+      method: 'POST',
+      url: '/api/replay-sessions',
+      payload: { seed: 71, currentMinute: 50 }
+    });
+    const sessionId = created.json().sessionId as string;
+
+    const appended = await server.inject({
+      method: 'POST',
+      url: `/api/replay-sessions/${sessionId}/commands`,
+      payload: {
+        side: 'away',
+        command: {
+          id: 'cmd-050-02-adjust-defensive-line',
+          minute: 50,
+          action: 'Adjust defensive line',
+          eventType: 'goal',
+          eventDescription: 'Away pause event.',
+          effectSummary: 'Recorded intent: adjust defensive line at 50’.'
+        }
+      }
+    });
+
+    expect(appended.statusCode).toBe(200);
+    expect(appended.json()).toEqual({ sessionId, commandCount: 1, commandCounts: { home: 0, away: 1 } });
+
+    const resumed = await server.inject({
+      method: 'POST',
+      url: `/api/replay-sessions/${sessionId}/resume`,
+      payload: { currentMinute: 50 }
+    });
+
+    expect(resumed.statusCode).toBe(200);
+    expect(resumed.json()).toEqual(expect.objectContaining({
+      sessionId,
+      authoritative: true,
+      diagnostics: expect.arrayContaining([
+        '50’ away change_transition_style command set transition style to hold_shape for regenerated future simulation.'
+      ])
+    }));
+
+    const summary = await server.inject({ method: 'GET', url: `/api/replay-sessions/${sessionId}` });
+
+    expect(summary.statusCode).toBe(200);
+    expect(summary.json()).toEqual({
+      sessionId,
+      seed: 71,
+      ownership: {
+        mode: 'single_manager',
+        lobbyState: 'in_match',
+        sides: { home: { managerId: 'local-home', displayName: 'Local manager' } }
+      },
+      lobbyState: 'in_match',
+      commandCounts: { home: 0, away: 1 },
+      visibleEventCount: expect.any(Number),
+      latestAuthoritativeSignature: resumed.json().signature
+    });
+    expect(summary.json()).not.toHaveProperty('baseInput');
+    expect(summary.json()).not.toHaveProperty('visibleEvents');
+    expect(summary.json()).not.toHaveProperty('sideManagerCommands');
+    expect(summary.json()).not.toHaveProperty('auditLog');
+  });
+
+  it('replay session routes reject invalid command sides', async () => {
+    const server = buildServer();
+    const created = await server.inject({ method: 'POST', url: '/api/replay-sessions', payload: { seed: 71, currentMinute: 50 } });
+    const sessionId = created.json().sessionId as string;
+
+    const response = await server.inject({
+      method: 'POST',
+      url: `/api/replay-sessions/${sessionId}/commands`,
+      payload: {
+        side: 'bench',
+        command: {
+          id: 'cmd-050-01-change-pressing',
+          minute: 50,
+          action: 'Change pressing',
+          eventType: 'goal',
+          eventDescription: 'Pause event.',
+          effectSummary: 'Recorded intent: change pressing at 50’.'
+        }
+      }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toEqual({ error: 'side must be home or away' });
+  });
+
   it('simulate match endpoint accepts tactical editor options', async () => {
     const server = buildServer();
     const response = await server.inject({

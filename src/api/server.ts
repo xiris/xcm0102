@@ -3,6 +3,7 @@ import { resumeMatchForApi } from './authoritativeResumeEndpoint';
 import {
   appendReplaySessionCommandForApi,
   createReplaySessionForApi,
+  getReplaySessionSummaryForApi,
   resumeReplaySessionForApi,
   syncReplaySessionVisibleEventsForApi
 } from './replaySessionEndpoint';
@@ -48,6 +49,16 @@ export function buildServer() {
   server.post('/api/replay-sessions/:sessionId/commands', async (request, reply) => {
     const { sessionId } = request.params as { sessionId: string };
     const result = appendReplaySessionCommandForApi({ ...(request.body as Record<string, unknown>), sessionId }, replaySessions);
+    if (!result.ok) {
+      return reply.status(result.status).send(result.body);
+    }
+
+    return result.body;
+  });
+
+  server.get('/api/replay-sessions/:sessionId', async (request, reply) => {
+    const { sessionId } = request.params as { sessionId: string };
+    const result = getReplaySessionSummaryForApi({ sessionId }, replaySessions);
     if (!result.ok) {
       return reply.status(result.status).send(result.body);
     }

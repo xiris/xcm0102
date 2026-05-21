@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   appendReplaySessionCommandForApi,
   createReplaySessionForApi,
+  getReplaySessionSummaryForApi,
   resumeReplaySessionForApi,
   syncReplaySessionVisibleEventsForApi
 } from '../../src/api/replaySessionEndpoint';
@@ -273,6 +274,45 @@ describe('replay session API helpers', () => {
       eventCount: resumedEvents.length,
       signature: resumedSignature
     }));
+  });
+
+  it('returns replay session ownership summary without private session internals', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({ seed: 71, currentMinute: 50 }, repository);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    appendReplaySessionCommandForApi({ sessionId, side: 'away', command: awayCommand }, repository);
+    const resumed = resumeReplaySessionForApi({ sessionId, currentMinute: 50 }, repository);
+    expect(resumed.status).toBe(200);
+    if (!resumed.ok) throw new Error('expected session resume to pass');
+    const signature = resumed.body.signature as string;
+
+    const summary = getReplaySessionSummaryForApi({ sessionId }, repository);
+
+    expect(summary).toEqual({
+      ok: true,
+      status: 200,
+      body: {
+        sessionId,
+        seed: 71,
+        ownership: {
+          mode: 'single_manager',
+          lobbyState: 'in_match',
+          sides: { home: { managerId: 'local-home', displayName: 'Local manager' } }
+        },
+        lobbyState: 'in_match',
+        commandCounts: { home: 0, away: 1 },
+        visibleEventCount: expect.any(Number),
+        latestAuthoritativeSignature: signature
+      }
+    });
+    expect(summary.body).not.toHaveProperty('baseInput');
+    expect(summary.body).not.toHaveProperty('initialResult');
+    expect(summary.body).not.toHaveProperty('visibleEvents');
+    expect(summary.body).not.toHaveProperty('managerCommands');
+    expect(summary.body).not.toHaveProperty('sideManagerCommands');
+    expect(summary.body).not.toHaveProperty('auditLog');
   });
 
   it('rejects malformed session requests and missing sessions', () => {

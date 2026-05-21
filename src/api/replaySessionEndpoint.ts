@@ -68,6 +68,32 @@ export function syncReplaySessionVisibleEventsForApi(payload: unknown, repositor
   }
 }
 
+export function getReplaySessionSummaryForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
+  const parsed = parseSessionIdRequest(payload);
+  if (!parsed.ok) return badRequest(parsed.errors.join('; '));
+
+  try {
+    const session = repository.getSession(parsed.value.sessionId);
+    const body: Record<string, unknown> = {
+      sessionId: session.sessionId,
+      seed: session.seed,
+      ownership: session.ownership,
+      lobbyState: session.ownership.lobbyState,
+      commandCounts: {
+        home: session.sideManagerCommands.home.length,
+        away: session.sideManagerCommands.away.length
+      },
+      visibleEventCount: session.visibleEvents.length
+    };
+    if (session.latestAuthoritativeSignature !== undefined) {
+      body.latestAuthoritativeSignature = session.latestAuthoritativeSignature;
+    }
+    return { ok: true, status: 200, body };
+  } catch (error) {
+    return notFound(error);
+  }
+}
+
 export function resumeReplaySessionForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
   const parsed = parseResumeSessionRequest(payload);
   if (!parsed.ok) return badRequest(parsed.errors.join('; '));
@@ -137,6 +163,15 @@ function parseVisibleEventsRequest(payload: unknown) {
   if (!Array.isArray(body.value.visibleEvents) || !body.value.visibleEvents.every(isMatchEventLike)) errors.push('visibleEvents must be an array of match events');
   if (errors.length > 0) return { ok: false as const, errors };
   return { ok: true as const, value: { sessionId: body.value.sessionId as string, visibleEvents: body.value.visibleEvents as MatchEvent[] } };
+}
+
+function parseSessionIdRequest(payload: unknown) {
+  const body = asObject(payload);
+  if (!body.ok) return body;
+  const errors: string[] = [];
+  if (typeof body.value.sessionId !== 'string' || body.value.sessionId.length === 0) errors.push('sessionId must be a non-empty string');
+  if (errors.length > 0) return { ok: false as const, errors };
+  return { ok: true as const, value: { sessionId: body.value.sessionId as string } };
 }
 
 function parseResumeSessionRequest(payload: unknown) {
