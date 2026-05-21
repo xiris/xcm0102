@@ -39,6 +39,78 @@ const awayCommand: ManagerCommand = {
 };
 
 describe('replay session repository', () => {
+  it('transitions lobby state with audit metadata', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const initialResult = matchResultFixture();
+    const baseInput = createSampleMatchInput({ seed: 42 });
+    const created = repository.createSession({
+      seed: 42,
+      baseInput,
+      initialResult,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    });
+
+    const locked = repository.transitionLobbyState(created.sessionId, 'locked');
+    const inMatch = repository.transitionLobbyState(created.sessionId, 'in_match');
+    const complete = repository.transitionLobbyState(created.sessionId, 'complete');
+
+    expect(locked.ownership.lobbyState).toBe('locked');
+    expect(inMatch.ownership.lobbyState).toBe('in_match');
+    expect(complete.ownership.lobbyState).toBe('complete');
+    expect(complete.auditLog.filter((entry) => entry.type === 'lobby_state_transitioned')).toEqual([
+      expect.objectContaining({ fromLobbyState: 'setup', toLobbyState: 'locked' }),
+      expect.objectContaining({ fromLobbyState: 'locked', toLobbyState: 'in_match' }),
+      expect.objectContaining({ fromLobbyState: 'in_match', toLobbyState: 'complete' })
+    ]);
+
+    const hydrated = createInMemoryReplaySessionRepository();
+    hydrated.hydrateStorageRecords(repository.listStorageRecords());
+    expect(hydrated.getSession(created.sessionId).ownership.lobbyState).toBe('complete');
+    expect(hydrated.getSession(created.sessionId).auditLog.at(-1)).toEqual(expect.objectContaining({
+      type: 'lobby_state_transitioned',
+      fromLobbyState: 'in_match',
+      toLobbyState: 'complete'
+    }));
+  });
+
+  it('rejects invalid lobby transitions', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const initialResult = matchResultFixture();
+    const baseInput = createSampleMatchInput({ seed: 42 });
+    const setup = repository.createSession({
+      seed: 42,
+      baseInput,
+      initialResult,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    });
+
+    expect(() => repository.transitionLobbyState(setup.sessionId, 'in_match')).toThrow('Invalid replay session lobby transition: setup -> in_match');
+    repository.transitionLobbyState(setup.sessionId, 'locked');
+    expect(() => repository.transitionLobbyState(setup.sessionId, 'setup')).toThrow('Invalid replay session lobby transition: locked -> setup');
+    repository.transitionLobbyState(setup.sessionId, 'in_match');
+    repository.transitionLobbyState(setup.sessionId, 'complete');
+    expect(() => repository.transitionLobbyState(setup.sessionId, 'in_match')).toThrow('Invalid replay session lobby transition: complete -> in_match');
+  });
+
+  it('rejects manager commands after completion', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = repository.createSession({ seed: 42, baseInput: createSampleMatchInput({ seed: 42 }), initialResult: matchResultFixture() });
+    repository.transitionLobbyState(created.sessionId, 'complete');
+
+    expect(() => repository.appendManagerCommand(created.sessionId, command)).toThrow('Replay session is complete and cannot accept manager commands');
+  });
+
   it('stores ownership metadata and side-specific command logs', () => {
     const repository = createInMemoryReplaySessionRepository();
     const initialResult = matchResultFixture();

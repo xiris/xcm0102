@@ -5,7 +5,8 @@ import {
   createReplaySessionForApi,
   getReplaySessionSummaryForApi,
   resumeReplaySessionForApi,
-  syncReplaySessionVisibleEventsForApi
+  syncReplaySessionVisibleEventsForApi,
+  transitionReplaySessionLobbyStateForApi
 } from './replaySessionEndpoint';
 import { createInMemoryReplaySessionRepository } from './replaySessionRepository';
 import { simulateMatchForApi } from './simulationEndpoint';
@@ -59,6 +60,16 @@ export function buildServer() {
   server.get('/api/replay-sessions/:sessionId', async (request, reply) => {
     const { sessionId } = request.params as { sessionId: string };
     const result = getReplaySessionSummaryForApi({ sessionId }, replaySessions);
+    if (!result.ok) {
+      return reply.status(result.status).send(result.body);
+    }
+
+    return result.body;
+  });
+
+  server.patch('/api/replay-sessions/:sessionId/lobby-state', async (request, reply) => {
+    const { sessionId } = request.params as { sessionId: string };
+    const result = transitionReplaySessionLobbyStateForApi({ ...(request.body as Record<string, unknown>), sessionId }, replaySessions);
     if (!result.ok) {
       return reply.status(result.status).send(result.body);
     }

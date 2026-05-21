@@ -45,6 +45,7 @@ Documentation map:
 - 38-production-durable-replay-session-persistence-contract.md — storage-shaped replay-session export/hydration contract for future durable persistence.
 - 39-production-head-to-head-session-ownership-contract.md — replay-session side ownership and head-to-head command-log contract.
 - 40-production-session-route-parity-lobby-state-contract.md — route-boundary parity and lobby-state summary contract for replay sessions.
+- 41-production-lobby-state-transition-contract.md — server-owned replay-session lobby-state transition command contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -73,6 +74,7 @@ Documentation map:
 - plans/2026-05-19-durable-replay-session-persistence.md — implementation plan for storage-shaped replay-session export/hydration.
 - plans/2026-05-19-head-to-head-session-ownership.md — implementation plan for replay-session side ownership and future head-to-head lobbies.
 - plans/2026-05-20-session-route-parity-lobby-state.md — implementation plan for side-aware route parity and session summary smoke coverage.
+- plans/2026-05-21-lobby-state-transition-commands.md — implementation plan for server-owned replay-session lobby-state transition commands.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

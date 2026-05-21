@@ -4,6 +4,7 @@ import {
   createReplaySessionForApi,
   getReplaySessionSummaryForApi,
   resumeReplaySessionForApi,
+  transitionReplaySessionLobbyStateForApi,
   syncReplaySessionVisibleEventsForApi
 } from '../../src/api/replaySessionEndpoint';
 import { createInMemoryReplaySessionRepository } from '../../src/api/replaySessionRepository';
@@ -28,6 +29,53 @@ const awayCommand = {
 };
 
 describe('replay session API helpers', () => {
+  it('transitions replay session lobby state through the API helper', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({ seed: 71, currentMinute: 50 }, repository);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    const transitioned = transitionReplaySessionLobbyStateForApi({ sessionId, lobbyState: 'complete' }, repository);
+
+    expect(transitioned).toEqual({
+      ok: true,
+      status: 200,
+      body: {
+        sessionId,
+        lobbyState: 'complete',
+        ownership: {
+          mode: 'single_manager',
+          lobbyState: 'complete',
+          sides: { home: { managerId: 'local-home', displayName: 'Local manager' } }
+        }
+      }
+    });
+    expect(getReplaySessionSummaryForApi({ sessionId }, repository).body).toEqual(expect.objectContaining({ lobbyState: 'complete' }));
+  });
+
+  it('rejects invalid replay session lobby state requests', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({ seed: 71, currentMinute: 50 }, repository);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    expect(transitionReplaySessionLobbyStateForApi({ sessionId, lobbyState: 'paused' }, repository)).toEqual({
+      ok: false,
+      status: 400,
+      body: { error: 'lobbyState must be setup locked in_match or complete' }
+    });
+    expect(transitionReplaySessionLobbyStateForApi({ sessionId, lobbyState: 'locked' }, repository)).toEqual({
+      ok: false,
+      status: 400,
+      body: { error: 'Invalid replay session lobby transition: in_match -> locked' }
+    });
+    expect(transitionReplaySessionLobbyStateForApi({ sessionId: 'rs-missing', lobbyState: 'complete' }, repository)).toEqual({
+      ok: false,
+      status: 404,
+      body: { error: 'Replay session not found: rs-missing' }
+    });
+  });
+
   it('applies away-side replay session commands independently from home commands', () => {
     const repository = createInMemoryReplaySessionRepository();
     const created = createReplaySessionForApi({ seed: 71, currentMinute: 50 }, repository);

@@ -517,6 +517,18 @@ const missions: Mission[] = [
   {
     label: 'MISSION 128: replay session lobby summary routes',
     args: ['vitest', 'run', 'tests/api/replaySessionNextRoutes.test.ts']
+  },
+  {
+    label: 'MISSION 129: replay session repository lobby transitions',
+    args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', '-t', 'transitions lobby state|rejects invalid lobby transitions|rejects manager commands after completion']
+  },
+  {
+    label: 'MISSION 130: replay session lobby transition API helper',
+    args: ['vitest', 'run', 'tests/api/replaySessionEndpoint.test.ts', '-t', 'transitions replay session lobby state|rejects invalid replay session lobby state requests']
+  },
+  {
+    label: 'MISSION 131: replay session lobby transition routes',
+    args: ['vitest', 'run', 'tests/api/server.test.ts', '-t', 'replay session lobby-state route completes sessions']
   }
 ];
 

@@ -316,6 +316,50 @@ describe('production API server', () => {
     expect(summary.json()).not.toHaveProperty('auditLog');
   });
 
+  it('replay session lobby-state route completes sessions and rejects late commands', async () => {
+    const server = buildServer();
+    const created = await server.inject({ method: 'POST', url: '/api/replay-sessions', payload: { seed: 71, currentMinute: 50 } });
+    const sessionId = created.json().sessionId as string;
+
+    const transitioned = await server.inject({
+      method: 'PATCH',
+      url: `/api/replay-sessions/${sessionId}/lobby-state`,
+      payload: { lobbyState: 'complete' }
+    });
+
+    expect(transitioned.statusCode).toBe(200);
+    expect(transitioned.json()).toEqual({
+      sessionId,
+      lobbyState: 'complete',
+      ownership: {
+        mode: 'single_manager',
+        lobbyState: 'complete',
+        sides: { home: { managerId: 'local-home', displayName: 'Local manager' } }
+      }
+    });
+
+    const summary = await server.inject({ method: 'GET', url: `/api/replay-sessions/${sessionId}` });
+    expect(summary.json()).toEqual(expect.objectContaining({ lobbyState: 'complete' }));
+
+    const lateCommand = await server.inject({
+      method: 'POST',
+      url: `/api/replay-sessions/${sessionId}/commands`,
+      payload: {
+        command: {
+          id: 'cmd-050-01-change-pressing',
+          minute: 50,
+          action: 'Change pressing',
+          eventType: 'goal',
+          eventDescription: 'Pause event.',
+          effectSummary: 'Recorded intent: change pressing at 50’.'
+        }
+      }
+    });
+
+    expect(lateCommand.statusCode).toBe(400);
+    expect(lateCommand.json()).toEqual({ error: 'Replay session is complete and cannot accept manager commands' });
+  });
+
   it('replay session routes reject invalid command sides', async () => {
     const server = buildServer();
     const created = await server.inject({ method: 'POST', url: '/api/replay-sessions', payload: { seed: 71, currentMinute: 50 } });

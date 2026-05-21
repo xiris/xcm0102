@@ -4,7 +4,7 @@ import { translateManagerCommandsToMatchCommands } from '../simulation/authorita
 import type { ManagerCommand } from '../simulation/managerCommands';
 import { simulateMatch } from '../simulation/simulateMatch';
 import { buildSimulationMatchInputForApi } from './simulationEndpoint';
-import type { MatchSide, ReplaySessionRepository } from './replaySessionRepository';
+import type { MatchSide, ReplaySessionLobbyState, ReplaySessionRepository } from './replaySessionRepository';
 
 export type ReplaySessionApiResult =
   | { ok: true; status: 200; body: Record<string, unknown> }
@@ -48,7 +48,7 @@ export function appendReplaySessionCommandForApi(payload: unknown, repository: R
       body: { sessionId: session.sessionId, commandCount: commandCounts.home + commandCounts.away, commandCounts }
     };
   } catch (error) {
-    return notFound(error);
+    return isReplaySessionNotFound(error) ? notFound(error) : badRequest(error instanceof Error ? error.message : 'replay session command append failed');
   }
 }
 
@@ -91,6 +91,26 @@ export function getReplaySessionSummaryForApi(payload: unknown, repository: Repl
     return { ok: true, status: 200, body };
   } catch (error) {
     return notFound(error);
+  }
+}
+
+export function transitionReplaySessionLobbyStateForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
+  const parsed = parseLobbyStateTransitionRequest(payload);
+  if (!parsed.ok) return badRequest(parsed.errors.join('; '));
+
+  try {
+    const session = repository.transitionLobbyState(parsed.value.sessionId, parsed.value.lobbyState);
+    return {
+      ok: true,
+      status: 200,
+      body: {
+        sessionId: session.sessionId,
+        lobbyState: session.ownership.lobbyState,
+        ownership: session.ownership
+      }
+    };
+  } catch (error) {
+    return isReplaySessionNotFound(error) ? notFound(error) : badRequest(error instanceof Error ? error.message : 'replay session lobby transition failed');
   }
 }
 
@@ -174,6 +194,16 @@ function parseSessionIdRequest(payload: unknown) {
   return { ok: true as const, value: { sessionId: body.value.sessionId as string } };
 }
 
+function parseLobbyStateTransitionRequest(payload: unknown) {
+  const body = asObject(payload);
+  if (!body.ok) return body;
+  const errors: string[] = [];
+  if (typeof body.value.sessionId !== 'string' || body.value.sessionId.length === 0) errors.push('sessionId must be a non-empty string');
+  if (!isReplaySessionLobbyState(body.value.lobbyState)) errors.push('lobbyState must be setup locked in_match or complete');
+  if (errors.length > 0) return { ok: false as const, errors };
+  return { ok: true as const, value: { sessionId: body.value.sessionId as string, lobbyState: body.value.lobbyState as ReplaySessionLobbyState } };
+}
+
 function parseResumeSessionRequest(payload: unknown) {
   const body = asObject(payload);
   if (!body.ok) return body;
@@ -193,6 +223,10 @@ function asObject(payload: unknown) {
 
 function isMatchSide(value: unknown): value is MatchSide {
   return value === 'home' || value === 'away';
+}
+
+function isReplaySessionLobbyState(value: unknown): value is ReplaySessionLobbyState {
+  return value === 'setup' || value === 'locked' || value === 'in_match' || value === 'complete';
 }
 
 function isMinute(value: unknown): boolean {
@@ -229,4 +263,8 @@ function badRequest(error: string): ReplaySessionApiResult {
 
 function notFound(error: unknown): ReplaySessionApiResult {
   return { ok: false, status: 404, body: { error: error instanceof Error ? error.message : 'Replay session not found' } };
+}
+
+function isReplaySessionNotFound(error: unknown): boolean {
+  return error instanceof Error && error.message.startsWith('Replay session not found:');
 }

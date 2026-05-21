@@ -25,7 +25,8 @@ export type ReplaySessionAuditType =
   | 'session_created'
   | 'manager_command_appended'
   | 'visible_events_replaced'
-  | 'authoritative_resume_recorded';
+  | 'authoritative_resume_recorded'
+  | 'lobby_state_transitioned';
 
 export type ReplaySessionAuditEntry = {
   type: ReplaySessionAuditType;
@@ -35,6 +36,8 @@ export type ReplaySessionAuditEntry = {
   signature?: string;
   commandId?: string;
   commandSide?: MatchSide;
+  fromLobbyState?: ReplaySessionLobbyState;
+  toLobbyState?: ReplaySessionLobbyState;
 };
 
 export type ReplaySession = {
@@ -75,6 +78,7 @@ export type ReplaySessionRepository = {
   getSession(sessionId: string): ReplaySession;
   appendManagerCommand(sessionId: string, command: ManagerCommand, side?: MatchSide): ReplaySession;
   replaceVisibleEvents(sessionId: string, visibleEvents: MatchEvent[]): ReplaySession;
+  transitionLobbyState(sessionId: string, nextState: ReplaySessionLobbyState): ReplaySession;
   recordAuthoritativeResume(sessionId: string, input: AuthoritativeResumeAuditInput): ReplaySession;
   listStorageRecords(): ReplaySessionStorageRecord[];
   hydrateStorageRecords(records: ReplaySessionStorageRecord[]): void;
@@ -117,6 +121,21 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
 
   function commandCounts(session: ReplaySession): Record<MatchSide, number> {
     return { home: session.sideManagerCommands.home.length, away: session.sideManagerCommands.away.length };
+  }
+
+  function nextLobbyState(current: ReplaySessionLobbyState): ReplaySessionLobbyState | undefined {
+    const transitions: Partial<Record<ReplaySessionLobbyState, ReplaySessionLobbyState>> = {
+      setup: 'locked',
+      locked: 'in_match',
+      in_match: 'complete'
+    };
+    return transitions[current];
+  }
+
+  function assertLobbyTransition(current: ReplaySessionLobbyState, next: ReplaySessionLobbyState): void {
+    if (nextLobbyState(current) !== next) {
+      throw new Error(`Invalid replay session lobby transition: ${current} -> ${next}`);
+    }
   }
 
   function sessionToRecord(session: ReplaySession): ReplaySessionStorageRecord {
@@ -165,6 +184,9 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
     },
     appendManagerCommand(sessionId, command, side = 'home') {
       const session = requireSession(sessionId);
+      if (session.ownership.lobbyState === 'complete') {
+        throw new Error('Replay session is complete and cannot accept manager commands');
+      }
       const sideManagerCommands = {
         ...session.sideManagerCommands,
         [side]: [...session.sideManagerCommands[side], command]
@@ -184,6 +206,24 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
         visibleEvents,
         auditLog: [...session.auditLog, { type: 'visible_events_replaced', timestamp: now(), eventCount: visibleEvents.length }],
         updatedAt: now()
+      });
+    },
+    transitionLobbyState(sessionId, nextState) {
+      const session = requireSession(sessionId);
+      const fromState = session.ownership.lobbyState;
+      assertLobbyTransition(fromState, nextState);
+      const timestamp = now();
+      return save({
+        ...session,
+        ownership: {
+          ...session.ownership,
+          lobbyState: nextState
+        },
+        auditLog: [
+          ...session.auditLog,
+          { type: 'lobby_state_transitioned', timestamp, fromLobbyState: fromState, toLobbyState: nextState }
+        ],
+        updatedAt: timestamp
       });
     },
     recordAuthoritativeResume(sessionId, input) {

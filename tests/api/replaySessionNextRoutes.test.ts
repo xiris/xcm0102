@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { POST as appendReplaySessionCommandRoute } from '../../app/api/replay-sessions/[sessionId]/commands/route';
+import { PATCH as transitionReplaySessionLobbyStateRoute } from '../../app/api/replay-sessions/[sessionId]/lobby-state/route';
 import { GET as getReplaySessionRoute } from '../../app/api/replay-sessions/[sessionId]/route';
 import { POST as createReplaySessionRoute } from '../../app/api/replay-sessions/route';
 
@@ -59,5 +60,34 @@ describe('Next replay session routes', () => {
     expect(summaryBody).not.toHaveProperty('managerCommands');
     expect(summaryBody).not.toHaveProperty('sideManagerCommands');
     expect(summaryBody).not.toHaveProperty('auditLog');
+  });
+
+  it('transitions replay session lobby state through the Next route wrapper', async () => {
+    const created = await createReplaySessionRoute(jsonRequest('http://localhost/api/replay-sessions', { seed: 172, currentMinute: 50 }));
+    expect(created.status).toBe(200);
+    const createdBody = await created.json();
+    const sessionId = createdBody.sessionId as string;
+
+    const transitioned = await transitionReplaySessionLobbyStateRoute(
+      jsonRequest(`http://localhost/api/replay-sessions/${sessionId}/lobby-state`, { lobbyState: 'complete' }),
+      { params: Promise.resolve({ sessionId }) }
+    );
+
+    expect(transitioned.status).toBe(200);
+    expect(await transitioned.json()).toEqual({
+      sessionId,
+      lobbyState: 'complete',
+      ownership: {
+        mode: 'single_manager',
+        lobbyState: 'complete',
+        sides: { home: { managerId: 'local-home', displayName: 'Local manager' } }
+      }
+    });
+
+    const summary = await getReplaySessionRoute(
+      new Request(`http://localhost/api/replay-sessions/${sessionId}`, { method: 'GET' }),
+      { params: Promise.resolve({ sessionId }) }
+    );
+    expect(await summary.json()).toEqual(expect.objectContaining({ sessionId, lobbyState: 'complete' }));
   });
 });
