@@ -25,6 +25,20 @@ export type ReplaySessionLobbySideCard = {
   readinessTone: 'setup' | 'waiting' | 'active' | 'complete' | 'unassigned';
 };
 
+export type ReplaySessionLobbyAction = {
+  id: 'lock_setup' | 'kickoff' | 'complete_match';
+  label: string;
+  targetLobbyState: Extract<ReplaySessionLobbyState, 'locked' | 'in_match' | 'complete'>;
+  available: boolean;
+  disabledReason?: string;
+};
+
+export type ReplaySessionLobbyActionAvailability = {
+  headline: string;
+  helperText: string;
+  actions: ReplaySessionLobbyAction[];
+};
+
 export type ReplaySessionLobbyStatusViewModel = {
   title: string;
   eyebrow: string;
@@ -32,6 +46,7 @@ export type ReplaySessionLobbyStatusViewModel = {
   stateTone: 'setup' | 'waiting' | 'active' | 'complete';
   rows: ReplaySessionLobbyStatusRow[];
   sideCards: ReplaySessionLobbySideCard[];
+  actionAvailability: ReplaySessionLobbyActionAvailability;
   notes: string[];
 };
 
@@ -81,6 +96,7 @@ export function createReplaySessionLobbyStatusViewModel(summary: ReplaySessionLo
     stateTone: state.tone,
     rows,
     sideCards: createSideCards(summary),
+    actionAvailability: createActionAvailability(summary),
     notes: [
       state.note,
       'This panel is read-only. Lobby transitions still happen through tested server commands.'
@@ -107,6 +123,84 @@ function createSideCard(summary: ReplaySessionLobbySummary, side: MatchSide): Re
     readinessLabel: readiness.label,
     readinessTone: readiness.tone
   };
+}
+
+function createActionAvailability(summary: ReplaySessionLobbySummary): ReplaySessionLobbyActionAvailability {
+  const requiredManagersAssigned = hasRequiredManagers(summary);
+
+  if (summary.lobbyState === 'setup') {
+    if (!requiredManagersAssigned) {
+      return {
+        headline: 'Future lobby actions',
+        helperText: summary.ownership.mode === 'head_to_head'
+          ? 'Manager assignment is incomplete. Future setup controls should stay disabled until both sides are assigned.'
+          : 'Home manager assignment is incomplete. Future setup controls should stay disabled until the home side is assigned.',
+        actions: [{
+          id: 'lock_setup',
+          label: 'Lock setup',
+          targetLobbyState: 'locked',
+          available: false,
+          disabledReason: summary.ownership.mode === 'head_to_head'
+            ? 'Assign both managers before locking setup.'
+            : 'Assign the home manager before locking setup.'
+        }]
+      };
+    }
+
+    return {
+      headline: 'Future lobby actions',
+      helperText: summary.ownership.mode === 'single_manager'
+        ? 'Single-manager setup can lock once the home manager is assigned, though Match Lab sessions usually skip setup/lock and begin in match.'
+        : 'Both managers are assigned. A future Lock setup control can request the server-owned locked transition.',
+      actions: [{
+        id: 'lock_setup',
+        label: 'Lock setup',
+        targetLobbyState: 'locked',
+        available: true
+      }]
+    };
+  }
+
+  if (summary.lobbyState === 'locked') {
+    return {
+      headline: 'Future lobby actions',
+      helperText: 'Setup is locked. A future Kick off match control can request the server-owned in-match transition.',
+      actions: [{
+        id: 'kickoff',
+        label: 'Kick off match',
+        targetLobbyState: 'in_match',
+        available: requiredManagersAssigned,
+        ...(requiredManagersAssigned ? {} : { disabledReason: 'Assign required managers before kickoff.' })
+      }]
+    };
+  }
+
+  if (summary.lobbyState === 'in_match') {
+    return {
+      headline: 'Future lobby actions',
+      helperText: summary.ownership.mode === 'single_manager'
+        ? 'Single-manager Match Lab sessions skip setup/lock controls and begin in match; only completion remains a future transition.'
+        : 'The match is active. A future Complete match control can close the authoritative lobby state.',
+      actions: [{
+        id: 'complete_match',
+        label: 'Complete match',
+        targetLobbyState: 'complete',
+        available: true
+      }]
+    };
+  }
+
+  return {
+    headline: 'Future lobby actions',
+    helperText: 'The result is complete. No further lobby transitions are available.',
+    actions: []
+  };
+}
+
+function hasRequiredManagers(summary: ReplaySessionLobbySummary): boolean {
+  const hasHome = summary.ownership.sides.home !== undefined;
+  const hasAway = summary.ownership.sides.away !== undefined;
+  return summary.ownership.mode === 'head_to_head' ? hasHome && hasAway : hasHome;
 }
 
 function formatSideReadiness(summary: ReplaySessionLobbySummary, side: MatchSide, isAssigned: boolean): { label: string; tone: ReplaySessionLobbySideCard['readinessTone'] } {

@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18D Lobby Transition Browser Client Contract.
+- Latest completed local work before the next lobby/multiplayer slice: P18E Lobby Action Availability View Model.
 
 ## Product Direction
 
@@ -108,38 +108,38 @@ Completed:
 - Replay-session creation can now accept tested server/API ownership metadata for setup lobby smoke paths while omitted ownership preserves the current Match Lab `in_match` single-manager flow.
 - API helper, Fastify routes, and Next route wrappers now prove head-to-head `setup -> locked -> in_match` lobby readiness without adding browser mutation controls.
 - The browser replay-session client now has a tested `PATCH /api/replay-sessions/:sessionId/lobby-state` helper for future lobby controls while Match Lab remains read-only.
+- The replay-session lobby status view model now includes pure future-action availability policy for setup lock, kickoff, completion, disabled manager-assignment copy, and single-manager compatibility.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18D Lobby Transition Browser Client Contract
+## Latest Slice: P18E Lobby Action Availability View Model
 
 Files added/updated:
 
-- `src/web/replaySessionClient.ts`
-- `tests/web/replaySessionClient.test.ts`
+- `src/web/replaySessionLobbyStatusViewModel.ts`
+- `tests/web/replaySessionLobbyStatusViewModel.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/45-production-lobby-transition-browser-client-contract.md`
-- `docs/plans/2026-05-22-lobby-transition-browser-client.md`
+- `docs/46-production-lobby-action-availability-view-model-contract.md`
+- `docs/plans/2026-05-22-lobby-action-availability-view-model.md`
 - `docs/README.md`
 - `docs/30-project-handoff-status.md`
 
 Behavior implemented:
 
-- Added a typed `transitionReplaySessionLobbyStateFromWeb` helper for `PATCH /api/replay-sessions/:sessionId/lobby-state`.
-- The helper sends only `{ lobbyState }` in the JSON body and keeps `sessionId` in the route path.
-- Injected-fetch tests prove exact URL, method, headers, body, returned lobby state, and ownership metadata.
-- Invalid transition server payloads surface through the existing readable `Replay session request failed: ...` error prefix.
-- Mission runner now includes a named lobby-transition web-client mission.
+- Added a typed `actionAvailability` field to the replay-session lobby status view model.
+- The action policy describes future `Lock setup`, `Kick off match`, and `Complete match` controls with target lobby states for the P18D transition client helper.
+- Pure tests prove setup, missing-manager setup, locked, in-match, complete, and single-manager compatibility copy.
+- Mission runner now includes a named lobby-action availability mission.
 - Match Lab remains read-only; no browser-visible mutation controls were wired.
 
 ## Latest Validation
 
-For P18D, run and verify:
+For P18E, run and verify:
 
 ```bash
-npx vitest run tests/web/replaySessionClient.test.ts -t 'transitions replay session lobby state from the browser client'
-npx vitest run tests/web/replaySessionClient.test.ts
+npx vitest run tests/web/replaySessionLobbyStatusViewModel.test.ts -t 'lobby action availability'
+npx vitest run tests/web/replaySessionLobbyStatusViewModel.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -149,28 +149,28 @@ git diff --check
 
 Browser smoke verified on `http://localhost:3000`:
 
-- submitted the Match Lab form through the browser with a semantic form submit
+- submitted the Match Lab form through the browser with a semantic `form.requestSubmit()`
 - confirmed the read-only `Replay session lobby` panel appears
 - confirmed the browser-created session remains `IN MATCH` / `Single manager`
-- confirmed no invite, ready, lock, kickoff, join, or other mutating lobby controls appear
+- confirmed no invite, ready, lock setup, kickoff, join, complete match, or other mutating lobby controls appear
 - confirmed browser console had no messages/errors after verification
 
-Expected mission count after P18D: ALL 136 MISSIONS PASSED.
+Expected mission count after P18E: ALL 137 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work: **P18E Lobby Action Availability View Model**.
+Recommended next work: **P18F Read-Only Lobby Action Preview Panel**.
 
 Why this is next:
 
-The browser now has a tested transition client boundary but still should not render mutating controls directly. The next smallest safe step is a pure view-model that decides which future lobby actions are available from each server-owned summary state, so button rendering can be added later without mixing policy and JSX.
+The browser now has both the transition client boundary and a pure action-availability policy. The next smallest safe UI step is to display that policy as a read-only preview panel so future lobby actions are visible to developers/users without wiring mutating buttons yet.
 
 Suggested goals:
 
-1. Add a pure web view-model for future lobby action availability from `ReplaySessionLobbySummary`.
-2. Prove setup, locked, in-match, complete, and single-manager compatibility copy with tests.
-3. Keep Match Lab read-only; do not call transition mutations from UI yet.
-4. Document how future controls should map view-model actions to the P18D transition client helper.
+1. Render the existing pure `actionAvailability` copy inside the read-only replay-session lobby panel.
+2. Prove the UI copy appears for the current single-manager in-match browser flow without adding mutating controls.
+3. Keep `transitionReplaySessionLobbyStateFromWeb` unused by Match Lab.
+4. Document when a later slice may convert preview rows into real controls.
 
 ## Important User Preferences
 
