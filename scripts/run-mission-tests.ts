@@ -545,6 +545,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 135: replay session setup lock API smoke',
     args: ['vitest', 'run', 'tests/api/replaySessionEndpoint.test.ts', '-t', 'creates setup lobby sessions']
+  },
+  {
+    label: 'MISSION 136: replay session lobby transition web client',
+    args: ['vitest', 'run', 'tests/web/replaySessionClient.test.ts', '-t', 'transitions replay session lobby state from the browser client']
   }
 ];
 

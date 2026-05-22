@@ -1,4 +1,4 @@
-import type { MatchSide } from '../api/replaySessionRepository';
+import type { MatchSide, ReplaySessionLobbyState, ReplaySessionOwnership } from '../api/replaySessionRepository';
 import type { MatchEvent, MatchReport, MatchResult } from '../simulation/domain';
 import type { ManagerCommand } from '../simulation/managerCommands';
 import type { ReplaySessionLobbySummary } from './replaySessionLobbyStatusViewModel';
@@ -54,6 +54,17 @@ export type WebReplaySessionResumeResult = {
   signature: string;
 };
 
+export type WebReplaySessionLobbyStateRequest = {
+  sessionId: string;
+  lobbyState: ReplaySessionLobbyState;
+};
+
+export type WebReplaySessionLobbyStateResult = {
+  sessionId: string;
+  lobbyState: ReplaySessionLobbyState;
+  ownership: ReplaySessionOwnership;
+};
+
 type FetchLike = (input: string, init: RequestInit) => Promise<{
   ok: boolean;
   status?: number;
@@ -87,6 +98,11 @@ export async function getReplaySessionSummaryFromWeb(sessionId: string, fetcher?
   return getJson(`/api/replay-sessions/${sessionId}`, fetcher) as Promise<ReplaySessionLobbySummary>;
 }
 
+export async function transitionReplaySessionLobbyStateFromWeb(request: WebReplaySessionLobbyStateRequest, fetcher?: FetchLike): Promise<WebReplaySessionLobbyStateResult> {
+  const { sessionId, lobbyState } = request;
+  return patchJson(`/api/replay-sessions/${sessionId}/lobby-state`, { lobbyState }, fetcher) as Promise<WebReplaySessionLobbyStateResult>;
+}
+
 async function getJson(url: string, fetcher?: FetchLike): Promise<unknown> {
   const response = await getFetch(fetcher)(url, {
     method: 'GET',
@@ -98,6 +114,15 @@ async function getJson(url: string, fetcher?: FetchLike): Promise<unknown> {
 async function postJson(url: string, body: unknown, fetcher?: FetchLike): Promise<unknown> {
   const response = await getFetch(fetcher)(url, {
     method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return parseJsonResponse(response);
+}
+
+async function patchJson(url: string, body: unknown, fetcher?: FetchLike): Promise<unknown> {
+  const response = await getFetch(fetcher)(url, {
+    method: 'PATCH',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
   });

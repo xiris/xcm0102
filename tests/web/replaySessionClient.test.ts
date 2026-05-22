@@ -4,7 +4,8 @@ import {
   createReplaySessionFromWeb,
   getReplaySessionSummaryFromWeb,
   resumeReplaySessionFromWeb,
-  syncReplaySessionVisibleEventsFromWeb
+  syncReplaySessionVisibleEventsFromWeb,
+  transitionReplaySessionLobbyStateFromWeb
 } from '../../src/web/replaySessionClient';
 import { defaultTacticalState } from '../../src/web/tacticalPayload';
 
@@ -103,6 +104,51 @@ describe('replay session web client', () => {
     });
     expect(summary.commandCounts).toEqual({ home: 1, away: 0 });
     expect(summary.latestAuthoritativeSignature).toBe('71|50|cmd|vh-abcd|8');
+  });
+
+  it('transitions replay session lobby state from the browser client', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        sessionId: 'rs-0001',
+        lobbyState: 'locked',
+        ownership: {
+          mode: 'head_to_head',
+          lobbyState: 'locked',
+          sides: {
+            home: { managerId: 'manager-home', displayName: 'Home Boss' },
+            away: { managerId: 'manager-away', displayName: 'Away Boss' }
+          }
+        }
+      })
+    });
+
+    const transitioned = await transitionReplaySessionLobbyStateFromWeb({
+      sessionId: 'rs-0001',
+      lobbyState: 'locked'
+    }, fetchMock);
+
+    expect(fetchMock).toHaveBeenCalledWith('/api/replay-sessions/rs-0001/lobby-state', {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ lobbyState: 'locked' })
+    });
+    expect(transitioned.lobbyState).toBe('locked');
+    expect(transitioned.ownership.mode).toBe('head_to_head');
+    expect(transitioned.ownership.sides.away?.displayName).toBe('Away Boss');
+  });
+
+  it('throws readable lobby transition errors from server payloads', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ error: 'Invalid replay session lobby transition: setup -> in_match' })
+    });
+
+    await expect(transitionReplaySessionLobbyStateFromWeb({
+      sessionId: 'rs-0001',
+      lobbyState: 'in_match'
+    }, fetchMock)).rejects.toThrow('Replay session request failed: Invalid replay session lobby transition: setup -> in_match');
   });
 
   it('throws readable session errors from server payloads', async () => {
