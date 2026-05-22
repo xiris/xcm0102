@@ -498,7 +498,7 @@ function AssignmentEditor({
   );
 }
 
-function LobbyStatusCard({ status }: { status: ReplaySessionLobbyStatusViewModel }) {
+export function LobbyStatusCard({ status }: { status: ReplaySessionLobbyStatusViewModel }) {
   return (
     <section className={`info-list lobby-status lobby-status-${status.stateTone}`} aria-label="Replay session lobby status">
       <p className="eyebrow">{status.eyebrow}</p>
@@ -524,6 +524,22 @@ function LobbyStatusCard({ status }: { status: ReplaySessionLobbyStatusViewModel
             <small>{card.readinessLabel}</small>
           </article>
         ))}
+      </div>
+      <div className="lobby-action-preview" aria-label="Future lobby action preview">
+        <h4>{status.actionAvailability.headline}</h4>
+        <p>{status.actionAvailability.helperText}</p>
+        {status.actionAvailability.actions.length > 0 ? (
+          <ul>
+            {status.actionAvailability.actions.map((action) => (
+              <li key={action.id}>
+                <strong>{action.label}</strong>
+                <span>{action.available ? 'Available' : 'Disabled'}</span>
+                <small>Target: {action.targetLobbyState}</small>
+                {action.disabledReason ? <small>{action.disabledReason}</small> : null}
+              </li>
+            ))}
+          </ul>
+        ) : <p>No further lobby transitions available.</p>}
       </div>
       <ul>
         {status.notes.map((note) => <li key={note}>{note}</li>)}

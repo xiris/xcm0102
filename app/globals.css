@@ -557,6 +557,38 @@ td:not(:first-child) { text-align: right; }
 .lobby-side-card-complete { border-color: rgb(102 227 143 / 0.34); }
 .lobby-side-card-unassigned { border-color: rgb(255 255 255 / 0.12); opacity: 0.86; }
 
+.lobby-action-preview {
+  background: linear-gradient(135deg, rgb(6 16 19 / 0.78), rgb(17 35 39 / 0.58));
+  border: 1px dashed rgb(182 255 99 / 0.24);
+  border-radius: 14px;
+  display: grid;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 10px;
+}
+
+.lobby-action-preview h4 {
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.lobby-action-preview p {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.lobby-action-preview li {
+  display: grid;
+  gap: 3px;
+}
+
+.lobby-action-preview span,
+.lobby-action-preview small {
+  color: var(--subtle);
+  font-size: 0.76rem;
+}
+
 ul {
   margin: 0;
   padding-left: 18px;

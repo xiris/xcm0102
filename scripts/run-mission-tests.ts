@@ -553,6 +553,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 137: replay session lobby action availability',
     args: ['vitest', 'run', 'tests/web/replaySessionLobbyStatusViewModel.test.ts', '-t', 'lobby action availability']
+  },
+  {
+    label: 'MISSION 138: lobby action preview panel',
+    args: ['vitest', 'run', 'tests/web/matchLabLobbyActionPreview.test.ts']
   }
 ];
 

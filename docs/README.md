@@ -51,6 +51,7 @@ Documentation map:
 - 44-production-lobby-setup-lock-api-smoke-contract.md — server-first setup/lock replay-session lobby smoke contract.
 - 45-production-lobby-transition-browser-client-contract.md — browser client contract for replay-session lobby-state transitions.
 - 46-production-lobby-action-availability-view-model-contract.md — pure browser policy/view-model contract for future lobby action controls.
+- 47-production-read-only-lobby-action-preview-panel-contract.md — read-only Match Lab preview rendering contract for future lobby actions.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -85,6 +86,7 @@ Documentation map:
 - plans/2026-05-22-lobby-setup-lock-api-smoke.md — implementation plan for server-first setup/lock lobby route smoke coverage.
 - plans/2026-05-22-lobby-transition-browser-client.md — implementation plan for the browser lobby-state transition client contract.
 - plans/2026-05-22-lobby-action-availability-view-model.md — implementation plan for pure future lobby action availability policy.
+- plans/2026-05-22-read-only-lobby-action-preview-panel.md — implementation plan for the read-only lobby action preview panel.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 
