@@ -29,6 +29,53 @@ const awayCommand = {
 };
 
 describe('replay session API helpers', () => {
+  it('creates setup lobby sessions and advances them to kickoff readiness through the API helper', () => {
+    const repository = createInMemoryReplaySessionRepository();
+
+    const created = createReplaySessionForApi({
+      seed: 71,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    }, repository);
+
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected setup session creation to pass');
+    const sessionId = created.body.sessionId as string;
+    expect(getReplaySessionSummaryForApi({ sessionId }, repository).body).toEqual(expect.objectContaining({
+      sessionId,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      },
+      lobbyState: 'setup',
+      commandCounts: { home: 0, away: 0 }
+    }));
+
+    expect(transitionReplaySessionLobbyStateForApi({ sessionId, lobbyState: 'locked' }, repository)).toEqual(expect.objectContaining({
+      ok: true,
+      body: expect.objectContaining({ lobbyState: 'locked' })
+    }));
+    expect(transitionReplaySessionLobbyStateForApi({ sessionId, lobbyState: 'in_match' }, repository)).toEqual(expect.objectContaining({
+      ok: true,
+      body: expect.objectContaining({ lobbyState: 'in_match' })
+    }));
+    expect(getReplaySessionSummaryForApi({ sessionId }, repository).body).toEqual(expect.objectContaining({
+      lobbyState: 'in_match',
+      ownership: expect.objectContaining({ lobbyState: 'in_match' })
+    }));
+  });
+
   it('transitions replay session lobby state through the API helper', () => {
     const repository = createInMemoryReplaySessionRepository();
     const created = createReplaySessionForApi({ seed: 71, currentMinute: 50 }, repository);

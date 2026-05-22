@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18B Side-Aware Lobby Readiness View Model.
+- Latest completed local work before the next lobby/multiplayer slice: P18C Lobby Setup/Lock Readiness API Smoke.
 
 ## Product Direction
 
@@ -105,41 +105,46 @@ Completed:
 - Match Lab now renders a read-only replay-session lobby status panel from the summary route after session creation, manager-command sync, and authoritative resume.
 - The lobby status panel shows server-derived lobby state, mode, side owners, command counts, visible event count, seed, and optional latest signature without adding mutating browser controls.
 - The lobby status panel now includes read-only home/away side readiness cards with manager assignment, command counts, and lobby-state-specific readiness copy.
+- Replay-session creation can now accept tested server/API ownership metadata for setup lobby smoke paths while omitted ownership preserves the current Match Lab `in_match` single-manager flow.
+- API helper, Fastify routes, and Next route wrappers now prove head-to-head `setup -> locked -> in_match` lobby readiness without adding browser mutation controls.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18B Side-Aware Lobby Readiness View Model
+## Latest Slice: P18C Lobby Setup/Lock Readiness API Smoke
 
 Files added/updated:
 
-- `src/web/replaySessionLobbyStatusViewModel.ts`
-- `src/web/MatchLab.tsx`
-- `app/globals.css`
-- `tests/web/replaySessionLobbyStatusViewModel.test.ts`
+- `src/api/replaySessionEndpoint.ts`
+- `tests/api/replaySessionEndpoint.test.ts`
+- `tests/api/server.test.ts`
+- `tests/api/replaySessionNextRoutes.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/43-production-side-aware-lobby-readiness-contract.md`
-- `docs/plans/2026-05-21-side-aware-lobby-readiness.md`
+- `docs/44-production-lobby-setup-lock-api-smoke-contract.md`
+- `docs/plans/2026-05-22-lobby-setup-lock-api-smoke.md`
 - `docs/README.md`
 - `docs/30-project-handoff-status.md`
 
 Behavior implemented:
 
-- Extended the pure replay-session lobby status view model with ordered home/away side cards.
-- Each side card shows manager assignment, assigned/unassigned state, side command count with singular/plural copy, and lobby-state-specific readiness copy.
-- Head-to-head locked sessions show both sides as assigned and locked for kickoff.
-- Single-manager in-match sessions keep home assigned to the local manager and make the away side explicitly `Unassigned` / `AI/default side for this single-manager session`.
-- Match Lab renders the side cards inside the existing read-only replay-session lobby panel without adding mutation controls.
-- Added original dense-console CSS for side cards and responsive one-column behavior.
-- Mission runner now includes a named side-readiness mission.
+- Replay-session API creation accepts optional validated ownership metadata for server-first lobby smoke sessions.
+- Omitted ownership metadata preserves the current Match Lab compatibility path: single-manager, home-owned, `in_match` sessions.
+- Head-to-head setup smoke sessions can be created with both home and away managers assigned.
+- Shared API helper tests prove setup summaries and `setup -> locked -> in_match` transition readiness.
+- Fastify route tests prove setup lobby creation, summary visibility, and forward transition smoke behavior.
+- Next app-route tests prove parity for setup creation and setup/lock/in-match transitions.
+- Mission runner now includes a named setup/lock API smoke mission.
+- Browser mutation controls remain out of scope.
 
 ## Latest Validation
 
-For P18B, run and verify:
+For P18C, run and verify:
 
 ```bash
-npx vitest run tests/web/replaySessionLobbyStatusViewModel.test.ts -t 'side readiness cards'
-npx vitest run tests/web/replaySessionLobbyStatusViewModel.test.ts
+npx vitest run tests/api/replaySessionEndpoint.test.ts -t 'creates setup lobby sessions'
+npx vitest run tests/api/replaySessionEndpoint.test.ts
+npx vitest run tests/api/server.test.ts -t 'replay session routes create setup lobbies|replay session lobby-state route completes sessions'
+npx vitest run tests/api/replaySessionNextRoutes.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -149,30 +154,28 @@ git diff --check
 
 Browser smoke verified on `http://localhost:3000`:
 
-- submitted the Match Lab form through the browser
+- submitted the Match Lab form through the browser with a semantic form submit fallback after the visible click did not change state
 - confirmed the read-only `Replay session lobby` panel appears
-- confirmed it shows `IN MATCH`, `Single manager`, `Local manager`, `Unassigned`, command counts, visible events, and read-only transition copy
-- confirmed the new `Home side` and `Away side` cards appear
-- confirmed the home side shows `Assigned`, `Local manager`, `0 commands`, and `In-match commands available`
-- confirmed the away side shows `Needs manager`, `Unassigned`, `0 commands`, and `AI/default side for this single-manager session`
+- confirmed the browser-created session remains `IN MATCH` / `Single manager`
+- confirmed no invite, ready, lock, kickoff, or other mutating lobby controls appear
 - confirmed browser console had no messages/errors after verification
 
-Expected mission count after P18B: ALL 134 MISSIONS PASSED.
+Expected mission count after P18C: ALL 135 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work: **P18C Lobby Setup/Lock Readiness API Smoke**.
+Recommended next work: **P18D Lobby Transition Browser Client Contract**.
 
 Why this is next:
 
-The browser now has a stable read-only side-card contract, but Match Lab still creates sessions directly in `in_match`. The next small server-first slice should create a setup/locked smoke path at the API/helper layer so future browser controls can prove readiness and lock behavior without yet adding mutating UI buttons.
+The API and route layers can now create setup lobbies and prove `setup -> locked -> in_match` readiness. The next smallest slice should add a browser client contract for the existing lobby-state PATCH route without adding visible mutating controls yet, so future UI buttons can reuse a tested client boundary.
 
 Suggested goals:
 
-1. Add a server/API helper or repository fixture path that can create a replay session in `setup` for lobby-readiness smoke tests while preserving current Match Lab `in_match` compatibility.
-2. Prove allowed `setup -> locked -> in_match` transitions against side assignment/readiness metadata through pure API or route tests.
-3. Keep browser controls read-only; do not add invite, ready, lock, or kickoff buttons until the setup/lock route behavior is stable.
-4. Document how setup/locked sessions differ from the current post-simulation Match Lab sessions.
+1. Add a web-client helper with injected fetch for `PATCH /api/replay-sessions/:sessionId/lobby-state`.
+2. Prove request shape and readable error handling with pure web-client tests.
+3. Keep Match Lab UI read-only; do not wire buttons yet.
+4. Document the client contract and how it will be used by future invite/ready/lock/kickoff UI.
 
 ## Important User Preferences
 

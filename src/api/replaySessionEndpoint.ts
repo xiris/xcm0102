@@ -4,7 +4,7 @@ import { translateManagerCommandsToMatchCommands } from '../simulation/authorita
 import type { ManagerCommand } from '../simulation/managerCommands';
 import { simulateMatch } from '../simulation/simulateMatch';
 import { buildSimulationMatchInputForApi } from './simulationEndpoint';
-import type { MatchSide, ReplaySessionLobbyState, ReplaySessionRepository } from './replaySessionRepository';
+import type { MatchSide, ReplaySessionLobbyState, ReplaySessionOwnership, ReplaySessionRepository } from './replaySessionRepository';
 
 export type ReplaySessionApiResult =
   | { ok: true; status: 200; body: Record<string, unknown> }
@@ -18,7 +18,14 @@ export function createReplaySessionForApi(payload: unknown, repository: ReplaySe
 
   const initialResult = simulateMatch(built.input);
   const visibleEvents = initialResult.events.filter((event) => event.minute <= parsed.value.currentMinute);
-  const session = repository.createSession({ seed: built.input.seed, baseInput: built.input, initialResult, visibleEvents });
+  const createInput = {
+    seed: built.input.seed,
+    baseInput: built.input,
+    initialResult,
+    visibleEvents,
+    ...(parsed.value.ownership === undefined ? {} : { ownership: parsed.value.ownership })
+  };
+  const session = repository.createSession(createInput);
 
   return {
     ok: true,
@@ -160,8 +167,18 @@ function parseCreateSessionRequest(payload: unknown) {
   const errors: string[] = [];
   if (typeof body.value.seed !== 'number' || !Number.isInteger(body.value.seed)) errors.push('seed must be an integer');
   if (body.value.currentMinute !== undefined && !isMinute(body.value.currentMinute)) errors.push('currentMinute must be an integer between 0 and 90');
+  if (body.value.ownership !== undefined && !isReplaySessionOwnership(body.value.ownership)) {
+    errors.push('ownership must include mode single_manager or head_to_head lobbyState setup locked in_match or complete and valid side owners');
+  }
   if (errors.length > 0) return { ok: false as const, errors };
-  return { ok: true as const, value: { seed: body.value.seed as number, currentMinute: (body.value.currentMinute ?? 0) as number } };
+  return {
+    ok: true as const,
+    value: {
+      seed: body.value.seed as number,
+      currentMinute: (body.value.currentMinute ?? 0) as number,
+      ownership: body.value.ownership as ReplaySessionOwnership | undefined
+    }
+  };
 }
 
 function parseAppendCommandRequest(payload: unknown) {
@@ -223,6 +240,26 @@ function asObject(payload: unknown) {
 
 function isMatchSide(value: unknown): value is MatchSide {
   return value === 'home' || value === 'away';
+}
+
+function isReplaySessionOwnership(value: unknown): value is ReplaySessionOwnership {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const ownership = value as Record<string, unknown>;
+  if (ownership.mode !== 'single_manager' && ownership.mode !== 'head_to_head') return false;
+  if (!isReplaySessionLobbyState(ownership.lobbyState)) return false;
+  if (ownership.sides === null || typeof ownership.sides !== 'object' || Array.isArray(ownership.sides)) return false;
+  const sides = ownership.sides as Record<string, unknown>;
+  return isOptionalSideOwner(sides.home) && isOptionalSideOwner(sides.away);
+}
+
+function isOptionalSideOwner(value: unknown): boolean {
+  if (value === undefined) return true;
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const owner = value as Record<string, unknown>;
+  return typeof owner.managerId === 'string'
+    && owner.managerId.length > 0
+    && typeof owner.displayName === 'string'
+    && owner.displayName.length > 0;
 }
 
 function isReplaySessionLobbyState(value: unknown): value is ReplaySessionLobbyState {

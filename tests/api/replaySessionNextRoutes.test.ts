@@ -62,6 +62,55 @@ describe('Next replay session routes', () => {
     expect(summaryBody).not.toHaveProperty('auditLog');
   });
 
+  it('creates setup lobby sessions and advances them through Next route wrappers', async () => {
+    const created = await createReplaySessionRoute(jsonRequest('http://localhost/api/replay-sessions', {
+      seed: 173,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    }));
+    expect(created.status).toBe(200);
+    const createdBody = await created.json();
+    const sessionId = createdBody.sessionId as string;
+
+    const setupSummary = await getReplaySessionRoute(
+      new Request(`http://localhost/api/replay-sessions/${sessionId}`, { method: 'GET' }),
+      { params: Promise.resolve({ sessionId }) }
+    );
+    expect(await setupSummary.json()).toEqual(expect.objectContaining({
+      sessionId,
+      lobbyState: 'setup',
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    }));
+
+    const locked = await transitionReplaySessionLobbyStateRoute(
+      jsonRequest(`http://localhost/api/replay-sessions/${sessionId}/lobby-state`, { lobbyState: 'locked' }),
+      { params: Promise.resolve({ sessionId }) }
+    );
+    expect(locked.status).toBe(200);
+    expect(await locked.json()).toEqual(expect.objectContaining({ sessionId, lobbyState: 'locked' }));
+
+    const inMatch = await transitionReplaySessionLobbyStateRoute(
+      jsonRequest(`http://localhost/api/replay-sessions/${sessionId}/lobby-state`, { lobbyState: 'in_match' }),
+      { params: Promise.resolve({ sessionId }) }
+    );
+    expect(inMatch.status).toBe(200);
+    expect(await inMatch.json()).toEqual(expect.objectContaining({ sessionId, lobbyState: 'in_match' }));
+  });
+
   it('transitions replay session lobby state through the Next route wrapper', async () => {
     const created = await createReplaySessionRoute(jsonRequest('http://localhost/api/replay-sessions', { seed: 172, currentMinute: 50 }));
     expect(created.status).toBe(200);

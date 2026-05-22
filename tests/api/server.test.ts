@@ -316,6 +316,66 @@ describe('production API server', () => {
     expect(summary.json()).not.toHaveProperty('auditLog');
   });
 
+  it('replay session routes create setup lobbies and advance to in-match readiness', async () => {
+    const server = buildServer();
+    const created = await server.inject({
+      method: 'POST',
+      url: '/api/replay-sessions',
+      payload: {
+        seed: 72,
+        currentMinute: 0,
+        ownership: {
+          mode: 'head_to_head',
+          lobbyState: 'setup',
+          sides: {
+            home: { managerId: 'manager-home', displayName: 'Home Boss' },
+            away: { managerId: 'manager-away', displayName: 'Away Boss' }
+          }
+        }
+      }
+    });
+    expect(created.statusCode).toBe(200);
+    const sessionId = created.json().sessionId as string;
+
+    const setupSummary = await server.inject({ method: 'GET', url: `/api/replay-sessions/${sessionId}` });
+    expect(setupSummary.json()).toEqual(expect.objectContaining({
+      sessionId,
+      lobbyState: 'setup',
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      },
+      commandCounts: { home: 0, away: 0 }
+    }));
+
+    const locked = await server.inject({
+      method: 'PATCH',
+      url: `/api/replay-sessions/${sessionId}/lobby-state`,
+      payload: { lobbyState: 'locked' }
+    });
+    expect(locked.statusCode).toBe(200);
+    expect(locked.json()).toEqual(expect.objectContaining({ sessionId, lobbyState: 'locked' }));
+
+    const inMatch = await server.inject({
+      method: 'PATCH',
+      url: `/api/replay-sessions/${sessionId}/lobby-state`,
+      payload: { lobbyState: 'in_match' }
+    });
+    expect(inMatch.statusCode).toBe(200);
+    expect(inMatch.json()).toEqual(expect.objectContaining({ sessionId, lobbyState: 'in_match' }));
+
+    const inMatchSummary = await server.inject({ method: 'GET', url: `/api/replay-sessions/${sessionId}` });
+    expect(inMatchSummary.json()).toEqual(expect.objectContaining({
+      sessionId,
+      lobbyState: 'in_match',
+      ownership: expect.objectContaining({ lobbyState: 'in_match' })
+    }));
+  });
+
   it('replay session lobby-state route completes sessions and rejects late commands', async () => {
     const server = buildServer();
     const created = await server.inject({ method: 'POST', url: '/api/replay-sessions', payload: { seed: 71, currentMinute: 50 } });
