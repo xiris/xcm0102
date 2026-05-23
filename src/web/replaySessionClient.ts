@@ -7,6 +7,7 @@ import type { WebSimulationRequest } from './simulationClient';
 export type WebReplaySessionCreateRequest = WebSimulationRequest & {
   seed: number;
   currentMinute?: number;
+  ownership?: ReplaySessionOwnership;
 };
 
 export type WebReplaySessionCreateResult = {

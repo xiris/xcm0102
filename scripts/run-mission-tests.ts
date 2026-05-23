@@ -581,6 +581,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 144: lobby mutation flow helper',
     args: ['vitest', 'run', 'tests/web/lobbyMutationFlow.test.ts']
+  },
+  {
+    label: 'MISSION 145: lobby transition harness setup request',
+    args: ['vitest', 'run', 'tests/web/lobbyTransitionHarnessModel.test.ts']
+  },
+  {
+    label: 'MISSION 146: lobby transition harness route',
+    args: ['vitest', 'run', 'tests/web/lobbyTransitionHarness.test.ts']
   }
 ];
 

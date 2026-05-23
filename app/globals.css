@@ -240,9 +240,35 @@ button:disabled {
   justify-self: start;
 }
 
+.lobby-mutation-controls button:disabled {
+  opacity: 0.58;
+  cursor: wait;
+}
+
 .lobby-mutation-controls small,
 .lobby-mutation-controls span {
   color: var(--muted);
+}
+
+.harness-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.harness-actions button {
+  border: 1px solid rgb(214 240 182 / 0.28);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgb(214 240 182 / 0.18), rgb(82 118 69 / 0.18));
+  color: #eff8d7;
+  padding: 9px 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.harness-actions button:disabled {
+  opacity: 0.58;
+  cursor: wait;
 }
 
 .lobby-fixture-gallery .panel-grid {
