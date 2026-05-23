@@ -170,7 +170,8 @@ button:disabled {
 .grid,
 .formation-grid,
 .assignment-grid,
-.stat-groups {
+.stat-groups,
+.panel-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
@@ -183,6 +184,7 @@ button:disabled {
 .assignment-card,
 .formation-card,
 .stat-card,
+.fixture-card,
 .info-list,
 .interactive-status,
 .score-strip {
@@ -193,6 +195,19 @@ button:disabled {
 }
 
 .assignment-card { min-width: 0; }
+
+.fixture-card {
+  display: grid;
+  gap: 12px;
+}
+
+.fixture-card .info-list {
+  background: rgb(7 10 8 / 0.48);
+}
+
+.lobby-fixture-gallery .panel-grid {
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+}
 
 .pitch-shell { margin: 16px 0; }
 

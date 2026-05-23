@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18F Read-Only Lobby Action Preview Panel.
+- Latest completed local work before the next lobby/multiplayer slice: P18H Read-Only Lobby Fixture Gallery.
 
 ## Product Direction
 
@@ -111,39 +111,41 @@ Completed:
 - The replay-session lobby status view model now includes pure future-action availability policy for setup lock, kickoff, completion, disabled manager-assignment copy, and single-manager compatibility.
 - Match Lab now renders that future-action availability policy as a read-only lobby action preview, including available/disabled state and target lobby-state copy without mutating buttons.
 - Browser-facing route-shaped lobby summary fixtures now cover setup, locked, in-match, and complete preview states for future smoke/story coverage without wiring mutation controls.
+- A read-only `/lobby-fixtures` gallery now renders every route-shaped lobby action-preview state through the same lobby status card contract for browser smoke before mutation controls are introduced.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18G Lobby Action Preview Route Fixtures
+## Latest Slice: P18H Read-Only Lobby Fixture Gallery
 
 Files added/updated:
 
-- `src/web/replaySessionLobbyRouteFixtures.ts`
-- `tests/web/replaySessionLobbyRouteFixtures.test.ts`
+- `app/lobby-fixtures/page.tsx`
+- `src/web/LobbyFixtureGallery.tsx`
+- `tests/web/lobbyFixtureGallery.test.ts`
+- `app/globals.css`
 - `scripts/run-mission-tests.ts`
-- `docs/48-production-lobby-action-preview-route-fixtures-contract.md`
-- `docs/plans/2026-05-22-lobby-action-preview-route-fixtures.md`
+- `docs/49-production-read-only-lobby-fixture-gallery-contract.md`
+- `docs/plans/2026-05-23-read-only-lobby-fixture-gallery.md`
 - `docs/README.md`
 - `docs/30-project-handoff-status.md`
 
 Behavior implemented:
 
-- Added `createReplaySessionLobbyRouteFixtures()` with route-shaped `ReplaySessionLobbySummary` fixtures for setup, locked, in-match, and complete lobby states.
-- Fixtures use assigned head-to-head managers, deterministic seed/session IDs, command counts, visible event counts, and signature metadata where route summaries would expose it.
-- Fixture-backed component tests render every state through `createReplaySessionLobbyStatusViewModel` and `LobbyStatusCard`.
-- Tests prove lock setup, kickoff, completion, and complete/no-transition preview copy from route-shaped summaries.
-- Tests prove fixture-backed preview markup still renders no mutating `<button>` controls.
-- Mission runner now includes named P18G lobby-action route-fixture coverage.
-- Match Lab remains read-only; `transitionReplaySessionLobbyStateFromWeb` is still not imported or called by `MatchLab.tsx`.
+- Added a static read-only `/lobby-fixtures` browser route for lobby action-preview fixture smoke coverage.
+- Added `LobbyFixtureGallery`, which renders setup, locked, in-match, and complete P18G route-shaped summaries through `createReplaySessionLobbyStatusViewModel` and the existing `LobbyStatusCard`.
+- Tests prove the gallery and route render `Lock setup`, `Kick off match`, `Complete match`, and complete/no-transition copy.
+- Tests prove the gallery/route render no mutating `<button>` controls.
+- Mission runner now includes named P18H read-only fixture-gallery coverage.
+- Browser-facing fixture smoke remains read-only; `transitionReplaySessionLobbyStateFromWeb` is not imported or called by the gallery.
 
 ## Latest Validation
 
-For P18G, run and verify:
+For P18H, run and verify:
 
 ```bash
-npx vitest run tests/web/replaySessionLobbyRouteFixtures.test.ts -t 'route-shaped lobby summary fixtures'
-npx vitest run tests/web/replaySessionLobbyRouteFixtures.test.ts
+npx vitest run tests/web/lobbyFixtureGallery.test.ts -t 'renders every read-only lobby fixture state'
+npx vitest run tests/web/lobbyFixtureGallery.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -153,38 +155,38 @@ git diff --check
 
 Observed validation:
 
-- Focused mission 01: route-shaped lobby summary fixtures passed.
-- Focused mission 02: route fixture preview matrix passed.
-- `npm run test:missions`: ALL 139 MISSIONS PASSED.
-- `npm test`: 35 test files passed, 173 tests passed.
+- Focused mission 01: read-only lobby fixture gallery passed.
+- Focused mission 02: fixture gallery route passed.
+- `npm run test:missions`: ALL 140 MISSIONS PASSED.
+- `npm test`: 36 test files passed, 175 tests passed.
 - `npx tsc --noEmit`: passed.
-- `npm run build`: passed.
+- `npm run build`: passed; `/lobby-fixtures` prerendered as a static route.
 - `git diff --check`: passed.
 
-Browser smoke verified on `http://localhost:3000`:
+Browser smoke verified on `http://localhost:3000/lobby-fixtures`:
 
-- submitted the Match Lab form through the browser with a semantic `form.requestSubmit()`
-- confirmed the read-only `Replay session lobby` panel appears
-- confirmed the browser-created session renders `Future lobby actions` with single-manager `Complete match`, `Available`, and `Target: complete` preview copy
+- confirmed the `Lobby fixture gallery` route renders
+- confirmed setup, locked, in-match, and complete lobby states are visible
+- confirmed `Lock setup`, `Kick off match`, `Complete match`, and no-transition preview copy are visible
 - confirmed no invite, ready, lock setup, kickoff, join, complete match, rematch, or other mutating lobby controls appear as buttons
 - confirmed browser console had no messages/errors after verification
 
-Expected mission count after P18G: ALL 139 MISSIONS PASSED.
+Expected mission count after P18H: ALL 140 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work: **P18H Read-Only Fixture Gallery / Story Harness**.
+Recommended next work: **P18I Stabilization Before Lobby Mutations**.
 
 Why this is next:
 
-P18G now provides route-shaped setup, locked, in-match, and complete summaries, but the live Match Lab still only naturally reaches the current single-manager in-match summary. The next safe slice is to add a dev/test-only read-only fixture gallery or story harness that renders every route fixture state through the same lobby panel contract, making setup/locked/complete browser smoke possible before wiring any transition buttons.
+P18H completes read-only route-fixture browser coverage for setup, locked, in-match, and complete lobby action-preview states. Before exposing any mutation buttons, do a focused stabilization pass across lobby route contracts, browser client error handling, fixture/gallery no-mutation guarantees, and documentation consistency so the future mutation-control slice starts from a clean base.
 
 Suggested goals:
 
-1. Add a development-only/read-only fixture gallery component or route for lobby action preview states.
-2. Render setup, locked, in-match, and complete route fixtures through `LobbyStatusCard`.
-3. Keep the gallery non-mutating and excluded from production lobby state changes.
-4. Browser-smoke every fixture state and document the point where explicit mutation-control wiring may begin.
+1. Add guard tests that prevent `LobbyFixtureGallery` and `MatchLab` from importing or calling the lobby transition helper until the explicit mutation-control slice.
+2. Re-run and tighten route/client rejection-copy tests for invalid transitions and completed-session command guards.
+3. Clean up any duplicated lobby fixture/test setup discovered during the read-only slices.
+4. Document the exact acceptance gate required before visible mutation controls may be added.
 
 ## Important User Preferences
 

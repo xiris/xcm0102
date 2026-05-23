@@ -561,6 +561,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 139: lobby action preview route fixtures',
     args: ['vitest', 'run', 'tests/web/replaySessionLobbyRouteFixtures.test.ts']
+  },
+  {
+    label: 'MISSION 140: read-only lobby fixture gallery',
+    args: ['vitest', 'run', 'tests/web/lobbyFixtureGallery.test.ts']
   }
 ];
 
