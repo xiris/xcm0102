@@ -54,6 +54,7 @@ Documentation map:
 - 47-production-read-only-lobby-action-preview-panel-contract.md — read-only Match Lab preview rendering contract for future lobby actions.
 - 48-production-lobby-action-preview-route-fixtures-contract.md — route-shaped lobby summary fixtures for setup/locked/in-match/complete action-preview states.
 - 49-production-read-only-lobby-fixture-gallery-contract.md — browser-smokeable read-only fixture gallery route for all lobby action-preview states.
+- 50-production-lobby-mutation-stabilization-contract.md — read-only UI guardrails and invalid-transition rejection-copy acceptance gate before visible lobby mutation controls.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -91,6 +92,7 @@ Documentation map:
 - plans/2026-05-22-read-only-lobby-action-preview-panel.md — implementation plan for the read-only lobby action preview panel.
 - plans/2026-05-22-lobby-action-preview-route-fixtures.md — implementation plan for route-shaped lobby action preview fixtures.
 - plans/2026-05-23-read-only-lobby-fixture-gallery.md — implementation plan for the read-only lobby fixture gallery/story harness.
+- plans/2026-05-23-lobby-mutation-stabilization.md — stabilization plan for read-only lobby UI guardrails and invalid-transition rejection copy.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

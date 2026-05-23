@@ -376,6 +376,36 @@ describe('production API server', () => {
     }));
   });
 
+  it('replay session lobby-state route rejects direct setup to in-match transitions', async () => {
+    const server = buildServer();
+    const created = await server.inject({
+      method: 'POST',
+      url: '/api/replay-sessions',
+      payload: {
+        seed: 72,
+        currentMinute: 0,
+        ownership: {
+          mode: 'head_to_head',
+          lobbyState: 'setup',
+          sides: {
+            home: { managerId: 'manager-home', displayName: 'Home Boss' },
+            away: { managerId: 'manager-away', displayName: 'Away Boss' }
+          }
+        }
+      }
+    });
+    const sessionId = created.json().sessionId as string;
+
+    const response = await server.inject({
+      method: 'PATCH',
+      url: `/api/replay-sessions/${sessionId}/lobby-state`,
+      payload: { lobbyState: 'in_match' }
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(response.json()).toEqual({ error: 'Invalid replay session lobby transition: setup -> in_match' });
+  });
+
   it('replay session lobby-state route completes sessions and rejects late commands', async () => {
     const server = buildServer();
     const created = await server.inject({ method: 'POST', url: '/api/replay-sessions', payload: { seed: 71, currentMinute: 50 } });

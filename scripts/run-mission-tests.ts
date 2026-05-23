@@ -565,6 +565,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 140: read-only lobby fixture gallery',
     args: ['vitest', 'run', 'tests/web/lobbyFixtureGallery.test.ts']
+  },
+  {
+    label: 'MISSION 141: lobby read-only mutation guards',
+    args: ['vitest', 'run', 'tests/web/lobbyReadOnlyMutationGuards.test.ts']
+  },
+  {
+    label: 'MISSION 142: lobby invalid transition rejection copy',
+    args: ['vitest', 'run', 'tests/web/replaySessionClient.test.ts', 'tests/api/server.test.ts', '-t', 'preserves invalid lobby transition rejection copy|lobby-state route rejects direct setup to in-match transitions']
   }
 ];
 

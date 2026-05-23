@@ -138,17 +138,21 @@ describe('replay session web client', () => {
     expect(transitioned.ownership.sides.away?.displayName).toBe('Away Boss');
   });
 
-  it('throws readable lobby transition errors from server payloads', async () => {
+  it.each([
+    ['setup direct kickoff', 'Invalid replay session lobby transition: setup -> in_match', 'in_match' as const],
+    ['in-match rollback', 'Invalid replay session lobby transition: in_match -> locked', 'locked' as const],
+    ['complete rollback', 'Invalid replay session lobby transition: complete -> in_match', 'in_match' as const]
+  ])('preserves invalid lobby transition rejection copy for %s', async (_caseName, serverError, lobbyState) => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: false,
       status: 400,
-      json: async () => ({ error: 'Invalid replay session lobby transition: setup -> in_match' })
+      json: async () => ({ error: serverError })
     });
 
     await expect(transitionReplaySessionLobbyStateFromWeb({
       sessionId: 'rs-0001',
-      lobbyState: 'in_match'
-    }, fetchMock)).rejects.toThrow('Replay session request failed: Invalid replay session lobby transition: setup -> in_match');
+      lobbyState
+    }, fetchMock)).rejects.toThrow(`Replay session request failed: ${serverError}`);
   });
 
   it('throws readable session errors from server payloads', async () => {
