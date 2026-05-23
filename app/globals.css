@@ -205,6 +205,46 @@ button:disabled {
   background: rgb(7 10 8 / 0.48);
 }
 
+.lobby-mutation-controls {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgb(230 246 211 / 0.14);
+  border-radius: 14px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgb(29 45 33 / 0.88), rgb(11 19 14 / 0.9));
+}
+
+.lobby-mutation-controls h4,
+.lobby-mutation-controls p {
+  margin: 0;
+}
+
+.lobby-mutation-controls ul {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lobby-mutation-controls li {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgb(194 240 136 / 0.16);
+  border-radius: 12px;
+  padding: 12px;
+  background: rgb(5 8 6 / 0.42);
+}
+
+.lobby-mutation-controls button {
+  justify-self: start;
+}
+
+.lobby-mutation-controls small,
+.lobby-mutation-controls span {
+  color: var(--muted);
+}
+
 .lobby-fixture-gallery .panel-grid {
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
 }

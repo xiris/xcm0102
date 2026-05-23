@@ -13,6 +13,7 @@ import {
 } from './assignmentState';
 import { createFormationPreview, type FormationPreview } from './formationPreview';
 import { createInteractiveReplayViewModel, formatAuthoritativeReplay } from './interactiveReplayViewModel';
+import { LobbyMutationControls } from './LobbyMutationControls';
 import {
   createMatchLabLayoutViewModel,
   groupMatchStatRows,
@@ -28,7 +29,8 @@ import {
   syncReplaySessionVisibleEventsFromWeb
 } from './replaySessionClient';
 import { createPlayerAttributeCards, type PlayerAttributeCard } from './playerAttributeCards';
-import { createReplaySessionLobbyStatusViewModel, type ReplaySessionLobbySummary, type ReplaySessionLobbyStatusViewModel } from './replaySessionLobbyStatusViewModel';
+import { applyReplaySessionLobbyTransitionFromWeb } from './replaySessionLobbyMutationFlow';
+import { createReplaySessionLobbyStatusViewModel, type ReplaySessionLobbyAction, type ReplaySessionLobbySummary, type ReplaySessionLobbyStatusViewModel } from './replaySessionLobbyStatusViewModel';
 import { buildSimulationPayload, defaultTacticalState } from './tacticalPayload';
 import {
   simulateMatchFromWeb,
@@ -80,6 +82,8 @@ export function MatchLab() {
   const [replaySessionVisibleEventCount, setReplaySessionVisibleEventCount] = useState(0);
   const [replaySessionCommandCount, setReplaySessionCommandCount] = useState(0);
   const [replaySessionSummary, setReplaySessionSummary] = useState<ReplaySessionLobbySummary | null>(null);
+  const [isLobbyTransitionPending, setIsLobbyTransitionPending] = useState(false);
+  const [lobbyTransitionError, setLobbyTransitionError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -100,7 +104,8 @@ export function MatchLab() {
   const lobbyStatus = useMemo(() => (replaySessionSummary ? createReplaySessionLobbyStatusViewModel(replaySessionSummary) : null), [replaySessionSummary]);
   const replayMetadata = useMemo(() => [
     ...(viewModel?.replay ?? []),
-    replaySessionId ? `Replay session: ${replaySessionId}` : replaySessionStatus,
+    replaySessionStatus,
+    ...(replaySessionId ? [`Replay session: ${replaySessionId}`] : []),
     `Session visible events: ${replaySessionVisibleEventCount}`,
     `Session command count: ${replaySessionCommandCount}`,
     ...(replaySessionError ? [`Replay session error: ${replaySessionError}`] : [])
@@ -154,6 +159,7 @@ export function MatchLab() {
       setReplaySessionVisibleEventCount(0);
       setReplaySessionCommandCount(0);
       setReplaySessionSummary(null);
+      setLobbyTransitionError(null);
       try {
         const session = await createReplaySessionFromWeb(simulationPayload);
         setReplaySessionId(session.sessionId);
@@ -195,6 +201,27 @@ export function MatchLab() {
       setReplaySessionError(null);
     } catch (caught) {
       setReplaySessionError(caught instanceof Error ? caught.message : 'Replay session command append failed');
+    }
+  }
+
+  async function requestLobbyTransition(action: ReplaySessionLobbyAction) {
+    if (!replaySessionId) {
+      setLobbyTransitionError('Replay session is not ready yet. Run a match again to create one.');
+      return;
+    }
+
+    setIsLobbyTransitionPending(true);
+    setLobbyTransitionError(null);
+
+    try {
+      const summary = await applyReplaySessionLobbyTransitionFromWeb({ sessionId: replaySessionId, action });
+      setReplaySessionSummary(summary);
+      setReplaySessionStatus(`Replay session lobby transitioned to ${summary.lobbyState}.`);
+      setReplaySessionError(null);
+    } catch (caught) {
+      setLobbyTransitionError(caught instanceof Error ? caught.message : 'Replay session lobby transition failed');
+    } finally {
+      setIsLobbyTransitionPending(false);
     }
   }
 
@@ -347,6 +374,14 @@ export function MatchLab() {
             {interactiveViewModel ? <InfoList title="Server-authoritative replay" eyebrow="Server resume" items={authoritativeReplay.length > 0 ? authoritativeReplay : [authoritativeError ?? (isAuthoritativeLoading ? 'Requesting server-authoritative resume...' : 'Request an authoritative resume to compare against the client projection.')]} /> : null}
             <InfoList title={section('diagnostics').title} eyebrow={section('diagnostics').eyebrow} items={viewModel.diagnostics} />
             {lobbyStatus ? <LobbyStatusCard status={lobbyStatus} /> : null}
+            {lobbyStatus ? (
+              <LobbyMutationControls
+                status={lobbyStatus}
+                isPending={isLobbyTransitionPending}
+                error={lobbyTransitionError}
+                onTransition={requestLobbyTransition}
+              />
+            ) : null}
             <InfoList title={section('replay-metadata').title} eyebrow={section('replay-metadata').eyebrow} items={replayMetadata} />
           </div>
         </section>

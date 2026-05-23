@@ -12,23 +12,25 @@ function extractButtonBlocks(source: string): string[] {
   return source.match(/<button[\s\S]*?<\/button>/g) ?? [];
 }
 
-describe('read-only lobby mutation guards', () => {
-  it('keeps read-only lobby browser surfaces disconnected from the transition helper', () => {
+describe('guarded lobby mutation controls', () => {
+  it('keeps fixture-gallery browser surfaces disconnected from transition helpers and mutation buttons', () => {
     const readOnlySurfacePaths = [
-      'src/web/MatchLab.tsx',
       'src/web/LobbyFixtureGallery.tsx',
       'app/lobby-fixtures/page.tsx'
     ];
 
     for (const relativePath of readOnlySurfacePaths) {
-      expect(readProjectFile(relativePath), relativePath).not.toContain('transitionReplaySessionLobbyStateFromWeb');
+      const source = readProjectFile(relativePath);
+      expect(source, relativePath).not.toContain('transitionReplaySessionLobbyStateFromWeb');
+      expect(source, relativePath).not.toContain('applyReplaySessionLobbyTransitionFromWeb');
+      expect(source, relativePath).not.toContain('<button');
     }
   });
 
-  it('keeps the fixture gallery and Match Lab from rendering visible lobby mutation controls', () => {
-    const gallerySource = readProjectFile('src/web/LobbyFixtureGallery.tsx');
-    const matchLabButtonBlocks = extractButtonBlocks(readProjectFile('src/web/MatchLab.tsx'));
-    const forbiddenMutationControlLabels = [
+  it('keeps visible Match Lab lobby mutation controls behind the explicit component and flow helper', () => {
+    const source = readProjectFile('src/web/MatchLab.tsx');
+    const matchLabButtonBlocks = extractButtonBlocks(source);
+    const forbiddenInlineMutationControlLabels = [
       'Lock setup',
       'Kick off match',
       'Complete match',
@@ -38,11 +40,13 @@ describe('read-only lobby mutation guards', () => {
       'Rematch'
     ];
 
-    expect(gallerySource).not.toContain('<button');
+    expect(source).toContain('<LobbyMutationControls');
+    expect(source).toContain('applyReplaySessionLobbyTransitionFromWeb');
+    expect(source).not.toContain('transitionReplaySessionLobbyStateFromWeb');
 
     for (const buttonBlock of matchLabButtonBlocks) {
-      for (const label of forbiddenMutationControlLabels) {
-        expect(buttonBlock, `${label} must remain out of Match Lab buttons until explicit mutation-control work`).not.toContain(label);
+      for (const label of forbiddenInlineMutationControlLabels) {
+        expect(buttonBlock, `${label} must stay inside LobbyMutationControls, not inline Match Lab buttons`).not.toContain(label);
       }
     }
   });

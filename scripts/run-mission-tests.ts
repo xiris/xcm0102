@@ -573,6 +573,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 142: lobby invalid transition rejection copy',
     args: ['vitest', 'run', 'tests/web/replaySessionClient.test.ts', 'tests/api/server.test.ts', '-t', 'preserves invalid lobby transition rejection copy|lobby-state route rejects direct setup to in-match transitions']
+  },
+  {
+    label: 'MISSION 143: visible lobby mutation controls',
+    args: ['vitest', 'run', 'tests/web/lobbyMutationControls.test.ts', 'tests/web/matchLabLobbyMutationControls.test.ts']
+  },
+  {
+    label: 'MISSION 144: lobby mutation flow helper',
+    args: ['vitest', 'run', 'tests/web/lobbyMutationFlow.test.ts']
   }
 ];
 

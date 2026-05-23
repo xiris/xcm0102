@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18I Stabilization Before Lobby Mutations.
+- Latest completed local work before the next lobby/multiplayer slice: P18J Visible Lobby Mutation Controls.
 
 ## Product Direction
 
@@ -112,41 +112,49 @@ Completed:
 - Match Lab now renders that future-action availability policy as a read-only lobby action preview, including available/disabled state and target lobby-state copy without mutating buttons.
 - Browser-facing route-shaped lobby summary fixtures now cover setup, locked, in-match, and complete preview states for future smoke/story coverage without wiring mutation controls.
 - A read-only `/lobby-fixtures` gallery now renders every route-shaped lobby action-preview state through the same lobby status card contract for browser smoke before mutation controls are introduced.
+- Match Lab now renders guarded visible lobby mutation controls from the lobby action availability model and refreshes the server summary after successful transitions.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18I Stabilization Before Lobby Mutations
+## Latest Slice: P18J Visible Lobby Mutation Controls
 
 Files added/updated:
 
+- `src/web/LobbyMutationControls.tsx`
+- `src/web/replaySessionLobbyMutationFlow.ts`
+- `src/web/MatchLab.tsx`
+- `tests/web/lobbyMutationControls.test.ts`
+- `tests/web/lobbyMutationFlow.test.ts`
+- `tests/web/matchLabLobbyMutationControls.test.ts`
 - `tests/web/lobbyReadOnlyMutationGuards.test.ts`
-- `tests/web/replaySessionClient.test.ts`
-- `tests/api/server.test.ts`
 - `scripts/run-mission-tests.ts`
-- `docs/50-production-lobby-mutation-stabilization-contract.md`
-- `docs/plans/2026-05-23-lobby-mutation-stabilization.md`
+- `app/globals.css`
+- `docs/51-production-visible-lobby-mutation-controls-contract.md`
+- `docs/plans/2026-05-23-visible-lobby-mutation-controls.md`
 - `docs/README.md`
 - `docs/30-project-handoff-status.md`
 
 Behavior implemented:
 
-- Added a read-only source guard that fails if `MatchLab.tsx`, `LobbyFixtureGallery.tsx`, or `/lobby-fixtures` imports/calls `transitionReplaySessionLobbyStateFromWeb` before the explicit mutation-control slice.
-- Added fixture-gallery guard coverage proving the gallery source contains no `<button>` controls.
-- Added Match Lab guard coverage proving existing button blocks do not contain lobby mutation labels such as `Lock setup`, `Kick off match`, `Complete match`, `Ready`, `Invite`, `Join`, or `Rematch`.
-- Tightened browser-client invalid transition error tests so setup direct kickoff, in-match rollback, and complete rollback preserve exact server rejection copy.
-- Added Fastify route coverage proving direct `setup -> in_match` transition attempts return `400` with stable invalid-transition copy.
-- Documented the exact acceptance gate future visible lobby mutation controls must satisfy.
-- Mission runner now includes named P18I guard and rejection-copy coverage.
+- Added a reusable `LobbyMutationControls` component that renders visible lobby transition buttons from `ReplaySessionLobbyStatusViewModel.actionAvailability`.
+- Added enabled, disabled, and completed/no-action rendering coverage for the mutation controls.
+- Added `applyReplaySessionLobbyTransitionFromWeb`, which calls the existing browser transition client and then refreshes the replay-session summary from the server.
+- Preserved exact thrown rejection copy in the transition flow so UI display can show server validation messages unchanged.
+- Wired Match Lab to render mutation controls beside the read-only lobby status panel once a replay session summary exists.
+- Match Lab successful transitions refresh `replaySessionSummary` and set status copy to `Replay session lobby transitioned to <state>.`.
+- Updated guard tests so `/lobby-fixtures` and `LobbyFixtureGallery` remain disconnected from mutation helpers and button-free.
+- Kept Match Lab mutation buttons behind the explicit `LobbyMutationControls` component instead of inline lobby-label button blocks.
+- Mission runner now includes named P18J visible controls and flow-helper coverage.
 
 ## Latest Validation
 
-For P18I, run and verify:
+For P18J, run and verify:
 
 ```bash
+npx vitest run tests/web/lobbyMutationControls.test.ts tests/web/matchLabLobbyMutationControls.test.ts
+npx vitest run tests/web/lobbyMutationFlow.test.ts
 npx vitest run tests/web/lobbyReadOnlyMutationGuards.test.ts
-npx vitest run tests/web/replaySessionClient.test.ts -t 'preserves invalid lobby transition rejection copy'
-npx vitest run tests/api/server.test.ts -t 'lobby-state route rejects direct setup to in-match transitions'
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -156,39 +164,37 @@ git diff --check
 
 Observed validation:
 
-- Focused mission 01: lobby read-only mutation guards passed.
-- Focused mission 02: client invalid lobby transition rejection copy passed.
-- Focused mission 03: server direct setup-to-in-match rejection copy passed.
-- `npm run test:missions`: ALL 142 MISSIONS PASSED.
-- `npm test`: 37 test files passed, 180 tests passed.
+- Focused mission 01: visible lobby mutation controls passed.
+- Focused mission 02: lobby mutation flow helper passed.
+- Focused mission 03: guarded lobby mutation source boundaries passed.
+- `npm run test:missions`: ALL 144 MISSIONS PASSED.
+- `npm test`: 40 test files passed, 186 tests passed.
 - `npx tsc --noEmit`: passed.
-- `npm run build`: passed; `/lobby-fixtures` prerendered as a static route.
+- `npm run build`: passed; `/lobby-fixtures` remains prerendered as a static route.
 - `git diff --check`: passed.
 
-Browser smoke verified on `http://localhost:3000/lobby-fixtures`:
+Browser smoke verified for P18J:
 
-- confirmed the `Lobby fixture gallery` route renders
-- confirmed setup, locked, in-match, and complete lobby states are visible
-- confirmed `Lock setup`, `Kick off match`, `Complete match`, and no-transition preview copy are visible
-- confirmed no mutating lobby controls render as buttons
-- confirmed browser console had no messages/errors after verification
+- `http://localhost:3000`: ran a match, verified `Lobby transition controls`, clicked `Complete match`, verified `Result complete`, `Replay session lobby transitioned to complete.`, no further mutation buttons, and `No lobby transition controls are available.`.
+- `http://localhost:3000/lobby-fixtures`: verified the read-only fixture gallery remains button-free.
+- Confirmed browser console had no messages/errors after verification.
 
-Expected mission count after P18I: ALL 142 MISSIONS PASSED.
+Expected mission count after P18J: ALL 144 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work after P18I: **P18J Visible Lobby Mutation Controls (guarded first pass)**.
+Recommended next work after P18J: **P18K Lobby Mutation Rejection UX + Setup/Locked Route Harness**.
 
 Why this is next:
 
-P18I stabilizes the read-only boundary and rejection-copy contracts. The next safe feature slice can introduce visible lock/kickoff/complete controls, but only by deriving availability from the existing lobby action view model, routing mutations through `transitionReplaySessionLobbyStateFromWeb`, refreshing server summaries after success, and preserving `/lobby-fixtures` as a read-only smoke/story route.
+P18J proves the first live Match Lab completion mutation path. The next safe slice should exercise visible rejection handling and setup/locked success paths through a dedicated route/test harness before broad multiplayer lobby controls.
 
 Suggested goals:
 
-1. Add a small explicit mutation-control component that consumes the existing action availability model.
-2. Keep disabled states and invalid transition copy server-derived/tested.
-3. Wire controls only where the slice explicitly opts in; keep `LobbyFixtureGallery` read-only.
-4. Browser-smoke success and rejection paths before any broader multiplayer UX work.
+1. Add a browser/test harness that can exercise setup lock and locked kickoff controls with route-shaped server-backed sessions.
+2. Browser-smoke both successful setup/locked transitions and failed invalid transitions.
+3. Preserve exact server rejection copy in the visible controls.
+4. Keep `/lobby-fixtures` read-only and keep Match Lab single-manager compatibility intact.
 
 ## Important User Preferences
 
