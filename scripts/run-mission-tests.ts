@@ -557,6 +557,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 138: lobby action preview panel',
     args: ['vitest', 'run', 'tests/web/matchLabLobbyActionPreview.test.ts']
+  },
+  {
+    label: 'MISSION 139: lobby action preview route fixtures',
+    args: ['vitest', 'run', 'tests/web/replaySessionLobbyRouteFixtures.test.ts']
   }
 ];
 
