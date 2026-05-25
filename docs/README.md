@@ -57,6 +57,7 @@ Documentation map:
 - 50-production-lobby-mutation-stabilization-contract.md — read-only UI guardrails and invalid-transition rejection-copy acceptance gate before visible lobby mutation controls.
 - 51-production-visible-lobby-mutation-controls-contract.md — guarded Match Lab lobby mutation controls and summary-refresh flow contract.
 - 52-production-lobby-transition-harness-contract.md — server-backed browser harness for setup lock, kickoff, and exact invalid-transition rejection UX.
+- 53-production-head-to-head-lobby-entry-contract.md — first product-facing head-to-head lobby create/read route contract.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -97,6 +98,7 @@ Documentation map:
 - plans/2026-05-23-lobby-mutation-stabilization.md — stabilization plan for read-only lobby UI guardrails and invalid-transition rejection copy.
 - plans/2026-05-23-visible-lobby-mutation-controls.md — implementation plan for guarded visible Match Lab lobby mutation controls.
 - plans/2026-05-23-lobby-transition-harness-rejection-ux.md — implementation plan for browser-visible setup lock, kickoff, and rejection-copy harness.
+- plans/2026-05-23-head-to-head-lobby-entry.md — implementation plan for first product-facing head-to-head lobby create/read route.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

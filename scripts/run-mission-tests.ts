@@ -589,6 +589,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 146: lobby transition harness route',
     args: ['vitest', 'run', 'tests/web/lobbyTransitionHarness.test.ts']
+  },
+  {
+    label: 'MISSION 147: head-to-head lobby request/read model',
+    args: ['vitest', 'run', 'tests/web/headToHeadLobbyModel.test.ts']
+  },
+  {
+    label: 'MISSION 148: head-to-head lobby entry route',
+    args: ['vitest', 'run', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 
