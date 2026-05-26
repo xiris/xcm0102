@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18M Away Manager Join Mutation.
+- Latest completed local work before the next lobby/multiplayer slice: P18N Setup Lock Readiness + Product Control.
 
 ## Product Direction
 
@@ -114,28 +114,27 @@ Completed:
 - A read-only `/lobby-fixtures` gallery now renders every route-shaped lobby action-preview state through the same lobby status card contract for browser smoke before mutation controls are introduced.
 - Match Lab now renders guarded visible lobby mutation controls from the lobby action availability model and refreshes the server summary after successful transitions.
 - `/lobby-transition-harness` now creates server-backed head-to-head setup replay sessions, visibly exercises setup lock and kickoff transitions, and displays exact invalid direct-kickoff rejection copy while `/lobby-fixtures` remains read-only.
-- `/head-to-head-lobby` now provides the first product-facing head-to-head lobby entry/read route: create a setup lobby from a named home manager, inspect an existing session ID, show away-manager waiting copy, and keep transition mutation controls out of the product route.
+- `/head-to-head-lobby` now provides a product-facing head-to-head lobby route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, lock setup once both managers are assigned, and keep kickoff/complete controls out of the product route.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18M Away Manager Join Mutation
+## Latest Slice: P18N Setup Lock Readiness + Product Control
 
-- Added the first product-facing away-side join mutation for head-to-head setup lobbies.
-- Added server authority in `joinAwayManager`, API helper `joinAwayManagerForApi`, and `POST /api/replay-sessions/[sessionId]/join-away`.
-- Added browser client and flow helpers: `joinAwayManagerFromWeb` and `joinAwayManagerAndRefreshSummaryFromWeb`.
-- Updated `/head-to-head-lobby` with `Away manager name` and `Join as away manager` controls that assign the away side, refresh the lobby summary, and preserve exact server rejection copy.
-- Preserved guardrails: `/head-to-head-lobby` still has no setup-lock/kickoff/complete transition buttons; `/lobby-transition-harness` remains the transition smoke harness; `/lobby-fixtures` remains button-free/read-only.
-- Added MISSION 149 for away manager repository/API/route join mutation and MISSION 150 for away manager browser join flow.
+- Tightened server authority so head-to-head `setup -> locked` transitions require both home and away managers.
+- Exact readiness rejection copy is `Cannot lock setup until both managers are assigned`; the API helper and browser client preserve it.
+- Added product-specific browser flow `lockHeadToHeadSetupAndRefreshSummaryFromWeb`, which requests only `locked` then refreshes the lobby summary.
+- Updated `/head-to-head-lobby` with a visible `Lock setup` control that is disabled until a setup summary has both managers assigned.
+- Preserved guardrails: `/head-to-head-lobby` still has no `Kick off match` or `Complete match`; it does not import `LobbyMutationControls` or the generic transition-flow helper.
+- Added MISSION 151 for setup lock readiness repository/API contract and MISSION 152 for product setup lock browser flow.
 
 ## Latest Validation
 
-For P18L, run and verify:
+For P18N, run and verify:
 
 ```bash
-npx vitest run tests/web/headToHeadLobbyModel.test.ts
-npx vitest run tests/web/headToHeadLobbyEntry.test.ts
-npx vitest run tests/web/lobbyReadOnlyMutationGuards.test.ts
+npx vitest run tests/api/replaySessionRepository.test.ts tests/api/replaySessionEndpoint.test.ts
+npx vitest run tests/web/headToHeadLobbyLockFlow.test.ts tests/web/headToHeadLobbyEntry.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -143,40 +142,34 @@ npm run build
 git diff --check
 ```
 
-Observed validation:
+Observed validation after P18N:
 
-- Focused mission 01: head-to-head lobby model passed.
-- Focused mission 02: head-to-head lobby entry route passed.
-- Focused mission 03: guarded read-only lobby fixture boundary passed.
-- `npm run test:missions`: ALL 148 MISSIONS PASSED.
-- `npm test`: 44 test files passed, 193 tests passed.
+- Focused mission 01: setup lock repository readiness rejection passed.
+- Focused mission 02: setup lock API readiness rejection passed.
+- Focused mission 03: product setup-lock browser flow passed.
+- Focused mission 04: product route setup-lock control passed.
+- Focused P18N API/browser groups passed.
+- `npm run test:missions`: ALL 152 MISSIONS PASSED.
+- `npm test`: 46 files passed, 204 tests passed.
 - `npx tsc --noEmit`: passed.
-- `npm run build`: passed; `/head-to-head-lobby`, `/lobby-fixtures`, and `/lobby-transition-harness` prerender as static routes while API routes remain dynamic.
+- `npm run build`: passed.
+- Browser smoke passed for `/head-to-head-lobby` create -> join -> lock, `/lobby-transition-harness`, and button-free `/lobby-fixtures`.
 - `git diff --check`: passed.
-
-Browser smoke verified for P18L:
-
-- `http://localhost:3000/head-to-head-lobby`: entered `Chris Silva`, clicked `Create lobby`, verified `Created lobby`, `Invite code: rs-...`, `Home manager: Chris Silva`, `Away manager: waiting for opponent`, read-only notice, and no `Lock setup` / `Kick off match` / `Complete match` transition buttons.
-- `http://localhost:3000/lobby-transition-harness`: verified the transition harness still renders and exposes `Create setup lobby` / `Try invalid kickoff` for smoke-only transition work.
-- `http://localhost:3000/lobby-fixtures`: verified the read-only fixture gallery remains button-free.
-- Confirmed browser console had no messages/errors after verification.
-
-Expected mission count after P18L: ALL 148 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work after P18L: **P18M Away Manager Join Mutation Contract**.
+Recommended next work after P18N: **P18O Product Kickoff Readiness + Match Start Control**.
 
 Why this is next:
 
-P18L proves the first product-facing create/read route, but created lobbies intentionally leave the away side unassigned. The next safe slice should add a server-owned away-manager join mutation and browser client helper, then wire the product route to join/read without allowing setup lock until both managers are assigned.
+P18N proves that a product head-to-head lobby can create, join, and lock setup while the server owns readiness. The next safe slice should expose kickoff from the product route only after setup is locked, keeping completion/rematch and richer tactic privacy for later.
 
 Suggested goals:
 
-1. Add repository/API support for assigning an unassigned away manager on a setup head-to-head lobby.
-2. Reject joins after setup lock, reject duplicate away joins, and preserve exact rejection copy.
-3. Add a browser client helper and pure flow function that joins then refreshes summary.
-4. Wire `/head-to-head-lobby` to join an existing lobby by session ID/name while keeping transition controls out of that route.
+1. Add product-specific kickoff flow that requests `locked -> in_match` and refreshes the summary.
+2. Keep server invalid-transition copy intact for premature kickoff attempts.
+3. Render `Kick off match` only when the lobby is locked; keep `Complete match` out of the product route.
+4. Browser-smoke create -> join -> lock -> kickoff while preserving `/lobby-fixtures` read-only behavior.
 
 ## Important User Preferences
 

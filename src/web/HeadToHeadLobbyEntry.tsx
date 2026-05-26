@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
 import { joinAwayManagerAndRefreshSummaryFromWeb } from './headToHeadLobbyJoinFlow';
+import { lockHeadToHeadSetupAndRefreshSummaryFromWeb } from './headToHeadLobbyLockFlow';
 import { createReplaySessionFromWeb, getReplaySessionSummaryFromWeb } from './replaySessionClient';
 import { createReplaySessionLobbyStatusViewModel, type ReplaySessionLobbySummary } from './replaySessionLobbyStatusViewModel';
 import { LobbyStatusCard } from './MatchLab';
@@ -17,6 +18,7 @@ export function HeadToHeadLobbyEntry() {
   const [pendingLabel, setPendingLabel] = useState<string | null>(null);
   const lobbyStatus = useMemo(() => (summary ? createReplaySessionLobbyStatusViewModel(summary) : null), [summary]);
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
+  const setupLockReady = summary?.lobbyState === 'setup' && summary.ownership.sides.home !== undefined && summary.ownership.sides.away !== undefined;
 
   async function createLobby() {
     setPendingLabel('Create lobby');
@@ -78,12 +80,33 @@ export function HeadToHeadLobbyEntry() {
     }
   }
 
+  async function lockSetup() {
+    const sessionId = lookupSessionId.trim();
+    if (sessionId.length === 0) {
+      setErrorCopy('Enter an existing lobby session ID before locking setup.');
+      return;
+    }
+    setPendingLabel('Lock setup');
+    setErrorCopy(null);
+    setStatusCopy(`Locking setup for lobby ${sessionId}...`);
+    try {
+      const refreshedSummary = await lockHeadToHeadSetupAndRefreshSummaryFromWeb({ sessionId });
+      setSummary(refreshedSummary);
+      setStatusCopy(`Locked setup for lobby ${sessionId}.`);
+    } catch (error) {
+      setErrorCopy(error instanceof Error ? error.message : 'Replay session request failed: unknown setup lock error');
+      setStatusCopy('Setup lock failed.');
+    } finally {
+      setPendingLabel(null);
+    }
+  }
+
   return (
     <main className="shell head-to-head-lobby-entry">
       <section className="hero">
         <p>Product lobby entry</p>
         <h1>Head-to-head lobby</h1>
-        <p>Create a setup lobby for a home manager, or read an existing lobby by session ID before join mutations are introduced.</p>
+        <p>Create a setup lobby for a home manager, join an away manager, then lock setup when both managers are assigned.</p>
       </section>
 
       <section className="panel-grid">
@@ -122,7 +145,7 @@ export function HeadToHeadLobbyEntry() {
           <div className="sectionheader">
             <p>JOIN</p>
             <h2>Join away side</h2>
-            <p>Assign the away manager on a setup lobby before future setup-lock controls are available.</p>
+            <p>Assign the away manager on a setup lobby before the setup can be locked.</p>
           </div>
           <label>
             Away manager name
@@ -130,6 +153,17 @@ export function HeadToHeadLobbyEntry() {
           </label>
           <button type="button" onClick={joinAwayManager} disabled={pendingLabel !== null}>
             {pendingLabel === 'Join as away manager' ? 'Joining away manager...' : 'Join as away manager'}
+          </button>
+        </article>
+
+        <article className="info-list">
+          <div className="sectionheader">
+            <p>LOCK</p>
+            <h2>Lock setup</h2>
+            <p>{setupLockReady ? 'Both managers are assigned. Lock setup when tactics and lineups are ready.' : 'Assign both managers before locking setup.'}</p>
+          </div>
+          <button type="button" onClick={lockSetup} disabled={pendingLabel !== null || !setupLockReady}>
+            {pendingLabel === 'Lock setup' ? 'Locking setup...' : 'Lock setup'}
           </button>
         </article>
       </section>

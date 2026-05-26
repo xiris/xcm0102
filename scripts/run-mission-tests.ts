@@ -605,6 +605,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 150: away manager browser join flow',
     args: ['vitest', 'run', 'tests/web/replaySessionClient.test.ts', 'tests/web/headToHeadLobbyJoinFlow.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 151: setup lock readiness repository/API contract',
+    args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', 'tests/api/replaySessionEndpoint.test.ts']
+  },
+  {
+    label: 'MISSION 152: product setup lock browser flow',
+    args: ['vitest', 'run', 'tests/web/headToHeadLobbyLockFlow.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

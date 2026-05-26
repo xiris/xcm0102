@@ -142,6 +142,13 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
     }
   }
 
+  function assertSetupLockReadiness(session: ReplaySession, next: ReplaySessionLobbyState): void {
+    if (session.ownership.mode !== 'head_to_head' || session.ownership.lobbyState !== 'setup' || next !== 'locked') return;
+    if (session.ownership.sides.home === undefined || session.ownership.sides.away === undefined) {
+      throw new Error('Cannot lock setup until both managers are assigned');
+    }
+  }
+
   function sessionToRecord(session: ReplaySession): ReplaySessionStorageRecord {
     return { schemaVersion: 1, ...clone(session) };
   }
@@ -244,6 +251,7 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
       const session = requireSession(sessionId);
       const fromState = session.ownership.lobbyState;
       assertLobbyTransition(fromState, nextState);
+      assertSetupLockReadiness(session, nextState);
       const timestamp = now();
       return save({
         ...session,

@@ -145,6 +145,23 @@ describe('replay session repository', () => {
     }));
   });
 
+  it('rejects setup lock until both head-to-head managers are assigned', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const setup = repository.createSession({
+      seed: 42,
+      baseInput: createSampleMatchInput({ seed: 42 }),
+      initialResult: matchResultFixture(),
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    });
+
+    expect(() => repository.transitionLobbyState(setup.sessionId, 'locked')).toThrow('Cannot lock setup until both managers are assigned');
+    expect(repository.getSession(setup.sessionId).ownership.lobbyState).toBe('setup');
+  });
+
   it('rejects invalid lobby transitions', () => {
     const repository = createInMemoryReplaySessionRepository();
     const initialResult = matchResultFixture();
@@ -156,7 +173,10 @@ describe('replay session repository', () => {
       ownership: {
         mode: 'head_to_head',
         lobbyState: 'setup',
-        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
       }
     });
 

@@ -47,7 +47,7 @@ export function createHeadToHeadLobbyReadModel(summary: ReplaySessionLobbySummar
     homeManagerLabel: `Home manager: ${homeManager}`,
     awayManagerLabel: `Away manager: ${awayManager}`,
     readinessLabel: formatReadiness(summary, hasHome, hasAway),
-    readOnlyNotice: 'This entry route can create and read lobbies. Joining and lobby transitions remain server-owned follow-up actions.'
+    readOnlyNotice: 'This entry route can create, read, join, and lock setup. Kickoff and completion remain isolated follow-up actions.'
   };
 }
 

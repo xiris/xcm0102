@@ -145,6 +145,29 @@ describe('replay session API helpers', () => {
     }));
   });
 
+  it('rejects setup lock through the API helper until both head-to-head managers are assigned', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({
+      seed: 83,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    }, repository);
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    expect(transitionReplaySessionLobbyStateForApi({ sessionId, lobbyState: 'locked' }, repository)).toEqual({
+      ok: false,
+      status: 400,
+      body: { error: 'Cannot lock setup until both managers are assigned' }
+    });
+    expect(getReplaySessionSummaryForApi({ sessionId }, repository).body).toEqual(expect.objectContaining({ lobbyState: 'setup' }));
+  });
+
   it('transitions replay session lobby state through the API helper', () => {
     const repository = createInMemoryReplaySessionRepository();
     const created = createReplaySessionForApi({ seed: 71, currentMinute: 50 }, repository);
