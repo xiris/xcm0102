@@ -4,7 +4,7 @@ import { translateManagerCommandsToMatchCommands } from '../simulation/authorita
 import type { ManagerCommand } from '../simulation/managerCommands';
 import { simulateMatch } from '../simulation/simulateMatch';
 import { buildSimulationMatchInputForApi } from './simulationEndpoint';
-import type { MatchSide, ReplaySessionLobbyState, ReplaySessionOwnership, ReplaySessionRepository } from './replaySessionRepository';
+import type { MatchSide, ReplaySessionLobbyState, ReplaySessionOwnership, ReplaySessionRepository, ReplaySessionSideOwner } from './replaySessionRepository';
 
 export type ReplaySessionApiResult =
   | { ok: true; status: 200; body: Record<string, unknown> }
@@ -121,6 +121,26 @@ export function transitionReplaySessionLobbyStateForApi(payload: unknown, reposi
   }
 }
 
+export function joinAwayManagerForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
+  const parsed = parseJoinAwayManagerRequest(payload);
+  if (!parsed.ok) return badRequest(parsed.errors.join('; '));
+
+  try {
+    const session = repository.joinAwayManager(parsed.value.sessionId, parsed.value.owner);
+    return {
+      ok: true,
+      status: 200,
+      body: {
+        sessionId: session.sessionId,
+        lobbyState: session.ownership.lobbyState,
+        ownership: session.ownership
+      }
+    };
+  } catch (error) {
+    return isReplaySessionNotFound(error) ? notFound(error) : badRequest(error instanceof Error ? error.message : 'replay session away manager join failed');
+  }
+}
+
 export function resumeReplaySessionForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
   const parsed = parseResumeSessionRequest(payload);
   if (!parsed.ok) return badRequest(parsed.errors.join('; '));
@@ -219,6 +239,21 @@ function parseLobbyStateTransitionRequest(payload: unknown) {
   if (!isReplaySessionLobbyState(body.value.lobbyState)) errors.push('lobbyState must be setup locked in_match or complete');
   if (errors.length > 0) return { ok: false as const, errors };
   return { ok: true as const, value: { sessionId: body.value.sessionId as string, lobbyState: body.value.lobbyState as ReplaySessionLobbyState } };
+}
+
+function parseJoinAwayManagerRequest(payload: unknown) {
+  const body = asObject(payload);
+  if (!body.ok) return body;
+  const errors: string[] = [];
+  if (typeof body.value.sessionId !== 'string' || body.value.sessionId.length === 0) errors.push('sessionId must be a non-empty string');
+  if (typeof body.value.managerId !== 'string' || body.value.managerId.length === 0) errors.push('managerId must be a non-empty string');
+  if (typeof body.value.displayName !== 'string' || body.value.displayName.length === 0) errors.push('displayName must be a non-empty string');
+  if (errors.length > 0) return { ok: false as const, errors };
+  const owner: ReplaySessionSideOwner = {
+    managerId: body.value.managerId as string,
+    displayName: body.value.displayName as string
+  };
+  return { ok: true as const, value: { sessionId: body.value.sessionId as string, owner } };
 }
 
 function parseResumeSessionRequest(payload: unknown) {

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { POST as appendReplaySessionCommandRoute } from '../../app/api/replay-sessions/[sessionId]/commands/route';
+import { POST as joinAwayManagerRoute } from '../../app/api/replay-sessions/[sessionId]/join-away/route';
 import { PATCH as transitionReplaySessionLobbyStateRoute } from '../../app/api/replay-sessions/[sessionId]/lobby-state/route';
 import { GET as getReplaySessionRoute } from '../../app/api/replay-sessions/[sessionId]/route';
 import { POST as createReplaySessionRoute } from '../../app/api/replay-sessions/route';
@@ -13,6 +14,40 @@ function jsonRequest(url: string, body: unknown): Request {
 }
 
 describe('Next replay session routes', () => {
+  it('joins an away manager through the Next route wrapper', async () => {
+    const created = await createReplaySessionRoute(jsonRequest('http://localhost/api/replay-sessions', {
+      seed: 181,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    }));
+    expect(created.status).toBe(200);
+    const createdBody = await created.json();
+    const sessionId = createdBody.sessionId as string;
+
+    const joined = await joinAwayManagerRoute(
+      jsonRequest(`http://localhost/api/replay-sessions/${sessionId}/join-away`, { managerId: 'manager-away', displayName: 'Away Boss' }),
+      { params: Promise.resolve({ sessionId }) }
+    );
+
+    expect(joined.status).toBe(200);
+    expect(await joined.json()).toEqual({
+      sessionId,
+      lobbyState: 'setup',
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    });
+  });
+
   it('preserve away-side commands and expose lobby summary shape', async () => {
     const created = await createReplaySessionRoute(jsonRequest('http://localhost/api/replay-sessions', { seed: 171, currentMinute: 50 }));
     expect(created.status).toBe(200);

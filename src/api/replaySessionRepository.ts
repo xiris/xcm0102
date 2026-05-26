@@ -26,7 +26,8 @@ export type ReplaySessionAuditType =
   | 'manager_command_appended'
   | 'visible_events_replaced'
   | 'authoritative_resume_recorded'
-  | 'lobby_state_transitioned';
+  | 'lobby_state_transitioned'
+  | 'away_manager_joined';
 
 export type ReplaySessionAuditEntry = {
   type: ReplaySessionAuditType;
@@ -38,6 +39,8 @@ export type ReplaySessionAuditEntry = {
   commandSide?: MatchSide;
   fromLobbyState?: ReplaySessionLobbyState;
   toLobbyState?: ReplaySessionLobbyState;
+  managerId?: string;
+  displayName?: string;
 };
 
 export type ReplaySession = {
@@ -78,6 +81,7 @@ export type ReplaySessionRepository = {
   getSession(sessionId: string): ReplaySession;
   appendManagerCommand(sessionId: string, command: ManagerCommand, side?: MatchSide): ReplaySession;
   replaceVisibleEvents(sessionId: string, visibleEvents: MatchEvent[]): ReplaySession;
+  joinAwayManager(sessionId: string, owner: ReplaySessionSideOwner): ReplaySession;
   transitionLobbyState(sessionId: string, nextState: ReplaySessionLobbyState): ReplaySession;
   recordAuthoritativeResume(sessionId: string, input: AuthoritativeResumeAuditInput): ReplaySession;
   listStorageRecords(): ReplaySessionStorageRecord[];
@@ -206,6 +210,34 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
         visibleEvents,
         auditLog: [...session.auditLog, { type: 'visible_events_replaced', timestamp: now(), eventCount: visibleEvents.length }],
         updatedAt: now()
+      });
+    },
+    joinAwayManager(sessionId, owner) {
+      const session = requireSession(sessionId);
+      if (session.ownership.mode !== 'head_to_head') {
+        throw new Error('Away manager can only join head-to-head lobbies');
+      }
+      if (session.ownership.lobbyState !== 'setup') {
+        throw new Error('Away manager can only join setup lobbies');
+      }
+      if (session.ownership.sides.away !== undefined) {
+        throw new Error('Away manager is already assigned for replay session');
+      }
+      const timestamp = now();
+      return save({
+        ...session,
+        ownership: {
+          ...session.ownership,
+          sides: {
+            ...session.ownership.sides,
+            away: owner
+          }
+        },
+        auditLog: [
+          ...session.auditLog,
+          { type: 'away_manager_joined', timestamp, commandSide: 'away', managerId: owner.managerId, displayName: owner.displayName }
+        ],
+        updatedAt: timestamp
       });
     },
     transitionLobbyState(sessionId, nextState) {

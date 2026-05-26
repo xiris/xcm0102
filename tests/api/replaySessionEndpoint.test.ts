@@ -3,6 +3,7 @@ import {
   appendReplaySessionCommandForApi,
   createReplaySessionForApi,
   getReplaySessionSummaryForApi,
+  joinAwayManagerForApi,
   resumeReplaySessionForApi,
   transitionReplaySessionLobbyStateForApi,
   syncReplaySessionVisibleEventsForApi
@@ -29,6 +30,74 @@ const awayCommand = {
 };
 
 describe('replay session API helpers', () => {
+  it('joins an away manager through the API helper', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({
+      seed: 81,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    }, repository);
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    expect(joinAwayManagerForApi({ sessionId, managerId: 'manager-away', displayName: 'Away Boss' }, repository)).toEqual({
+      ok: true,
+      status: 200,
+      body: {
+        sessionId,
+        lobbyState: 'setup',
+        ownership: {
+          mode: 'head_to_head',
+          lobbyState: 'setup',
+          sides: {
+            home: { managerId: 'manager-home', displayName: 'Home Boss' },
+            away: { managerId: 'manager-away', displayName: 'Away Boss' }
+          }
+        }
+      }
+    });
+  });
+
+  it('rejects invalid away manager API joins', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({
+      seed: 82,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    }, repository);
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    expect(joinAwayManagerForApi({ sessionId, managerId: 'manager-next', displayName: 'Next Away' }, repository)).toEqual({
+      ok: false,
+      status: 400,
+      body: { error: 'Away manager is already assigned for replay session' }
+    });
+    expect(joinAwayManagerForApi({ sessionId, managerId: '', displayName: 'Away Boss' }, repository)).toEqual({
+      ok: false,
+      status: 400,
+      body: { error: 'managerId must be a non-empty string' }
+    });
+    expect(joinAwayManagerForApi({ sessionId: 'rs-missing', managerId: 'manager-away', displayName: 'Away Boss' }, repository)).toEqual({
+      ok: false,
+      status: 404,
+      body: { error: 'Replay session not found: rs-missing' }
+    });
+  });
+
   it('creates setup lobby sessions and advances them to kickoff readiness through the API helper', () => {
     const repository = createInMemoryReplaySessionRepository();
 

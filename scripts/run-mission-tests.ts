@@ -597,6 +597,14 @@ const missions: Mission[] = [
   {
     label: 'MISSION 148: head-to-head lobby entry route',
     args: ['vitest', 'run', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 149: away manager repository/API/route join mutation',
+    args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', 'tests/api/replaySessionEndpoint.test.ts', 'tests/api/replaySessionNextRoutes.test.ts']
+  },
+  {
+    label: 'MISSION 150: away manager browser join flow',
+    args: ['vitest', 'run', 'tests/web/replaySessionClient.test.ts', 'tests/web/headToHeadLobbyJoinFlow.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

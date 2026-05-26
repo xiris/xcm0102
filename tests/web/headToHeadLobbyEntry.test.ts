@@ -20,6 +20,8 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(markup).toContain('Create lobby');
     expect(markup).toContain('Existing lobby session ID');
     expect(markup).toContain('View lobby');
+    expect(markup).toContain('Away manager name');
+    expect(markup).toContain('Join as away manager');
     expect(markup).not.toContain('Lock setup');
     expect(markup).not.toContain('Kick off match');
     expect(markup).not.toContain('Complete match');
@@ -34,6 +36,7 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('createHeadToHeadLobbyReadModel');
     expect(componentSource).toContain('createReplaySessionFromWeb');
     expect(componentSource).toContain('getReplaySessionSummaryFromWeb');
+    expect(componentSource).toContain('joinAwayManagerAndRefreshSummaryFromWeb');
     expect(componentSource).not.toContain('LobbyMutationControls');
     expect(componentSource).not.toContain('applyReplaySessionLobbyTransitionFromWeb');
   });

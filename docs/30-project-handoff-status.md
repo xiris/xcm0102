@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18L First Real Head-to-Head Lobby Entry.
+- Latest completed local work before the next lobby/multiplayer slice: P18M Away Manager Join Mutation.
 
 ## Product Direction
 
@@ -119,31 +119,14 @@ Completed:
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18L First Real Head-to-Head Lobby Entry
+## Latest Slice: P18M Away Manager Join Mutation
 
-Files added/updated:
-
-- `src/web/headToHeadLobbyModel.ts`
-- `src/web/HeadToHeadLobbyEntry.tsx`
-- `app/head-to-head-lobby/page.tsx`
-- `tests/web/headToHeadLobbyModel.test.ts`
-- `tests/web/headToHeadLobbyEntry.test.ts`
-- `scripts/run-mission-tests.ts`
-- `docs/53-production-head-to-head-lobby-entry-contract.md`
-- `docs/plans/2026-05-23-head-to-head-lobby-entry.md`
-- `docs/README.md`
-- `docs/30-project-handoff-status.md`
-
-Behavior implemented:
-
-- Added `createHeadToHeadLobbyRequest`, which builds a valid head-to-head setup replay-session request from a normalized home manager name, default tactical state, and filled Inter/Milan assignment maps.
-- The first product lobby request intentionally leaves the away side unassigned so the route can prove create/read behavior before join mutation exists.
-- Added `createHeadToHeadLobbyReadModel`, which formats invite/session, home manager, away waiting, readiness, and read-only boundary copy.
-- Added `/head-to-head-lobby` as a product-facing route that can create a setup lobby through `createReplaySessionFromWeb` and read any existing lobby summary through `getReplaySessionSummaryFromWeb`.
-- The route renders the product read model and shared `LobbyStatusCard` but deliberately does not import or render `LobbyMutationControls` or the transition flow helper.
-- `/lobby-transition-harness` remains the write-capable smoke route for setup lock/kickoff/invalid-transition UX.
-- `/lobby-fixtures` remains read-only and button-free.
-- Mission runner now includes named P18L model and route coverage.
+- Added the first product-facing away-side join mutation for head-to-head setup lobbies.
+- Added server authority in `joinAwayManager`, API helper `joinAwayManagerForApi`, and `POST /api/replay-sessions/[sessionId]/join-away`.
+- Added browser client and flow helpers: `joinAwayManagerFromWeb` and `joinAwayManagerAndRefreshSummaryFromWeb`.
+- Updated `/head-to-head-lobby` with `Away manager name` and `Join as away manager` controls that assign the away side, refresh the lobby summary, and preserve exact server rejection copy.
+- Preserved guardrails: `/head-to-head-lobby` still has no setup-lock/kickoff/complete transition buttons; `/lobby-transition-harness` remains the transition smoke harness; `/lobby-fixtures` remains button-free/read-only.
+- Added MISSION 149 for away manager repository/API/route join mutation and MISSION 150 for away manager browser join flow.
 
 ## Latest Validation
 

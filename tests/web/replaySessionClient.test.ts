@@ -3,6 +3,7 @@ import {
   appendReplaySessionCommandFromWeb,
   createReplaySessionFromWeb,
   getReplaySessionSummaryFromWeb,
+  joinAwayManagerFromWeb,
   resumeReplaySessionFromWeb,
   syncReplaySessionVisibleEventsFromWeb,
   transitionReplaySessionLobbyStateFromWeb
@@ -104,6 +105,41 @@ describe('replay session web client', () => {
     });
     expect(summary.commandCounts).toEqual({ home: 1, away: 0 });
     expect(summary.latestAuthoritativeSignature).toBe('71|50|cmd|vh-abcd|8');
+  });
+
+  it('joins an away manager from the browser client and preserves rejection copy', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          sessionId: 'rs-0001',
+          lobbyState: 'setup',
+          ownership: {
+            mode: 'head_to_head',
+            lobbyState: 'setup',
+            sides: {
+              home: { managerId: 'manager-home', displayName: 'Home Boss' },
+              away: { managerId: 'manager-away', displayName: 'Away Boss' }
+            }
+          }
+        })
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({ error: 'Away manager is already assigned for replay session' })
+      });
+
+    const joined = await joinAwayManagerFromWeb({ sessionId: 'rs-0001', managerId: 'manager-away', displayName: 'Away Boss' }, fetchMock);
+
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/replay-sessions/rs-0001/join-away', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ managerId: 'manager-away', displayName: 'Away Boss' })
+    });
+    expect(joined.ownership.sides.away?.displayName).toBe('Away Boss');
+    await expect(joinAwayManagerFromWeb({ sessionId: 'rs-0001', managerId: 'manager-next', displayName: 'Next Away' }, fetchMock))
+      .rejects.toThrow('Replay session request failed: Away manager is already assigned for replay session');
   });
 
   it('transitions replay session lobby state from the browser client', async () => {

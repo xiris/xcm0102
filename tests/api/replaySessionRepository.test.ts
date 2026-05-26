@@ -39,6 +39,71 @@ const awayCommand: ManagerCommand = {
 };
 
 describe('replay session repository', () => {
+  it('joins an away manager to a setup head-to-head lobby with audit metadata', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = repository.createSession({
+      seed: 42,
+      baseInput: createSampleMatchInput({ seed: 42 }),
+      initialResult: matchResultFixture(),
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    });
+
+    const joined = repository.joinAwayManager(created.sessionId, { managerId: 'manager-away', displayName: 'Away Boss' });
+
+    expect(joined.ownership).toEqual({
+      mode: 'head_to_head',
+      lobbyState: 'setup',
+      sides: {
+        home: { managerId: 'manager-home', displayName: 'Home Boss' },
+        away: { managerId: 'manager-away', displayName: 'Away Boss' }
+      }
+    });
+    expect(joined.auditLog.at(-1)).toEqual(expect.objectContaining({
+      type: 'away_manager_joined',
+      commandSide: 'away',
+      managerId: 'manager-away',
+      displayName: 'Away Boss'
+    }));
+  });
+
+  it('rejects invalid away manager joins', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const baseInput = createSampleMatchInput({ seed: 42 });
+    const initialResult = matchResultFixture();
+    const setup = repository.createSession({
+      seed: 42,
+      baseInput,
+      initialResult,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    });
+    const locked = repository.createSession({
+      seed: 43,
+      baseInput,
+      initialResult,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'locked',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    });
+    const singleManager = repository.createSession({ seed: 44, baseInput, initialResult });
+
+    expect(() => repository.joinAwayManager(setup.sessionId, { managerId: 'manager-next', displayName: 'Next Away' })).toThrow('Away manager is already assigned for replay session');
+    expect(() => repository.joinAwayManager(locked.sessionId, { managerId: 'manager-away', displayName: 'Away Boss' })).toThrow('Away manager can only join setup lobbies');
+    expect(() => repository.joinAwayManager(singleManager.sessionId, { managerId: 'manager-away', displayName: 'Away Boss' })).toThrow('Away manager can only join head-to-head lobbies');
+  });
+
   it('transitions lobby state with audit metadata', () => {
     const repository = createInMemoryReplaySessionRepository();
     const initialResult = matchResultFixture();

@@ -66,6 +66,14 @@ export type WebReplaySessionLobbyStateResult = {
   ownership: ReplaySessionOwnership;
 };
 
+export type WebReplaySessionJoinAwayRequest = {
+  sessionId: string;
+  managerId: string;
+  displayName: string;
+};
+
+export type WebReplaySessionJoinAwayResult = WebReplaySessionLobbyStateResult;
+
 type FetchLike = (input: string, init: RequestInit) => Promise<{
   ok: boolean;
   status?: number;
@@ -102,6 +110,11 @@ export async function getReplaySessionSummaryFromWeb(sessionId: string, fetcher?
 export async function transitionReplaySessionLobbyStateFromWeb(request: WebReplaySessionLobbyStateRequest, fetcher?: FetchLike): Promise<WebReplaySessionLobbyStateResult> {
   const { sessionId, lobbyState } = request;
   return patchJson(`/api/replay-sessions/${sessionId}/lobby-state`, { lobbyState }, fetcher) as Promise<WebReplaySessionLobbyStateResult>;
+}
+
+export async function joinAwayManagerFromWeb(request: WebReplaySessionJoinAwayRequest, fetcher?: FetchLike): Promise<WebReplaySessionJoinAwayResult> {
+  const { sessionId, managerId, displayName } = request;
+  return postJson(`/api/replay-sessions/${sessionId}/join-away`, { managerId, displayName }, fetcher) as Promise<WebReplaySessionJoinAwayResult>;
 }
 
 async function getJson(url: string, fetcher?: FetchLike): Promise<unknown> {

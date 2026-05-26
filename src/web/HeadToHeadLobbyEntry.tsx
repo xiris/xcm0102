@@ -2,12 +2,14 @@
 
 import { useMemo, useState } from 'react';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
+import { joinAwayManagerAndRefreshSummaryFromWeb } from './headToHeadLobbyJoinFlow';
 import { createReplaySessionFromWeb, getReplaySessionSummaryFromWeb } from './replaySessionClient';
 import { createReplaySessionLobbyStatusViewModel, type ReplaySessionLobbySummary } from './replaySessionLobbyStatusViewModel';
 import { LobbyStatusCard } from './MatchLab';
 
 export function HeadToHeadLobbyEntry() {
   const [homeManagerName, setHomeManagerName] = useState('Home Manager');
+  const [awayManagerName, setAwayManagerName] = useState('Away Manager');
   const [lookupSessionId, setLookupSessionId] = useState('');
   const [summary, setSummary] = useState<ReplaySessionLobbySummary | null>(null);
   const [statusCopy, setStatusCopy] = useState('Create a head-to-head setup lobby or view an existing lobby by session ID.');
@@ -55,6 +57,27 @@ export function HeadToHeadLobbyEntry() {
     }
   }
 
+  async function joinAwayManager() {
+    const sessionId = lookupSessionId.trim();
+    if (sessionId.length === 0) {
+      setErrorCopy('Enter an existing lobby session ID before joining.');
+      return;
+    }
+    setPendingLabel('Join as away manager');
+    setErrorCopy(null);
+    setStatusCopy(`Joining lobby ${sessionId} as away manager...`);
+    try {
+      const refreshedSummary = await joinAwayManagerAndRefreshSummaryFromWeb({ sessionId, awayManagerName });
+      setSummary(refreshedSummary);
+      setStatusCopy(`Joined lobby ${sessionId} as away manager.`);
+    } catch (error) {
+      setErrorCopy(error instanceof Error ? error.message : 'Replay session request failed: unknown away join error');
+      setStatusCopy('Away manager join failed.');
+    } finally {
+      setPendingLabel(null);
+    }
+  }
+
   return (
     <main className="shell head-to-head-lobby-entry">
       <section className="hero">
@@ -92,6 +115,21 @@ export function HeadToHeadLobbyEntry() {
           </label>
           <button type="button" onClick={viewLobby} disabled={pendingLabel !== null}>
             {pendingLabel === 'View lobby' ? 'Viewing lobby...' : 'View lobby'}
+          </button>
+        </article>
+
+        <article className="info-list">
+          <div className="sectionheader">
+            <p>JOIN</p>
+            <h2>Join away side</h2>
+            <p>Assign the away manager on a setup lobby before future setup-lock controls are available.</p>
+          </div>
+          <label>
+            Away manager name
+            <input value={awayManagerName} onChange={(event) => setAwayManagerName(event.target.value)} />
+          </label>
+          <button type="button" onClick={joinAwayManager} disabled={pendingLabel !== null}>
+            {pendingLabel === 'Join as away manager' ? 'Joining away manager...' : 'Join as away manager'}
           </button>
         </article>
       </section>
