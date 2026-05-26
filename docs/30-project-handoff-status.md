@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18O Product Kickoff Readiness + Match Start Control.
+- Latest completed local work before the next lobby/multiplayer slice: P18P Product Match Completion + Result Closure Control.
 
 ## Product Direction
 
@@ -114,25 +114,25 @@ Completed:
 - A read-only `/lobby-fixtures` gallery now renders every route-shaped lobby action-preview state through the same lobby status card contract for browser smoke before mutation controls are introduced.
 - Match Lab now renders guarded visible lobby mutation controls from the lobby action availability model and refreshes the server summary after successful transitions.
 - `/lobby-transition-harness` now creates server-backed head-to-head setup replay sessions, visibly exercises setup lock and kickoff transitions, and displays exact invalid direct-kickoff rejection copy while `/lobby-fixtures` remains read-only.
-- `/head-to-head-lobby` now provides a product-facing head-to-head lobby route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, lock setup once both managers are assigned, kick off once locked, and keep complete/rematch controls out of the product route.
+- `/head-to-head-lobby` now provides a product-facing head-to-head lobby route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, lock setup once both managers are assigned, kick off once locked, complete once in match, and keep rematch controls out of the product route.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18O Product Kickoff Readiness + Match Start Control
+## Latest Slice: P18P Product Match Completion + Result Closure Control
 
-- Added product-specific browser flow `kickOffHeadToHeadMatchAndRefreshSummaryFromWeb`, which requests only `in_match` then refreshes the lobby summary.
-- Updated `/head-to-head-lobby` with a visible `Kick off match` control that is disabled unless the current server summary is `locked`.
-- Preserved exact premature-kickoff rejection copy from the server transition contract: `Replay session request failed: Invalid replay session lobby transition: setup -> in_match`.
-- Preserved guardrails: `/head-to-head-lobby` still has no `Complete match` or rematch control; it does not import `LobbyMutationControls` or the generic transition-flow helper.
-- Added MISSION 153 for product kickoff browser flow.
+- Added product-specific browser flow `completeHeadToHeadMatchAndRefreshSummaryFromWeb`, which requests only `complete` then refreshes the lobby summary.
+- Updated `/head-to-head-lobby` with a guarded `Complete match` control that is rendered only when the current server summary is `in_match`.
+- Preserved exact premature-completion rejection copy from the server transition contract: `Replay session request failed: Invalid replay session lobby transition: locked -> complete`.
+- Preserved guardrails: `/head-to-head-lobby` still has no rematch control; it does not import `LobbyMutationControls` or the generic transition-flow helper.
+- Added MISSION 154 for product completion browser flow.
 
 ## Latest Validation
 
-For P18O, run and verify:
+For P18P, run and verify:
 
 ```bash
-npx vitest run tests/web/headToHeadLobbyKickoffFlow.test.ts tests/web/headToHeadLobbyModel.test.ts tests/web/headToHeadLobbyEntry.test.ts
+npx vitest run tests/web/headToHeadLobbyCompletionFlow.test.ts tests/web/headToHeadLobbyModel.test.ts tests/web/headToHeadLobbyEntry.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -140,34 +140,35 @@ npm run build
 git diff --check
 ```
 
-Observed validation after P18O:
+Observed validation after P18P:
 
-- Focused mission 01: product kickoff browser flow passed.
-- Focused mission 02: product route kickoff control passed.
-- Focused product kickoff route/model group passed.
-- `npm run test:missions`: ALL 153 MISSIONS PASSED.
-- `npm test`: 47 files passed, 206 tests passed.
+- Focused mission 01: product completion browser flow passed.
+- Focused mission 02: product route completion control passed.
+- Focused mission 03: head-to-head read model completion copy passed.
+- Focused product completion route/model group passed.
+- `npm run test:missions`: ALL 154 MISSIONS PASSED.
+- `npm test`: 48 files passed, 208 tests passed.
 - `npx tsc --noEmit`: passed.
 - `npm run build`: passed.
 - `git diff --check`: passed.
-- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route create -> join -> lock -> kickoff reached `IN MATCH` while keeping `Complete match` absent from the product route.
+- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route create -> join -> lock -> kickoff -> complete reached `COMPLETE`, rendered `Complete match` only during `IN MATCH`, and kept rematch buttons absent.
 
-Expected mission count after P18O: ALL 153 MISSIONS PASSED.
+Expected mission count after P18P: ALL 154 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work after P18O: **P18P Product Match Completion + Result Closure Control**.
+Recommended next work after P18P: **P18Q Head-to-Head Result Report Preview**.
 
 Why this is next:
 
-P18O proves the product route can create, join, lock, and kick off through server-owned transitions. The next safe slice should expose match completion from the product route only after the lobby is `in_match`, while keeping rematch/private tactic setup and durable multiplayer persistence for later.
+P18P completes the product route's server-owned state chain from setup lobby through closed match. The next safe slice should keep rematch and persistence out of scope while adding a read-only post-completion result/report preview so the completed state has useful product value.
 
 Suggested goals:
 
-1. Add product-specific completion flow that requests `in_match -> complete` and refreshes the summary.
-2. Keep server invalid-transition copy intact for premature completion attempts.
-3. Render `Complete match` only when the lobby is in match; keep rematch out of the product route.
-4. Browser-smoke create -> join -> lock -> kickoff -> complete while preserving `/lobby-fixtures` read-only behavior.
+1. Add a completed-lobby result summary/read-model using the stored replay-session result metadata.
+2. Render a read-only post-match report panel only when the lobby is `complete`.
+3. Keep rematch, new-lobby branching, durable persistence, and full report pages isolated for later.
+4. Browser-smoke create -> join -> lock -> kickoff -> complete -> result preview while preserving `/lobby-fixtures` read-only behavior.
 
 ## Important User Preferences
 

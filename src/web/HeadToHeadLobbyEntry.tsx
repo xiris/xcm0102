@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
+import { completeHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyCompletionFlow';
 import { joinAwayManagerAndRefreshSummaryFromWeb } from './headToHeadLobbyJoinFlow';
 import { kickOffHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyKickoffFlow';
 import { lockHeadToHeadSetupAndRefreshSummaryFromWeb } from './headToHeadLobbyLockFlow';
@@ -25,7 +26,7 @@ export function HeadToHeadLobbyEntry() {
       ...status,
       actionAvailability: {
         headline: 'Product follow-up actions',
-        helperText: 'The match is active. Result closure remains an isolated follow-up action.',
+        helperText: 'The match is active. Use the product Complete match control to close the authoritative result.',
         actions: []
       }
     };
@@ -33,6 +34,7 @@ export function HeadToHeadLobbyEntry() {
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
   const setupLockReady = summary?.lobbyState === 'setup' && summary.ownership.sides.home !== undefined && summary.ownership.sides.away !== undefined;
   const kickoffReady = summary?.lobbyState === 'locked';
+  const completionReady = summary?.lobbyState === 'in_match';
 
   async function createLobby() {
     setPendingLabel('Create lobby');
@@ -136,12 +138,33 @@ export function HeadToHeadLobbyEntry() {
     }
   }
 
+  async function completeMatch() {
+    const sessionId = lookupSessionId.trim();
+    if (sessionId.length === 0) {
+      setErrorCopy('Enter an existing lobby session ID before completing the match.');
+      return;
+    }
+    setPendingLabel('Complete match');
+    setErrorCopy(null);
+    setStatusCopy(`Completing match for lobby ${sessionId}...`);
+    try {
+      const refreshedSummary = await completeHeadToHeadMatchAndRefreshSummaryFromWeb({ sessionId });
+      setSummary(refreshedSummary);
+      setStatusCopy(`Completed match for lobby ${sessionId}.`);
+    } catch (error) {
+      setErrorCopy(error instanceof Error ? error.message : 'Replay session request failed: unknown completion error');
+      setStatusCopy('Match completion failed.');
+    } finally {
+      setPendingLabel(null);
+    }
+  }
+
   return (
     <main className="shell head-to-head-lobby-entry">
       <section className="hero">
         <p>Product lobby entry</p>
         <h1>Head-to-head lobby</h1>
-        <p>Create a setup lobby for a home manager, join an away manager, lock setup, then kick off the match.</p>
+        <p>Create a setup lobby for a home manager, join an away manager, lock setup, kick off, then complete the match.</p>
       </section>
 
       <section className="panel-grid">
@@ -212,6 +235,19 @@ export function HeadToHeadLobbyEntry() {
             {pendingLabel === 'Kick off match' ? 'Kicking off match...' : 'Kick off match'}
           </button>
         </article>
+
+        {completionReady ? (
+          <article className="info-list">
+            <div className="sectionheader">
+              <p>RESULT</p>
+              <h2>Complete match</h2>
+              <p>The match is in progress. Complete it to close the authoritative result.</p>
+            </div>
+            <button type="button" onClick={completeMatch} disabled={pendingLabel !== null}>
+              {pendingLabel === 'Complete match' ? 'Completing match...' : 'Complete match'}
+            </button>
+          </article>
+        ) : null}
       </section>
 
       {lobbyReadModel && lobbyStatus ? (

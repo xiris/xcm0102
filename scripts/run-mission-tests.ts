@@ -617,6 +617,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 153: product kickoff browser flow',
     args: ['vitest', 'run', 'tests/web/headToHeadLobbyKickoffFlow.test.ts', 'tests/web/headToHeadLobbyModel.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 154: product completion browser flow',
+    args: ['vitest', 'run', 'tests/web/headToHeadLobbyCompletionFlow.test.ts', 'tests/web/headToHeadLobbyModel.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

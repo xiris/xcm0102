@@ -47,7 +47,7 @@ export function createHeadToHeadLobbyReadModel(summary: ReplaySessionLobbySummar
     homeManagerLabel: `Home manager: ${homeManager}`,
     awayManagerLabel: `Away manager: ${awayManager}`,
     readinessLabel: formatReadiness(summary, hasHome, hasAway),
-    readOnlyNotice: 'This entry route can create, read, join, lock setup, and kick off. Completion remains an isolated follow-up action.'
+    readOnlyNotice: 'This entry route can create, read, join, lock setup, kick off, and complete matches. Future match restart remains an isolated follow-up action.'
   };
 }
 
