@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
 import { joinAwayManagerAndRefreshSummaryFromWeb } from './headToHeadLobbyJoinFlow';
+import { kickOffHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyKickoffFlow';
 import { lockHeadToHeadSetupAndRefreshSummaryFromWeb } from './headToHeadLobbyLockFlow';
 import { createReplaySessionFromWeb, getReplaySessionSummaryFromWeb } from './replaySessionClient';
 import { createReplaySessionLobbyStatusViewModel, type ReplaySessionLobbySummary } from './replaySessionLobbyStatusViewModel';
@@ -16,9 +17,22 @@ export function HeadToHeadLobbyEntry() {
   const [statusCopy, setStatusCopy] = useState('Create a head-to-head setup lobby or view an existing lobby by session ID.');
   const [errorCopy, setErrorCopy] = useState<string | null>(null);
   const [pendingLabel, setPendingLabel] = useState<string | null>(null);
-  const lobbyStatus = useMemo(() => (summary ? createReplaySessionLobbyStatusViewModel(summary) : null), [summary]);
+  const lobbyStatus = useMemo(() => {
+    if (!summary) return null;
+    const status = createReplaySessionLobbyStatusViewModel(summary);
+    if (summary.lobbyState !== 'in_match') return status;
+    return {
+      ...status,
+      actionAvailability: {
+        headline: 'Product follow-up actions',
+        helperText: 'The match is active. Result closure remains an isolated follow-up action.',
+        actions: []
+      }
+    };
+  }, [summary]);
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
   const setupLockReady = summary?.lobbyState === 'setup' && summary.ownership.sides.home !== undefined && summary.ownership.sides.away !== undefined;
+  const kickoffReady = summary?.lobbyState === 'locked';
 
   async function createLobby() {
     setPendingLabel('Create lobby');
@@ -101,12 +115,33 @@ export function HeadToHeadLobbyEntry() {
     }
   }
 
+  async function kickOffMatch() {
+    const sessionId = lookupSessionId.trim();
+    if (sessionId.length === 0) {
+      setErrorCopy('Enter an existing lobby session ID before kickoff.');
+      return;
+    }
+    setPendingLabel('Kick off match');
+    setErrorCopy(null);
+    setStatusCopy(`Kicking off match for lobby ${sessionId}...`);
+    try {
+      const refreshedSummary = await kickOffHeadToHeadMatchAndRefreshSummaryFromWeb({ sessionId });
+      setSummary(refreshedSummary);
+      setStatusCopy(`Kicked off match for lobby ${sessionId}.`);
+    } catch (error) {
+      setErrorCopy(error instanceof Error ? error.message : 'Replay session request failed: unknown kickoff error');
+      setStatusCopy('Kickoff failed.');
+    } finally {
+      setPendingLabel(null);
+    }
+  }
+
   return (
     <main className="shell head-to-head-lobby-entry">
       <section className="hero">
         <p>Product lobby entry</p>
         <h1>Head-to-head lobby</h1>
-        <p>Create a setup lobby for a home manager, join an away manager, then lock setup when both managers are assigned.</p>
+        <p>Create a setup lobby for a home manager, join an away manager, lock setup, then kick off the match.</p>
       </section>
 
       <section className="panel-grid">
@@ -164,6 +199,17 @@ export function HeadToHeadLobbyEntry() {
           </div>
           <button type="button" onClick={lockSetup} disabled={pendingLabel !== null || !setupLockReady}>
             {pendingLabel === 'Lock setup' ? 'Locking setup...' : 'Lock setup'}
+          </button>
+        </article>
+
+        <article className="info-list">
+          <div className="sectionheader">
+            <p>KICKOFF</p>
+            <h2>Kick off match</h2>
+            <p>{kickoffReady ? 'Setup is locked. Kick off when both managers are ready to start.' : 'Lock setup before kicking off the match.'}</p>
+          </div>
+          <button type="button" onClick={kickOffMatch} disabled={pendingLabel !== null || !kickoffReady}>
+            {pendingLabel === 'Kick off match' ? 'Kicking off match...' : 'Kick off match'}
           </button>
         </article>
       </section>

@@ -12,7 +12,7 @@ function readProjectFile(relativePath: string): string {
 }
 
 describe('HeadToHeadLobbyEntry', () => {
-  it('renders product-facing lobby creation and read controls without transition buttons', () => {
+  it('renders product-facing lobby creation, join, lock, and kickoff controls without completion controls', () => {
     const markup = renderToStaticMarkup(createElement(HeadToHeadLobbyEntry));
 
     expect(markup).toContain('Head-to-head lobby');
@@ -23,11 +23,11 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(markup).toContain('Away manager name');
     expect(markup).toContain('Join as away manager');
     expect(markup).toContain('Lock setup');
-    expect(markup).not.toContain('Kick off match');
+    expect(markup).toContain('Kick off match');
     expect(markup).not.toContain('Complete match');
   });
 
-  it('keeps the product entry route read-only after create/read by avoiding transition helpers', () => {
+  it('keeps the product entry route on product-specific lobby flows by avoiding generic transition helpers', () => {
     const pageSource = readProjectFile('app/head-to-head-lobby/page.tsx');
     const componentSource = readProjectFile('src/web/HeadToHeadLobbyEntry.tsx');
 
@@ -38,6 +38,7 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('getReplaySessionSummaryFromWeb');
     expect(componentSource).toContain('joinAwayManagerAndRefreshSummaryFromWeb');
     expect(componentSource).toContain('lockHeadToHeadSetupAndRefreshSummaryFromWeb');
+    expect(componentSource).toContain('kickOffHeadToHeadMatchAndRefreshSummaryFromWeb');
     expect(componentSource).not.toContain('LobbyMutationControls');
     expect(componentSource).not.toContain('applyReplaySessionLobbyTransitionFromWeb');
   });

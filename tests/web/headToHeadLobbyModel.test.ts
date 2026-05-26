@@ -41,7 +41,7 @@ describe('head-to-head lobby model', () => {
       homeManagerLabel: 'Home manager: Chris Silva',
       awayManagerLabel: 'Away manager: waiting for opponent',
       readinessLabel: 'Waiting for an away manager before setup can lock.',
-      readOnlyNotice: 'This entry route can create, read, join, and lock setup. Kickoff and completion remain isolated follow-up actions.'
+      readOnlyNotice: 'This entry route can create, read, join, lock setup, and kick off. Completion remains an isolated follow-up action.'
     });
   });
 });

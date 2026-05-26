@@ -60,6 +60,7 @@ Documentation map:
 - 53-production-head-to-head-lobby-entry-contract.md — first product-facing 1v1 lobby create/read route without transition controls.
 - 54-production-away-manager-join-contract.md — server-owned away-side join mutation, rejection copy, and browser join flow.
 - 55-production-setup-lock-product-control-contract.md — server readiness gate and product setup-lock control without kickoff/complete exposure.
+- 56-production-product-kickoff-control-contract.md — product locked-lobby kickoff control without completion/rematch exposure.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -103,6 +104,7 @@ Documentation map:
 - plans/2026-05-23-head-to-head-lobby-entry.md — implementation plan for first product-facing create/read head-to-head lobby route.
 - plans/2026-05-23-away-manager-join-mutation.md — implementation plan for server-owned away manager join mutation and browser join flow.
 - plans/2026-05-23-setup-lock-product-control.md — implementation plan for setup-lock readiness gate and product control.
+- plans/2026-05-23-product-kickoff-control.md — implementation plan for locked-lobby product kickoff control.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 
