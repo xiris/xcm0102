@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18Q Head-to-Head Result Report Preview.
+- Latest completed local work before the next lobby/multiplayer slice: P18R Product Lobby Stabilization + UX Copy Pass.
 
 ## Product Direction
 
@@ -119,21 +119,21 @@ Completed:
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18Q Head-to-Head Result Report Preview
+## Latest Slice: P18R Product Lobby Stabilization + UX Copy Pass
 
-- Added compact `resultPreview` metadata to replay-session summaries using stored server session data: team names, final score, stats, total event count, and replay metadata.
-- Preserved public-summary privacy: summaries still do not expose `baseInput`, `initialResult`, visible events, command logs, or audit logs.
-- Added pure browser view model `createHeadToHeadResultReportPreview`, which returns a read-only post-match report only when the lobby summary is `complete` and result metadata exists.
-- Updated `/head-to-head-lobby` to render `Post-match report preview` after completion with scoreline, outcome, stat rows, and replay metadata.
-- Preserved guardrails: `/head-to-head-lobby` still has no rematch/restart controls; it does not import `LobbyMutationControls` or the generic transition-flow helper.
-- Added MISSION 155 for the API summary contract, result preview view model, and product route guard tests.
+- Added pure browser helper `createHeadToHeadLobbyActionCopy` to centralize product-route stage labels, helper copy, and enabled/disabled action policy for away join, setup lock, kickoff, and match completion.
+- Updated `/head-to-head-lobby` to render state-specific helper copy from that helper instead of scattered inline strings.
+- Disabled duplicate/no-op product actions after the loaded summary makes them invalid: duplicate away join, late join after lock/kickoff/completion, late setup lock, late kickoff, and post-completion completion.
+- Kept product route guardrails: no rematch/restart/new-match controls, no `LobbyMutationControls`, and no generic `applyReplaySessionLobbyTransitionFromWeb` import.
+- Clarified report-preview note to say future new-match flow/full report pages remain follow-up slices, avoiding visible rematch wording that can be confused with an available control.
+- Added MISSION 156 for product lobby stabilization copy.
 
 ## Latest Validation
 
-For P18Q, run and verify:
+For P18R, run and verify:
 
 ```bash
-npx vitest run tests/api/replaySessionEndpoint.test.ts tests/web/headToHeadResultReportPreview.test.ts tests/web/headToHeadLobbyEntry.test.ts
+npx vitest run tests/web/headToHeadLobbyActionCopy.test.ts tests/web/headToHeadLobbyEntry.test.ts tests/web/headToHeadResultReportPreview.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -141,35 +141,34 @@ npm run build
 git diff --check
 ```
 
-Observed validation after P18Q:
+Observed validation after P18R:
 
-- Focused mission 01: replay summary result preview contract passed.
-- Focused mission 02: head-to-head result report preview model passed.
-- Focused mission 03: product route result report preview passed.
-- Focused result preview route/API/model group passed with TypeScript typecheck.
-- Route result-preview summary parity group passed for Fastify and Next route wrappers.
-- `npm run test:missions`: ALL 155 MISSIONS PASSED.
-- `npm test`: 49 files passed, 211 tests passed.
+- Focused mission 01: product lobby action copy policy passed.
+- Focused mission 02: product route action-copy wiring passed.
+- Focused mission 03: result preview follow-up copy clarity passed.
+- Focused product lobby stabilization group passed with TypeScript typecheck.
+- `npm run test:missions`: ALL 156 MISSIONS PASSED.
+- `npm test`: 50 files passed, 216 tests passed.
 - `npx tsc --noEmit`: passed.
 - `npm run build`: passed.
 - `git diff --check`: passed.
-- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route create -> join -> lock -> kickoff -> complete rendered `Post-match report preview`, preserved scoreline metadata, removed `Complete match` after completion, kept rematch/restart buttons absent, and left the browser console clean.
+- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route completed create -> join -> lock -> kickoff -> complete -> report preview, duplicate/late action buttons were disabled, `Complete match` disappeared after completion, no rematch/restart/new-match button or visible rematch copy appeared, and the browser console was clean.
 
-Expected mission count after P18Q: ALL 155 MISSIONS PASSED.
+Expected mission count after P18R: ALL 156 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work after P18Q: **P18R Product Lobby Stabilization + UX Copy Pass**.
+Recommended next work after P18R: **P18S Private Setup Shell / Club-Tactic Selection Preview**.
 
 Why this is next:
 
-P18Q completes the first product-facing create → join → lock → kickoff → complete → report-preview loop. Before deeper features like rematch, private tactic setup, durable persistence, or live invites, the safest next slice is a stabilization pass that tightens UX copy, loading/error states, and route contracts around the now-complete loop.
+P18R stabilizes the first complete product loop and closes obvious no-op action gaps. The next valuable slice can begin moving toward the Phase 1A head-to-head requirement for private lineup/tactic setup, starting with a safe preview/shell that keeps server transition rules unchanged and avoids revealing hidden manager choices prematurely.
 
 Suggested goals:
 
-1. Consolidate product-route state copy and disabled-control hints for setup, locked, in-match, and complete states.
-2. Add route-level browser/source tests for report-preview visibility and absence of rematch/restart controls.
-3. Keep durable persistence, accounts, invites, websockets, rematch, and full report pages isolated for later.
+1. Add a read-only/private-setup shell for each side that names the future club/tactic setup boundary without storing hidden competitive state yet.
+2. Keep kickoff gated by the existing server-owned setup lock, with no new persistence/accounts/websocket assumptions.
+3. Preserve no rematch/restart controls and keep full report pages isolated for later.
 4. Browser-smoke the full product loop plus `/lobby-transition-harness` and `/lobby-fixtures`.
 
 ## Important User Preferences

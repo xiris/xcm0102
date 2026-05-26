@@ -34,6 +34,11 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(pageSource).toContain('HeadToHeadLobbyEntry');
     expect(componentSource).toContain('createHeadToHeadLobbyRequest');
     expect(componentSource).toContain('createHeadToHeadLobbyReadModel');
+    expect(componentSource).toContain('createHeadToHeadLobbyActionCopy');
+    expect(componentSource).toContain('actionCopy.joinAway.enabled');
+    expect(componentSource).toContain('actionCopy.lockSetup.enabled');
+    expect(componentSource).toContain('actionCopy.kickOff.enabled');
+    expect(componentSource).toContain('actionCopy.completeMatch.enabled');
     expect(componentSource).toContain('createReplaySessionFromWeb');
     expect(componentSource).toContain('getReplaySessionSummaryFromWeb');
     expect(componentSource).toContain('joinAwayManagerAndRefreshSummaryFromWeb');

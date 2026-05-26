@@ -47,7 +47,7 @@ describe('head-to-head result report preview', () => {
         { label: 'Commands', value: '3' },
         { label: 'Engine', value: 'production-sim-foundation-0.1.0' }
       ],
-      note: 'Read-only preview. Rematch and full report pages remain follow-up slices.'
+      note: 'Read-only preview. New match flow and full report pages remain follow-up slices.'
     });
   });
 

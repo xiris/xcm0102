@@ -43,7 +43,7 @@ export function createHeadToHeadResultReportPreview(summary: ReplaySessionLobbyS
       { label: 'Commands', value: String(result.replay.commandCount) },
       { label: 'Engine', value: result.replay.engineVersion }
     ],
-    note: 'Read-only preview. Rematch and full report pages remain follow-up slices.'
+    note: 'Read-only preview. New match flow and full report pages remain follow-up slices.'
   };
 }
 

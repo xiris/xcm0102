@@ -37,7 +37,7 @@ When present, the view model provides:
 - a winner/draw outcome label
 - stat rows for shots, shots on target, possession, and execution
 - metadata rows for event count, replay seed, command count, and engine version
-- a note that the panel is read-only and rematch/full report pages remain follow-up slices
+- a note that the panel is read-only and new match flow/full report pages remain follow-up slices
 
 ## Product Route Contract
 

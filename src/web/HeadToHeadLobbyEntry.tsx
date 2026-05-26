@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { createHeadToHeadLobbyActionCopy } from './headToHeadLobbyActionCopy';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
 import { createHeadToHeadResultReportPreview } from './headToHeadResultReportPreview';
 import { completeHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyCompletionFlow';
@@ -34,9 +35,12 @@ export function HeadToHeadLobbyEntry() {
   }, [summary]);
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
   const resultReportPreview = useMemo(() => (summary ? createHeadToHeadResultReportPreview(summary) : null), [summary]);
-  const setupLockReady = summary?.lobbyState === 'setup' && summary.ownership.sides.home !== undefined && summary.ownership.sides.away !== undefined;
-  const kickoffReady = summary?.lobbyState === 'locked';
-  const completionReady = summary?.lobbyState === 'in_match';
+  const hasLookupSessionId = lookupSessionId.trim().length > 0;
+  const actionCopy = useMemo(
+    () => createHeadToHeadLobbyActionCopy({ summary, hasSessionId: hasLookupSessionId }),
+    [summary, hasLookupSessionId]
+  );
+  const completionReady = actionCopy.completeMatch.enabled;
 
   async function createLobby() {
     setPendingLabel('Create lobby');
@@ -166,7 +170,7 @@ export function HeadToHeadLobbyEntry() {
       <section className="hero">
         <p>Product lobby entry</p>
         <h1>Head-to-head lobby</h1>
-        <p>Create a setup lobby for a home manager, join an away manager, lock setup, kick off, then complete the match.</p>
+        <p>{actionCopy.stageLabel}: create a setup lobby for a home manager, join an away manager, lock setup, kick off, then complete the match.</p>
       </section>
 
       <section className="panel-grid">
@@ -205,13 +209,13 @@ export function HeadToHeadLobbyEntry() {
           <div className="sectionheader">
             <p>JOIN</p>
             <h2>Join away side</h2>
-            <p>Assign the away manager on a setup lobby before the setup can be locked.</p>
+            <p>{actionCopy.joinAway.helperText}</p>
           </div>
           <label>
             Away manager name
             <input value={awayManagerName} onChange={(event) => setAwayManagerName(event.target.value)} />
           </label>
-          <button type="button" onClick={joinAwayManager} disabled={pendingLabel !== null}>
+          <button type="button" onClick={joinAwayManager} disabled={pendingLabel !== null || !actionCopy.joinAway.enabled}>
             {pendingLabel === 'Join as away manager' ? 'Joining away manager...' : 'Join as away manager'}
           </button>
         </article>
@@ -220,9 +224,9 @@ export function HeadToHeadLobbyEntry() {
           <div className="sectionheader">
             <p>LOCK</p>
             <h2>Lock setup</h2>
-            <p>{setupLockReady ? 'Both managers are assigned. Lock setup when tactics and lineups are ready.' : 'Assign both managers before locking setup.'}</p>
+            <p>{actionCopy.lockSetup.helperText}</p>
           </div>
-          <button type="button" onClick={lockSetup} disabled={pendingLabel !== null || !setupLockReady}>
+          <button type="button" onClick={lockSetup} disabled={pendingLabel !== null || !actionCopy.lockSetup.enabled}>
             {pendingLabel === 'Lock setup' ? 'Locking setup...' : 'Lock setup'}
           </button>
         </article>
@@ -231,9 +235,9 @@ export function HeadToHeadLobbyEntry() {
           <div className="sectionheader">
             <p>KICKOFF</p>
             <h2>Kick off match</h2>
-            <p>{kickoffReady ? 'Setup is locked. Kick off when both managers are ready to start.' : 'Lock setup before kicking off the match.'}</p>
+            <p>{actionCopy.kickOff.helperText}</p>
           </div>
-          <button type="button" onClick={kickOffMatch} disabled={pendingLabel !== null || !kickoffReady}>
+          <button type="button" onClick={kickOffMatch} disabled={pendingLabel !== null || !actionCopy.kickOff.enabled}>
             {pendingLabel === 'Kick off match' ? 'Kicking off match...' : 'Kick off match'}
           </button>
         </article>
@@ -243,9 +247,9 @@ export function HeadToHeadLobbyEntry() {
             <div className="sectionheader">
               <p>RESULT</p>
               <h2>Complete match</h2>
-              <p>The match is in progress. Complete it to close the authoritative result.</p>
+              <p>{actionCopy.completeMatch.helperText}</p>
             </div>
-            <button type="button" onClick={completeMatch} disabled={pendingLabel !== null}>
+            <button type="button" onClick={completeMatch} disabled={pendingLabel !== null || !actionCopy.completeMatch.enabled}>
               {pendingLabel === 'Complete match' ? 'Completing match...' : 'Complete match'}
             </button>
           </article>
