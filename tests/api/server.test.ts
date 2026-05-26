@@ -308,7 +308,13 @@ describe('production API server', () => {
       lobbyState: 'in_match',
       commandCounts: { home: 0, away: 1 },
       visibleEventCount: expect.any(Number),
-      latestAuthoritativeSignature: resumed.json().signature
+      latestAuthoritativeSignature: resumed.json().signature,
+      resultPreview: expect.objectContaining({
+        score: expect.objectContaining({ home: expect.any(Number), away: expect.any(Number) }),
+        teams: { home: 'Internazionale 2002', away: 'Milan 2002' },
+        eventCount: expect.any(Number),
+        replay: expect.objectContaining({ seed: 71 })
+      })
     });
     expect(summary.json()).not.toHaveProperty('baseInput');
     expect(summary.json()).not.toHaveProperty('visibleEvents');

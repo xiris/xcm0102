@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
+import { createHeadToHeadResultReportPreview } from './headToHeadResultReportPreview';
 import { completeHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyCompletionFlow';
 import { joinAwayManagerAndRefreshSummaryFromWeb } from './headToHeadLobbyJoinFlow';
 import { kickOffHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyKickoffFlow';
@@ -32,6 +33,7 @@ export function HeadToHeadLobbyEntry() {
     };
   }, [summary]);
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
+  const resultReportPreview = useMemo(() => (summary ? createHeadToHeadResultReportPreview(summary) : null), [summary]);
   const setupLockReady = summary?.lobbyState === 'setup' && summary.ownership.sides.home !== undefined && summary.ownership.sides.away !== undefined;
   const kickoffReady = summary?.lobbyState === 'locked';
   const completionReady = summary?.lobbyState === 'in_match';
@@ -249,6 +251,43 @@ export function HeadToHeadLobbyEntry() {
           </article>
         ) : null}
       </section>
+
+      {resultReportPreview ? (
+        <section className="panel-grid" aria-label="Post-match report preview">
+          <article className="info-list">
+            <div className="sectionheader">
+              <p>{resultReportPreview.stateLabel}</p>
+              <h2>{resultReportPreview.title}</h2>
+              <p>{resultReportPreview.scoreline}</p>
+            </div>
+            <strong>{resultReportPreview.outcomeLabel}</strong>
+            <dl>
+              {resultReportPreview.metadataRows.map((row) => (
+                <div key={row.label}>
+                  <dt>{row.label}</dt>
+                  <dd>{row.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p>{resultReportPreview.note}</p>
+          </article>
+          <article className="info-list">
+            <div className="sectionheader">
+              <p>REPORT STATS</p>
+              <h2>Team comparison</h2>
+              <p>Stored authoritative match metadata from the replay session.</p>
+            </div>
+            <dl>
+              {resultReportPreview.statRows.map((row) => (
+                <div key={row.label}>
+                  <dt>{row.label}</dt>
+                  <dd>{row.home} · {row.away}</dd>
+                </div>
+              ))}
+            </dl>
+          </article>
+        </section>
+      ) : null}
 
       {lobbyReadModel && lobbyStatus ? (
         <section className="panel-grid">

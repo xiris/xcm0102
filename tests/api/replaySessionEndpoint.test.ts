@@ -145,6 +145,30 @@ describe('replay session API helpers', () => {
     }));
   });
 
+  it('includes a compact result preview in replay session summaries', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({ seed: 71, currentMinute: 0 }, repository);
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+    const stored = repository.getSession(sessionId);
+
+    const summary = getReplaySessionSummaryForApi({ sessionId }, repository);
+
+    expect(summary).toEqual(expect.objectContaining({ ok: true, status: 200 }));
+    if (!summary.ok) throw new Error('expected summary to pass');
+    expect(summary.body.resultPreview).toEqual({
+      score: stored.initialResult.score,
+      teams: {
+        home: stored.baseInput.home.name,
+        away: stored.baseInput.away.name
+      },
+      stats: stored.initialResult.stats,
+      eventCount: stored.initialResult.events.length,
+      replay: stored.initialResult.report.replay
+    });
+  });
+
   it('rejects setup lock through the API helper until both head-to-head managers are assigned', () => {
     const repository = createInMemoryReplaySessionRepository();
     const created = createReplaySessionForApi({
@@ -491,7 +515,13 @@ describe('replay session API helpers', () => {
         lobbyState: 'in_match',
         commandCounts: { home: 0, away: 1 },
         visibleEventCount: expect.any(Number),
-        latestAuthoritativeSignature: signature
+        latestAuthoritativeSignature: signature,
+        resultPreview: expect.objectContaining({
+          score: expect.objectContaining({ home: expect.any(Number), away: expect.any(Number) }),
+          teams: { home: 'Internazionale 2002', away: 'Milan 2002' },
+          eventCount: expect.any(Number),
+          replay: expect.objectContaining({ seed: 71 })
+        })
       }
     });
     expect(summary.body).not.toHaveProperty('baseInput');

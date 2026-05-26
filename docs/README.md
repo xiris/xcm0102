@@ -62,6 +62,7 @@ Documentation map:
 - 55-production-setup-lock-product-control-contract.md — server readiness gate and product setup-lock control without kickoff/complete exposure.
 - 56-production-product-kickoff-control-contract.md — product locked-lobby kickoff control without completion/rematch exposure.
 - 57-production-product-completion-control-contract.md — product in-match completion control without rematch exposure.
+- 58-production-result-report-preview-contract.md — read-only completed-match result preview on the product lobby route.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -107,6 +108,7 @@ Documentation map:
 - plans/2026-05-23-setup-lock-product-control.md — implementation plan for setup-lock readiness gate and product control.
 - plans/2026-05-23-product-kickoff-control.md — implementation plan for locked-lobby product kickoff control.
 - plans/2026-05-23-product-completion-control.md — implementation plan for in-match product completion control.
+- plans/2026-05-23-result-report-preview.md — implementation plan for completed-match result report preview.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

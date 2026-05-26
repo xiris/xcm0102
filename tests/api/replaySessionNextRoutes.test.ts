@@ -89,7 +89,13 @@ describe('Next replay session routes', () => {
       },
       lobbyState: 'in_match',
       commandCounts: { home: 0, away: 1 },
-      visibleEventCount: expect.any(Number)
+      visibleEventCount: expect.any(Number),
+      resultPreview: expect.objectContaining({
+        score: expect.objectContaining({ home: expect.any(Number), away: expect.any(Number) }),
+        teams: { home: 'Internazionale 2002', away: 'Milan 2002' },
+        eventCount: expect.any(Number),
+        replay: expect.objectContaining({ seed: 171 })
+      })
     });
     expect(summaryBody).not.toHaveProperty('baseInput');
     expect(summaryBody).not.toHaveProperty('managerCommands');

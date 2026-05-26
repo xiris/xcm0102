@@ -1,3 +1,4 @@
+import type { MatchReport, MatchResult, TeamMatchStats } from '../simulation/domain';
 import type { MatchSide, ReplaySessionLobbyState, ReplaySessionOwnership } from '../api/replaySessionRepository';
 
 export type ReplaySessionLobbySummary = {
@@ -8,6 +9,13 @@ export type ReplaySessionLobbySummary = {
   commandCounts: Record<MatchSide, number>;
   visibleEventCount: number;
   latestAuthoritativeSignature?: string;
+  resultPreview?: {
+    score: MatchResult['score'];
+    teams: Record<MatchSide, string>;
+    stats: Record<MatchSide, TeamMatchStats>;
+    eventCount: number;
+    replay: MatchReport['replay'];
+  };
 };
 
 export type ReplaySessionLobbyStatusRow = {

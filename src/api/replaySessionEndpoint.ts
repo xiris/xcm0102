@@ -90,7 +90,17 @@ export function getReplaySessionSummaryForApi(payload: unknown, repository: Repl
         home: session.sideManagerCommands.home.length,
         away: session.sideManagerCommands.away.length
       },
-      visibleEventCount: session.visibleEvents.length
+      visibleEventCount: session.visibleEvents.length,
+      resultPreview: {
+        score: session.initialResult.score,
+        teams: {
+          home: session.baseInput.home.name,
+          away: session.baseInput.away.name
+        },
+        stats: session.initialResult.stats,
+        eventCount: session.initialResult.events.length,
+        replay: session.initialResult.report.replay
+      }
     };
     if (session.latestAuthoritativeSignature !== undefined) {
       body.latestAuthoritativeSignature = session.latestAuthoritativeSignature;

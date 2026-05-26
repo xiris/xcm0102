@@ -40,6 +40,8 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('lockHeadToHeadSetupAndRefreshSummaryFromWeb');
     expect(componentSource).toContain('kickOffHeadToHeadMatchAndRefreshSummaryFromWeb');
     expect(componentSource).toContain('completeHeadToHeadMatchAndRefreshSummaryFromWeb');
+    expect(componentSource).toContain('createHeadToHeadResultReportPreview');
+    expect(componentSource).toContain('Post-match report preview');
     expect(componentSource).not.toContain('Rematch');
     expect(componentSource).not.toContain('LobbyMutationControls');
     expect(componentSource).not.toContain('applyReplaySessionLobbyTransitionFromWeb');
