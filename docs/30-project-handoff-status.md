@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18U Private Setup Draft Controls.
+- Latest completed local work before the next lobby/multiplayer slice: P18V Private Setup Perspective Switch.
 
 ## Product Direction
 
@@ -114,27 +114,27 @@ Completed:
 - A read-only `/lobby-fixtures` gallery now renders every route-shaped lobby action-preview state through the same lobby status card contract for browser smoke before mutation controls are introduced.
 - Match Lab now renders guarded visible lobby mutation controls from the lobby action availability model and refreshes the server summary after successful transitions.
 - `/lobby-transition-harness` now creates server-backed head-to-head setup replay sessions, visibly exercises setup lock and kickoff transitions, and displays exact invalid direct-kickoff rejection copy while `/lobby-fixtures` remains read-only.
-- `/head-to-head-lobby` now provides a product-facing head-to-head lobby route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, lock setup once both managers are assigned, kick off once locked, complete once in match, render a read-only post-match report preview after completion, render a read-only private setup shell with local browser-only draft controls, selection-state preview labels, and opponent pre-lock redaction for future club/tactic selection, and keep rematch controls out of the product route.
+- `/head-to-head-lobby` now provides a product-facing head-to-head lobby route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, lock setup once both managers are assigned, kick off once locked, complete once in match, render a read-only post-match report preview after completion, render a read-only private setup shell with local browser-only draft controls, local home/away perspective switching, selection-state preview labels, and opponent pre-lock redaction for future club/tactic selection, and keep rematch controls out of the product route.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18U Private Setup Draft Controls
+## Latest Slice: P18V Private Setup Perspective Switch
 
-- Added pure browser helper `createHeadToHeadPrivateSetupDraftControls` to derive local-only setup draft controls for one manager side.
-- Added immutable `applyHeadToHeadPrivateSetupDraftControlChange` updates for sample club, tactic shell, and readiness intent without server calls or storage.
-- Wired `/head-to-head-lobby` with component-state-only private setup drafts and passed those drafts into the existing private setup shell.
-- Rendered local draft controls for Draft club, Draft tactic shell, and Draft readiness intent with explicit "Local browser draft only" and "Not submitted to the server" copy.
-- Preserved opponent pre-lock redaction, server-owned setup lock/kickoff/completion rules, and no setup submit/save/rematch/restart/new-match controls.
-- Added `docs/62-production-private-setup-draft-controls-contract.md` and `docs/plans/2026-05-27-private-setup-draft-controls.md`.
-- Added MISSION 159 for private setup draft-control coverage.
+- Added pure browser helper `createHeadToHeadPrivateSetupPerspectiveSwitch` to derive a local-only home/away preview perspective switch from public lobby summary fields.
+- Wired `/head-to-head-lobby` with component-state-only `localSetupSide` and passed the selected side into existing private setup draft controls and shell helpers.
+- Rendered a native `Local perspective` selector with explicit "Perspective only changes this browser preview" and "No account or permission claim is made by this switch" copy.
+- Preserved privacy behavior so the selected side is treated as local while the opposite assigned side remains redacted before lock.
+- Preserved component-state-only drafts, server-owned setup lock/kickoff/completion rules, and no setup submit/save/rematch/restart/new-match controls.
+- Added `docs/63-production-private-setup-perspective-switch-contract.md` and `docs/plans/2026-05-27-private-setup-perspective-switch.md`.
+- Added MISSION 160 for private setup perspective-switch coverage.
 
 ## Latest Validation
 
-For P18U, run and verify:
+For P18V, run and verify:
 
 ```bash
-npx vitest run tests/web/headToHeadPrivateSetupDraftControls.test.ts tests/web/headToHeadPrivateSetupSelectionState.test.ts tests/web/headToHeadPrivateSetupShell.test.ts tests/web/headToHeadLobbyEntry.test.ts
+npx vitest run tests/web/headToHeadPrivateSetupPerspectiveSwitch.test.ts tests/web/headToHeadPrivateSetupDraftControls.test.ts tests/web/headToHeadPrivateSetupSelectionState.test.ts tests/web/headToHeadPrivateSetupShell.test.ts tests/web/headToHeadLobbyEntry.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -142,31 +142,31 @@ npm run build
 git diff --check
 ```
 
-Observed validation after P18U:
+Observed validation after P18V:
 
-- Focused private setup draft controls + selection state + shell + product route tests passed.
-- `npm run test:missions`: ALL 159 MISSIONS PASSED.
-- `npm test`: 53 files passed, 231 tests passed.
+- Focused private setup perspective switch + draft controls + selection state + shell + product route tests passed.
+- `npm run test:missions`: ALL 160 MISSIONS PASSED.
+- `npm test`: 54 files passed, 235 tests passed.
 - `npx tsc --noEmit`: passed.
 - `npm run build`: passed.
 - `git diff --check`: passed.
-- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route completed create -> join -> edit local draft controls -> lock -> kickoff -> complete -> report preview, local draft changes updated private setup shell labels, controls became read-only after lock/in-match/complete, opponent pre-lock setup details remained hidden, no setup submit/save/rematch/restart/new-match buttons appeared, `/lobby-transition-harness` still showed invalid direct-kickoff rejection and advanced setup -> locked -> in_match, `/lobby-fixtures` remained button-free, and browser console was clean.
+- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route completed create -> join -> switch local perspective to away -> edit away draft controls -> switch back to home and verify away redaction -> lock -> kickoff -> complete -> report preview, selected local draft changes updated the matching shell labels only, the non-selected assigned side remained redacted before lock, draft controls became read-only after lock/in-match/complete, no setup submit/save/rematch/restart/new-match buttons appeared, `/lobby-transition-harness` still showed invalid direct-kickoff rejection and advanced setup -> locked -> in_match, `/lobby-fixtures` remained button-free, and browser console was clean.
 
-Expected mission count after P18U: ALL 159 MISSIONS PASSED.
+Expected mission count after P18V: ALL 160 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work after P18U: **P18V Setup Draft Stabilization / Lock Readiness Copy**.
+Recommended next work after P18V: **P18W Setup Draft Readiness Copy / Persistence Boundary Stabilization**.
 
 Why this is next:
 
-P18U introduces local-only browser controls. The next valuable slice should stabilize copy and edge cases before any server persistence: disabled-state clarity after lock, local-vs-away perspective controls, and guardrails that the current lock flow still does not depend on unpersisted browser draft state.
+P18V makes home/away browser perspectives testable without accounts. The next valuable stabilization slice should tighten copy and source-boundary guardrails before introducing any server-authoritative hidden setup persistence.
 
 Suggested goals:
 
-1. Add focused guard tests for disabled local draft controls across locked/in-match/complete states.
-2. Add optional local-side perspective switching only if it remains component-local and privacy-safe.
-3. Preserve component-state-only drafts and avoid repository/API persistence.
+1. Add guard tests proving setup lock remains available even when the local browser draft is still `editing`.
+2. Clarify that draft readiness intent is advisory/local only and never gates the server-owned lock transition.
+3. Preserve component-state-only drafts, perspective state, and no repository/API persistence.
 4. Browser-smoke the full product loop plus `/lobby-transition-harness` and `/lobby-fixtures`.
 
 ## Important User Preferences

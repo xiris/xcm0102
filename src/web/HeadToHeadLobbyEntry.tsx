@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import type { MatchSide } from '../api/replaySessionRepository';
 import { createHeadToHeadLobbyActionCopy } from './headToHeadLobbyActionCopy';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
 import { createHeadToHeadResultReportPreview } from './headToHeadResultReportPreview';
@@ -9,6 +10,7 @@ import {
   applyHeadToHeadPrivateSetupDraftControlChange,
   createHeadToHeadPrivateSetupDraftControls
 } from './headToHeadPrivateSetupDraftControls';
+import { createHeadToHeadPrivateSetupPerspectiveSwitch } from './headToHeadPrivateSetupPerspectiveSwitch';
 import type {
   HeadToHeadPrivateSetupClubId,
   HeadToHeadPrivateSetupDraft,
@@ -31,6 +33,7 @@ export function HeadToHeadLobbyEntry() {
   const [statusCopy, setStatusCopy] = useState('Create a head-to-head setup lobby or view an existing lobby by session ID.');
   const [errorCopy, setErrorCopy] = useState<string | null>(null);
   const [pendingLabel, setPendingLabel] = useState<string | null>(null);
+  const [localSetupSide, setLocalSetupSide] = useState<MatchSide>('home');
   const [privateSetupDrafts, setPrivateSetupDrafts] = useState<HeadToHeadPrivateSetupDraft[]>([]);
   const lobbyStatus = useMemo(() => {
     if (!summary) return null;
@@ -46,13 +49,17 @@ export function HeadToHeadLobbyEntry() {
     };
   }, [summary]);
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
+  const privateSetupPerspectiveSwitch = useMemo(
+    () => createHeadToHeadPrivateSetupPerspectiveSwitch({ summary, localSide: localSetupSide }),
+    [summary, localSetupSide]
+  );
   const privateSetupDraftControls = useMemo(
-    () => createHeadToHeadPrivateSetupDraftControls({ summary, localSide: 'home', drafts: privateSetupDrafts }),
-    [summary, privateSetupDrafts]
+    () => createHeadToHeadPrivateSetupDraftControls({ summary, localSide: localSetupSide, drafts: privateSetupDrafts }),
+    [summary, localSetupSide, privateSetupDrafts]
   );
   const privateSetupShell = useMemo(
-    () => createHeadToHeadPrivateSetupShell(summary, { localSide: 'home', drafts: privateSetupDrafts }),
-    [summary, privateSetupDrafts]
+    () => createHeadToHeadPrivateSetupShell(summary, { localSide: localSetupSide, drafts: privateSetupDrafts }),
+    [summary, localSetupSide, privateSetupDrafts]
   );
   const resultReportPreview = useMemo(() => (summary ? createHeadToHeadResultReportPreview(summary) : null), [summary]);
   const hasLookupSessionId = lookupSessionId.trim().length > 0;
@@ -300,6 +307,31 @@ export function HeadToHeadLobbyEntry() {
               ))}
             </ul>
           </article>
+          {privateSetupPerspectiveSwitch ? (
+            <article className="info-list">
+              <div className="sectionheader">
+                <p>Local browser perspective only</p>
+                <h2>{privateSetupPerspectiveSwitch.title}</h2>
+                <p>{privateSetupPerspectiveSwitch.helperText}</p>
+              </div>
+              <dl>
+                <div>
+                  <dt>Privacy</dt>
+                  <dd>{privateSetupPerspectiveSwitch.privacyNotice}</dd>
+                </div>
+              </dl>
+              <label>
+                Local perspective
+                <select value={privateSetupPerspectiveSwitch.selectedSide} onChange={(event) => setLocalSetupSide(event.target.value as MatchSide)}>
+                  {privateSetupPerspectiveSwitch.options.map((option) => (
+                    <option key={option.side} value={option.side}>
+                      {option.label} — {option.managerLabel} ({option.assignmentLabel})
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </article>
+          ) : null}
           {privateSetupDraftControls ? (
             <article className="info-list">
               <div className="sectionheader">

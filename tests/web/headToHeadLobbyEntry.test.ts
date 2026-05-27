@@ -32,6 +32,7 @@ describe('HeadToHeadLobbyEntry', () => {
     const componentSource = readProjectFile('src/web/HeadToHeadLobbyEntry.tsx');
     const shellSource = readProjectFile('src/web/headToHeadPrivateSetupShell.ts');
     const selectionSource = readProjectFile('src/web/headToHeadPrivateSetupSelectionState.ts');
+    const perspectiveSource = readProjectFile('src/web/headToHeadPrivateSetupPerspectiveSwitch.ts');
 
     expect(pageSource).toContain('HeadToHeadLobbyEntry');
     expect(componentSource).toContain('createHeadToHeadLobbyRequest');
@@ -41,10 +42,17 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('privateSetupShell');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupDraftControls');
     expect(componentSource).toContain('applyHeadToHeadPrivateSetupDraftControlChange');
+    expect(componentSource).toContain('createHeadToHeadPrivateSetupPerspectiveSwitch');
+    expect(componentSource).toContain("useState<MatchSide>('home')");
     expect(componentSource).toContain('Local browser draft only');
+    expect(perspectiveSource).toContain('Local private setup perspective');
+    expect(perspectiveSource).toContain('Perspective only changes this browser preview');
     expect(componentSource).toContain('privateSetupDrafts');
+    expect(componentSource).toContain('localSetupSide');
     expect(componentSource).toContain('onChange={(event) => updatePrivateSetupDraft');
-    expect(componentSource).toContain('createHeadToHeadPrivateSetupShell(summary,');
+    expect(componentSource).toContain('onChange={(event) => setLocalSetupSide');
+    expect(componentSource).toContain('createHeadToHeadPrivateSetupDraftControls({ summary, localSide: localSetupSide');
+    expect(componentSource).toContain('createHeadToHeadPrivateSetupShell(summary, { localSide: localSetupSide');
     expect(componentSource).toContain('Private setup preview');
     expect(componentSource).toContain('Selection status');
     expect(componentSource).toContain('Tactic shell');
