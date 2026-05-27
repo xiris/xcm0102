@@ -657,6 +657,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 163: private setup submission route client contract',
     args: ['vitest', 'run', 'tests/api/replaySessionNextRoutes.test.ts', 'tests/web/replaySessionClient.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 164: private setup submit cockpit UI',
+    args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupSubmitFlow.test.ts', 'tests/web/headToHeadPrivateSetupDraftControls.test.ts', 'tests/web/headToHeadPrivateSetupReadinessBoundary.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

@@ -42,7 +42,7 @@ describe('head-to-head private setup readiness boundary', () => {
     expect(createHeadToHeadPrivateSetupReadinessBoundary({ summary: null, localSide: 'home', drafts: [], lockAvailable: false })).toBeNull();
   });
 
-  it('keeps server lock available when local browser readiness is still editing', () => {
+  it('keeps server lock available when saved private setup readiness is still editing', () => {
     const boundary = createHeadToHeadPrivateSetupReadinessBoundary({
       summary: lobbySummary('setup', { home, away }),
       localSide: 'home',
@@ -56,13 +56,13 @@ describe('head-to-head private setup readiness boundary', () => {
       managerLabel: 'Chris Silva',
       draftReadinessLabel: 'Still editing',
       serverLockLabel: 'Server lock remains available once both managers are assigned.',
-      helperText: 'Still editing is local preview state only; it does not disable the product Lock setup control.',
-      advisoryNotice: 'Local readiness intent is advisory and never gates server-owned setup lock.',
-      persistenceNotice: 'No private setup readiness is submitted, persisted, or synchronized yet.'
+      helperText: 'Still editing is private setup state only; it does not disable the product Lock setup control.',
+      advisoryNotice: 'Readiness intent is saved with the private draft but never gates server-owned setup lock.',
+      persistenceNotice: 'Private setup readiness can be submitted as a hidden side-scoped server draft; public summaries stay redacted until setup lock.'
     });
   });
 
-  it('treats ready-to-lock as local preview intent rather than submitted setup', () => {
+  it('treats ready-to-lock as saveable private setup intent rather than a setup-lock gate', () => {
     const boundary = createHeadToHeadPrivateSetupReadinessBoundary({
       summary: lobbySummary('setup', { home, away }),
       localSide: 'home',
@@ -72,7 +72,7 @@ describe('head-to-head private setup readiness boundary', () => {
 
     expect(boundary).toEqual(expect.objectContaining({
       draftReadinessLabel: 'Ready to lock',
-      helperText: 'Ready means local preview intent only; no setup has been submitted.',
+      helperText: 'Ready means this private draft can be saved before the server-owned setup lock.',
       serverLockLabel: 'Server lock remains available once both managers are assigned.'
     }));
   });
@@ -90,7 +90,7 @@ describe('head-to-head private setup readiness boundary', () => {
       managerLabel: 'Unassigned',
       draftReadinessLabel: 'Unavailable',
       serverLockLabel: 'Server lock is unavailable from the public lobby summary.',
-      helperText: 'Join this side before claiming local setup readiness.'
+      helperText: 'Join this side before saving setup readiness.'
     }));
   });
 
@@ -105,11 +105,11 @@ describe('head-to-head private setup readiness boundary', () => {
     expect(boundary).toEqual(expect.objectContaining({
       draftReadinessLabel: 'Archived preview',
       serverLockLabel: 'Setup lock is no longer editable because the server state is in_match.',
-      helperText: 'Local readiness is historical preview copy after setup is locked.'
+      helperText: 'Saved readiness is historical preview copy after setup is locked.'
     }));
   });
 
-  it('keeps the readiness boundary source free of API persistence, storage, and submit language', () => {
+  it('keeps the readiness boundary source pure and free of direct network/storage side effects', () => {
     const source = readProjectFile('src/web/headToHeadPrivateSetupReadinessBoundary.ts');
 
     expect(source).not.toContain('fetch(');
@@ -117,7 +117,5 @@ describe('head-to-head private setup readiness boundary', () => {
     expect(source).not.toContain('getReplaySession');
     expect(source).not.toContain('localStorage');
     expect(source).not.toContain('sessionStorage');
-    expect(source).not.toContain('Submit setup');
-    expect(source).not.toContain('Save setup');
   });
 });

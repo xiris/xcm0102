@@ -12,6 +12,7 @@ import {
 } from './headToHeadPrivateSetupDraftControls';
 import { createHeadToHeadPrivateSetupPerspectiveSwitch } from './headToHeadPrivateSetupPerspectiveSwitch';
 import { createHeadToHeadPrivateSetupReadinessBoundary } from './headToHeadPrivateSetupReadinessBoundary';
+import { submitHeadToHeadPrivateSetupDraftAndRefreshSummaryFromWeb } from './headToHeadPrivateSetupSubmitFlow';
 import type {
   HeadToHeadPrivateSetupClubId,
   HeadToHeadPrivateSetupDraft,
@@ -87,6 +88,36 @@ export function HeadToHeadLobbyEntry() {
     if (!privateSetupDraftControls) return;
     const updatedDraft = applyHeadToHeadPrivateSetupDraftControlChange(privateSetupDraftControls.currentDraft, change);
     setPrivateSetupDrafts((currentDrafts) => [updatedDraft, ...currentDrafts.filter((draft) => draft.side !== updatedDraft.side)]);
+  }
+
+  async function submitPrivateSetupDraft() {
+    const sessionId = lookupSessionId.trim();
+    if (sessionId.length === 0) {
+      setErrorCopy('Enter an existing lobby session ID before saving setup.');
+      return;
+    }
+    if (!privateSetupDraftControls || !privateSetupDraftControls.enabled) {
+      setErrorCopy(privateSetupDraftControls?.disabledReason ?? 'Create or load a setup lobby before saving setup.');
+      return;
+    }
+
+    setPendingLabel('Save setup draft');
+    setErrorCopy(null);
+    setStatusCopy(`Saving ${privateSetupDraftControls.side} setup draft for lobby ${sessionId}...`);
+    try {
+      const refreshedSummary = await submitHeadToHeadPrivateSetupDraftAndRefreshSummaryFromWeb({
+        sessionId,
+        side: privateSetupDraftControls.side,
+        draft: privateSetupDraftControls.currentDraft
+      });
+      setSummary(refreshedSummary);
+      setStatusCopy(`Saved setup draft to the server for ${privateSetupDraftControls.managerLabel}. Opponent details remain redacted until setup lock.`);
+    } catch (error) {
+      setErrorCopy(error instanceof Error ? error.message : 'Replay session request failed: unknown private setup save error');
+      setStatusCopy('Private setup save failed.');
+    } finally {
+      setPendingLabel(null);
+    }
   }
 
   async function createLobby() {
@@ -214,13 +245,19 @@ export function HeadToHeadLobbyEntry() {
 
   return (
     <main className="shell head-to-head-lobby-entry">
-      <section className="hero">
+      <section className="hero manager-cockpit-hero">
         <p>Product lobby entry</p>
-        <h1>Head-to-head lobby</h1>
-        <p>{actionCopy.stageLabel}: create a setup lobby for a home manager, join an away manager, lock setup, kick off, then complete the match.</p>
+        <h1>Manager cockpit</h1>
+        <p>{actionCopy.stageLabel}: create a setup lobby for a home manager, join an away manager, privately save setup, lock setup, kick off, then complete the match.</p>
+        <nav className="cockpit-tabs" aria-label="Manager cockpit sections">
+          <a href="#lobby-desk">Lobby desk</a>
+          <a href="#team-setup">Team setup</a>
+          <a href="#match-controls">Match controls</a>
+          <a href="#report-room">Report room</a>
+        </nav>
       </section>
 
-      <section className="panel-grid">
+      <section id="lobby-desk" className="panel-grid cockpit-panel cockpit-panel-lobby" aria-label="Lobby desk">
         <article className="info-list">
           <div className="sectionheader">
             <p>CREATE</p>
@@ -266,7 +303,9 @@ export function HeadToHeadLobbyEntry() {
             {pendingLabel === 'Join as away manager' ? 'Joining away manager...' : 'Join as away manager'}
           </button>
         </article>
+      </section>
 
+      <section id="match-controls" className="panel-grid cockpit-panel cockpit-panel-match" aria-label="Match controls">
         <article className="info-list">
           <div className="sectionheader">
             <p>LOCK</p>
@@ -304,7 +343,7 @@ export function HeadToHeadLobbyEntry() {
       </section>
 
       {privateSetupShell ? (
-        <section className="panel-grid" aria-label="Private setup preview">
+        <section id="team-setup" className="panel-grid cockpit-panel cockpit-panel-setup" aria-label="Private setup preview">
           <article className="info-list">
             <div className="sectionheader">
               <p>{privateSetupShell.stateLabel}</p>
@@ -345,7 +384,7 @@ export function HeadToHeadLobbyEntry() {
           {privateSetupDraftControls ? (
             <article className="info-list">
               <div className="sectionheader">
-                <p>{privateSetupDraftControls.enabled ? 'Local browser draft only' : 'Local draft read-only'}</p>
+                <p>{privateSetupDraftControls.enabled ? 'Server setup draft' : 'Server setup read-only'}</p>
                 <h2>{privateSetupDraftControls.title}</h2>
                 <p>{privateSetupDraftControls.helperText}</p>
               </div>
@@ -401,6 +440,13 @@ export function HeadToHeadLobbyEntry() {
                   ))}
                 </select>
               </label>
+              <button
+                type="button"
+                onClick={submitPrivateSetupDraft}
+                disabled={pendingLabel !== null || !privateSetupDraftControls.enabled}
+              >
+                {pendingLabel === 'Save setup draft' ? 'Saving setup draft...' : 'Save setup draft'}
+              </button>
             </article>
           ) : null}
           {privateSetupReadinessBoundary ? (
@@ -477,7 +523,7 @@ export function HeadToHeadLobbyEntry() {
       ) : null}
 
       {resultReportPreview ? (
-        <section className="panel-grid" aria-label="Post-match report preview">
+        <section id="report-room" className="panel-grid cockpit-panel cockpit-panel-report" aria-label="Post-match report preview">
           <article className="info-list">
             <div className="sectionheader">
               <p>{resultReportPreview.stateLabel}</p>

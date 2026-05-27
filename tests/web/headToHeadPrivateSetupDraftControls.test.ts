@@ -41,7 +41,7 @@ describe('head-to-head private setup draft controls', () => {
     expect(createHeadToHeadPrivateSetupDraftControls({ summary: null, localSide: 'home', drafts: [] })).toBeNull();
   });
 
-  it('enables local browser-only controls for an assigned setup-side manager', () => {
+  it('enables server-backed draft controls for an assigned setup-side manager', () => {
     const controls = createHeadToHeadPrivateSetupDraftControls({
       summary: lobbySummary('setup', { home, away }),
       localSide: 'home',
@@ -49,13 +49,13 @@ describe('head-to-head private setup draft controls', () => {
     });
 
     expect(controls).toEqual(expect.objectContaining({
-      title: 'Local private setup draft controls',
+      title: 'Private setup draft controls',
       side: 'home',
       managerLabel: 'Chris Silva',
       enabled: true,
       disabledReason: null,
-      helperText: 'Local browser draft only. Adjust sample setup labels before lock; nothing is submitted to the server.',
-      persistenceNotice: 'Not submitted to the server. Refreshing or loading another lobby can discard this draft.'
+      helperText: 'Adjust sample setup labels and save them to the server before lock; opponent details remain redacted until setup is locked.',
+      persistenceNotice: 'Submitted to the server as a hidden side-scoped draft. Public summaries stay redacted until setup lock.'
     }));
     expect(controls?.currentDraft).toEqual(homeDraft);
     expect(controls?.clubOptions).toEqual([
@@ -115,14 +115,12 @@ describe('head-to-head private setup draft controls', () => {
     });
   });
 
-  it('keeps the controls source free of server persistence, storage, and submit language', () => {
+  it('keeps the controls source pure and free of direct network/storage side effects', () => {
     const source = readProjectFile('src/web/headToHeadPrivateSetupDraftControls.ts');
 
     expect(source).not.toContain('fetch(');
     expect(source).not.toContain('createReplaySession');
     expect(source).not.toContain('localStorage');
     expect(source).not.toContain('sessionStorage');
-    expect(source).not.toContain('Submit setup');
-    expect(source).not.toContain('Save setup');
   });
 });

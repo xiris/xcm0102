@@ -15,7 +15,9 @@ describe('HeadToHeadLobbyEntry', () => {
   it('renders product-facing lobby creation, join, lock, and kickoff controls without completion controls', () => {
     const markup = renderToStaticMarkup(createElement(HeadToHeadLobbyEntry));
 
-    expect(markup).toContain('Head-to-head lobby');
+    expect(markup).toContain('Manager cockpit');
+    expect(markup).toContain('Lobby desk');
+    expect(markup).toContain('Match controls');
     expect(markup).toContain('Home manager name');
     expect(markup).toContain('Create lobby');
     expect(markup).toContain('Existing lobby session ID');
@@ -45,8 +47,15 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('applyHeadToHeadPrivateSetupDraftControlChange');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupPerspectiveSwitch');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupReadinessBoundary');
+    expect(componentSource).toContain('submitHeadToHeadPrivateSetupDraftAndRefreshSummaryFromWeb');
     expect(componentSource).toContain("useState<MatchSide>('home')");
-    expect(componentSource).toContain('Local browser draft only');
+    expect(componentSource).toContain('Manager cockpit');
+    expect(componentSource).toContain('cockpit-tabs');
+    expect(componentSource).toContain('Lobby desk');
+    expect(componentSource).toContain('Team setup');
+    expect(componentSource).toContain('Match controls');
+    expect(componentSource).toContain('Report room');
+    expect(componentSource).toContain('Server setup draft');
     expect(perspectiveSource).toContain('Local private setup perspective');
     expect(perspectiveSource).toContain('Perspective only changes this browser preview');
     expect(componentSource).toContain('privateSetupDrafts');
@@ -56,8 +65,11 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('lockAvailable: actionCopy.lockSetup.enabled');
     expect(componentSource).toContain('privateSetupReadinessBoundary.title');
     expect(readinessBoundarySource).toContain('Setup readiness boundary');
-    expect(readinessBoundarySource).toContain('Local readiness intent is advisory and never gates server-owned setup lock');
-    expect(readinessBoundarySource).toContain('No private setup readiness is submitted, persisted, or synchronized yet');
+    expect(readinessBoundarySource).toContain('Readiness intent is saved with the private draft but never gates server-owned setup lock');
+    expect(readinessBoundarySource).toContain('Private setup readiness can be submitted as a hidden side-scoped server draft');
+    expect(componentSource).toContain('Saved setup draft to the server for');
+    expect(componentSource).toContain('onClick={submitPrivateSetupDraft}');
+    expect(componentSource).toContain('privateSetupDraftControls.enabled');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupDraftControls({ summary, localSide: localSetupSide');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupShell(summary, { localSide: localSetupSide');
     expect(componentSource).toContain('Private setup preview');
@@ -80,11 +92,7 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('completeHeadToHeadMatchAndRefreshSummaryFromWeb');
     expect(componentSource).toContain('createHeadToHeadResultReportPreview');
     expect(componentSource).toContain('Post-match report preview');
-    expect(componentSource).not.toContain('Submit setup');
-    expect(componentSource).not.toContain('Save setup');
     expect(componentSource).not.toContain('storeReplaySessionPrivateSetupDraft');
-    expect(componentSource).not.toContain('submitPrivateSetup');
-    expect(componentSource).not.toContain('submitReplaySessionPrivateSetupDraftFromWeb');
     expect(componentSource).not.toContain('localStorage');
     expect(componentSource).not.toContain('sessionStorage');
     expect(componentSource).not.toContain('Rematch');

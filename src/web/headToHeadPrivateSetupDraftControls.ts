@@ -65,13 +65,13 @@ export function createHeadToHeadPrivateSetupDraftControls(
   const disabledReason = createDisabledReason(input.summary, manager !== undefined);
 
   return {
-    title: 'Local private setup draft controls',
+    title: 'Private setup draft controls',
     side: input.localSide,
     managerLabel: manager?.displayName ?? 'Unassigned',
     enabled: disabledReason === null,
     disabledReason,
-    helperText: 'Local browser draft only. Adjust sample setup labels before lock; nothing is submitted to the server.',
-    persistenceNotice: 'Not submitted to the server. Refreshing or loading another lobby can discard this draft.',
+    helperText: 'Adjust sample setup labels and save them to the server before lock; opponent details remain redacted until setup is locked.',
+    persistenceNotice: 'Submitted to the server as a hidden side-scoped draft. Public summaries stay redacted until setup lock.',
     currentDraft,
     clubOptions,
     tacticShellOptions,

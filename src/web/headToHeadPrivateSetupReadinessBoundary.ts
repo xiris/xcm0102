@@ -36,8 +36,8 @@ export function createHeadToHeadPrivateSetupReadinessBoundary(
     draftReadinessLabel,
     serverLockLabel: createServerLockLabel(input.summary, input.lockAvailable),
     helperText: createHelperText(input.summary, manager !== undefined, draft?.readinessIntent ?? 'editing'),
-    advisoryNotice: 'Local readiness intent is advisory and never gates server-owned setup lock.',
-    persistenceNotice: 'No private setup readiness is submitted, persisted, or synchronized yet.'
+    advisoryNotice: 'Readiness intent is saved with the private draft but never gates server-owned setup lock.',
+    persistenceNotice: 'Private setup readiness can be submitted as a hidden side-scoped server draft; public summaries stay redacted until setup lock.'
   };
 }
 
@@ -63,8 +63,8 @@ function createHelperText(
   isAssigned: boolean,
   intent: HeadToHeadPrivateSetupReadinessIntent
 ): string {
-  if (!isAssigned) return 'Join this side before claiming local setup readiness.';
-  if (summary.lobbyState !== 'setup') return 'Local readiness is historical preview copy after setup is locked.';
-  if (intent === 'ready_to_lock') return 'Ready means local preview intent only; no setup has been submitted.';
-  return 'Still editing is local preview state only; it does not disable the product Lock setup control.';
+  if (!isAssigned) return 'Join this side before saving setup readiness.';
+  if (summary.lobbyState !== 'setup') return 'Saved readiness is historical preview copy after setup is locked.';
+  if (intent === 'ready_to_lock') return 'Ready means this private draft can be saved before the server-owned setup lock.';
+  return 'Still editing is private setup state only; it does not disable the product Lock setup control.';
 }

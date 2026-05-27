@@ -108,6 +108,54 @@ h3 {
 
 .panel-header-compact h2 { display: none; }
 
+.manager-cockpit-hero {
+  background:
+    linear-gradient(135deg, rgb(182 255 99 / 0.08), transparent 34%),
+    rgb(4 7 5 / 0.42);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 24px 80px var(--shadow), inset 0 1px 0 rgb(255 255 255 / 0.04);
+  margin-bottom: 18px;
+  padding: 24px;
+}
+
+.cockpit-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cockpit-tabs a {
+  background: rgb(255 255 255 / 0.045);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 9px 13px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.cockpit-tabs a:hover,
+.cockpit-tabs a:focus-visible {
+  border-color: rgb(182 255 99 / 0.5);
+  color: var(--accent);
+}
+
+.cockpit-panel {
+  margin-bottom: 18px;
+}
+
+.cockpit-panel-lobby,
+.cockpit-panel-match,
+.cockpit-panel-setup,
+.cockpit-panel-report {
+  scroll-margin-top: 18px;
+}
+
 .controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
