@@ -661,6 +661,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 164: private setup submit cockpit UI',
     args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupSubmitFlow.test.ts', 'tests/web/headToHeadPrivateSetupDraftControls.test.ts', 'tests/web/headToHeadPrivateSetupReadinessBoundary.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 165: manager cockpit layout stabilization',
+    args: ['vitest', 'run', 'tests/web/headToHeadManagerCockpitLayout.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

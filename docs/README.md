@@ -73,6 +73,7 @@ Documentation map:
 - 66-production-private-setup-submission-route-client-contract.md — thin Next route and browser client contract for private setup draft submission without product UI wiring.
 - 67-manager-cockpit-interface-direction.md — manager cockpit UI direction for replacing stacked forms with task stations and modern football-operations design.
 - 68-production-private-setup-submit-ui-contract.md — guarded product `Save setup draft` UI contract plus cockpit shell acceptance criteria.
+- 69-manager-cockpit-layout-stabilization-contract.md — two-column session rail and station workspace contract for the product manager cockpit.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -128,6 +129,7 @@ Documentation map:
 - plans/2026-05-27-private-setup-persistence-contract.md — implementation plan for repository/API hidden setup draft persistence and reveal contracts.
 - plans/2026-05-27-private-setup-submission-route-client.md — implementation plan for private setup submission route/client transport boundaries.
 - plans/2026-05-27-private-setup-submit-cockpit-ui.md — implementation plan for guarded product private setup save UI and manager cockpit shell.
+- plans/2026-05-27-manager-cockpit-layout-stabilization.md — implementation plan for session rail + station workspace cockpit layout stabilization.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

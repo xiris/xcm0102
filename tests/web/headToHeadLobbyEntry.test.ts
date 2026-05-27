@@ -36,11 +36,13 @@ describe('HeadToHeadLobbyEntry', () => {
     const selectionSource = readProjectFile('src/web/headToHeadPrivateSetupSelectionState.ts');
     const perspectiveSource = readProjectFile('src/web/headToHeadPrivateSetupPerspectiveSwitch.ts');
     const readinessBoundarySource = readProjectFile('src/web/headToHeadPrivateSetupReadinessBoundary.ts');
+    const cockpitLayoutSource = readProjectFile('src/web/headToHeadManagerCockpitLayout.ts');
 
     expect(pageSource).toContain('HeadToHeadLobbyEntry');
     expect(componentSource).toContain('createHeadToHeadLobbyRequest');
     expect(componentSource).toContain('createHeadToHeadLobbyReadModel');
     expect(componentSource).toContain('createHeadToHeadLobbyActionCopy');
+    expect(componentSource).toContain('createHeadToHeadManagerCockpitLayout');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupShell');
     expect(componentSource).toContain('privateSetupShell');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupDraftControls');
@@ -50,11 +52,16 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('submitHeadToHeadPrivateSetupDraftAndRefreshSummaryFromWeb');
     expect(componentSource).toContain("useState<MatchSide>('home')");
     expect(componentSource).toContain('Manager cockpit');
+    expect(componentSource).toContain('cockpit-layout');
+    expect(componentSource).toContain('cockpit-rail');
+    expect(componentSource).toContain('cockpit-workspace');
+    expect(componentSource).toContain('Session rail');
+    expect(componentSource).toContain('Station workspace');
     expect(componentSource).toContain('cockpit-tabs');
-    expect(componentSource).toContain('Lobby desk');
-    expect(componentSource).toContain('Team setup');
-    expect(componentSource).toContain('Match controls');
-    expect(componentSource).toContain('Report room');
+    expect(cockpitLayoutSource).toContain('Lobby desk');
+    expect(cockpitLayoutSource).toContain('Team setup');
+    expect(cockpitLayoutSource).toContain('Match controls');
+    expect(cockpitLayoutSource).toContain('Report room');
     expect(componentSource).toContain('Server setup draft');
     expect(perspectiveSource).toContain('Local private setup perspective');
     expect(perspectiveSource).toContain('Perspective only changes this browser preview');

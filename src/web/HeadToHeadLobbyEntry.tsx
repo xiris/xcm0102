@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import type { MatchSide } from '../api/replaySessionRepository';
 import { createHeadToHeadLobbyActionCopy } from './headToHeadLobbyActionCopy';
+import { createHeadToHeadManagerCockpitLayout } from './headToHeadManagerCockpitLayout';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
 import { createHeadToHeadResultReportPreview } from './headToHeadResultReportPreview';
 import { createHeadToHeadPrivateSetupShell } from './headToHeadPrivateSetupShell';
@@ -55,6 +56,10 @@ export function HeadToHeadLobbyEntry() {
   const actionCopy = useMemo(
     () => createHeadToHeadLobbyActionCopy({ summary, hasSessionId: hasLookupSessionId }),
     [summary, hasLookupSessionId]
+  );
+  const cockpitLayout = useMemo(
+    () => createHeadToHeadManagerCockpitLayout({ summary, stageLabel: actionCopy.stageLabel, statusCopy, errorCopy }),
+    [summary, actionCopy.stageLabel, statusCopy, errorCopy]
   );
   const privateSetupPerspectiveSwitch = useMemo(
     () => createHeadToHeadPrivateSetupPerspectiveSwitch({ summary, localSide: localSetupSide }),
@@ -250,14 +255,31 @@ export function HeadToHeadLobbyEntry() {
         <h1>Manager cockpit</h1>
         <p>{actionCopy.stageLabel}: create a setup lobby for a home manager, join an away manager, privately save setup, lock setup, kick off, then complete the match.</p>
         <nav className="cockpit-tabs" aria-label="Manager cockpit sections">
-          <a href="#lobby-desk">Lobby desk</a>
-          <a href="#team-setup">Team setup</a>
-          <a href="#match-controls">Match controls</a>
-          <a href="#report-room">Report room</a>
+          {cockpitLayout.stations.map((station) => (
+            <a key={station.id} href={`#${station.id}`} title={station.helperText}>{station.label}</a>
+          ))}
         </nav>
       </section>
 
-      <section id="lobby-desk" className="panel-grid cockpit-panel cockpit-panel-lobby" aria-label="Lobby desk">
+      <div className="cockpit-layout">
+        <aside className="cockpit-rail" aria-label="Session rail">
+          <div className="sectionheader">
+            <p>SESSION RAIL</p>
+            <h2>{cockpitLayout.railTitle}</h2>
+            <p>{cockpitLayout.railHelper}</p>
+          </div>
+          <dl>
+            {cockpitLayout.rows.map((row) => (
+              <div key={row.label}>
+                <dt>{row.label}</dt>
+                <dd>{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
+
+        <div className="cockpit-workspace" aria-label="Station workspace">
+          <section id="lobby-desk" className="panel-grid cockpit-panel cockpit-panel-lobby" aria-label="Lobby desk">
         <article className="info-list">
           <div className="sectionheader">
             <p>CREATE</p>
@@ -579,6 +601,8 @@ export function HeadToHeadLobbyEntry() {
           </article>
         </section>
       ) : null}
-    </main>
+      </div>
+      </div>
+      </main>
   );
 }
