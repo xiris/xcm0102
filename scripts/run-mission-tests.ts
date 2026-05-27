@@ -633,6 +633,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 157: private setup shell preview',
     args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupShell.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 158: private setup selection state',
+    args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupSelectionState.test.ts', 'tests/web/headToHeadPrivateSetupShell.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createHeadToHeadPrivateSetupShell } from '../../src/web/headToHeadPrivateSetupShell';
+import type { HeadToHeadPrivateSetupDraft } from '../../src/web/headToHeadPrivateSetupSelectionState';
 import type { ReplaySessionLobbySummary } from '../../src/web/replaySessionLobbyStatusViewModel';
 
 function lobbySummary(state: ReplaySessionLobbySummary['lobbyState'], sides: ReplaySessionLobbySummary['ownership']['sides']): ReplaySessionLobbySummary {
@@ -15,6 +16,20 @@ function lobbySummary(state: ReplaySessionLobbySummary['lobbyState'], sides: Rep
 
 const home = { managerId: 'home-chris', displayName: 'Chris Silva' };
 const away = { managerId: 'away-boss', displayName: 'Away Boss' };
+
+const homeDraft: HeadToHeadPrivateSetupDraft = {
+  side: 'home',
+  clubId: 'internazionale-2002',
+  tacticShellId: 'attacking-4231',
+  readinessIntent: 'ready_to_lock'
+};
+
+const awayDraft: HeadToHeadPrivateSetupDraft = {
+  side: 'away',
+  clubId: 'milan-2002',
+  tacticShellId: 'compact-451',
+  readinessIntent: 'editing'
+};
 
 describe('head-to-head private setup shell', () => {
   it('stays absent until a lobby summary is selected', () => {
@@ -53,12 +68,31 @@ describe('head-to-head private setup shell', () => {
   });
 
   it('marks both assigned setup spaces as ready for a future private setup flow', () => {
-    const shell = createHeadToHeadPrivateSetupShell(lobbySummary('setup', { home, away }));
+    const shell = createHeadToHeadPrivateSetupShell(lobbySummary('setup', { home, away }), {
+      localSide: 'home',
+      drafts: [homeDraft, awayDraft]
+    });
 
     expect(shell?.stateLabel).toBe('Setup open');
     expect(shell?.sideCards).toEqual([
-      expect.objectContaining({ managerLabel: 'Chris Silva', readinessLabel: 'Manager assigned; future lineup and tactic choices stay private until lock/reveal.' }),
-      expect.objectContaining({ managerLabel: 'Away Boss', readinessLabel: 'Manager assigned; future lineup and tactic choices stay private until lock/reveal.' })
+      expect.objectContaining({
+        managerLabel: 'Chris Silva',
+        readinessLabel: 'Manager assigned; future lineup and tactic choices stay private until lock/reveal.',
+        selectionStatusLabel: 'Local setup draft ready',
+        selectionClubLabel: 'Internazionale 2002',
+        selectionTacticLabel: 'Attacking 4-2-3-1 shell',
+        selectionReadinessLabel: 'Ready to lock',
+        selectionPrivacyNote: 'Visible only to the local manager in this preview contract.'
+      }),
+      expect.objectContaining({
+        managerLabel: 'Away Boss',
+        readinessLabel: 'Manager assigned; future lineup and tactic choices stay private until lock/reveal.',
+        selectionStatusLabel: 'Opponent setup hidden',
+        selectionClubLabel: 'Hidden until lock',
+        selectionTacticLabel: 'Hidden until lock',
+        selectionReadinessLabel: 'Private',
+        selectionPrivacyNote: 'Opponent club, tactic, lineup, bench, and set pieces are not exposed before lock.'
+      })
     ]);
   });
 

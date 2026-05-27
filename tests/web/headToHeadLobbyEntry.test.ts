@@ -31,6 +31,7 @@ describe('HeadToHeadLobbyEntry', () => {
     const pageSource = readProjectFile('app/head-to-head-lobby/page.tsx');
     const componentSource = readProjectFile('src/web/HeadToHeadLobbyEntry.tsx');
     const shellSource = readProjectFile('src/web/headToHeadPrivateSetupShell.ts');
+    const selectionSource = readProjectFile('src/web/headToHeadPrivateSetupSelectionState.ts');
 
     expect(pageSource).toContain('HeadToHeadLobbyEntry');
     expect(componentSource).toContain('createHeadToHeadLobbyRequest');
@@ -39,7 +40,11 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('createHeadToHeadPrivateSetupShell');
     expect(componentSource).toContain('privateSetupShell');
     expect(componentSource).toContain('Private setup preview');
-    expect(shellSource).toContain('Internazionale 2002');
+    expect(componentSource).toContain('Selection status');
+    expect(componentSource).toContain('Tactic shell');
+    expect(shellSource).toContain('createHeadToHeadPrivateSetupSelectionState');
+    expect(shellSource).toContain('selectionStatusLabel');
+    expect(selectionSource).toContain('Hidden until lock');
     expect(shellSource).toContain('Milan 2002');
     expect(shellSource).toContain('No hidden choices are stored yet');
     expect(componentSource).toContain('actionCopy.joinAway.enabled');

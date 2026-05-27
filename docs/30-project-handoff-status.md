@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18S Private Setup Shell / Club-Tactic Selection Preview.
+- Latest completed local work before the next lobby/multiplayer slice: P18T Private Setup Selection State Contract.
 
 ## Product Direction
 
@@ -114,26 +114,28 @@ Completed:
 - A read-only `/lobby-fixtures` gallery now renders every route-shaped lobby action-preview state through the same lobby status card contract for browser smoke before mutation controls are introduced.
 - Match Lab now renders guarded visible lobby mutation controls from the lobby action availability model and refreshes the server summary after successful transitions.
 - `/lobby-transition-harness` now creates server-backed head-to-head setup replay sessions, visibly exercises setup lock and kickoff transitions, and displays exact invalid direct-kickoff rejection copy while `/lobby-fixtures` remains read-only.
-- `/head-to-head-lobby` now provides a product-facing head-to-head lobby route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, lock setup once both managers are assigned, kick off once locked, complete once in match, render a read-only post-match report preview after completion, render a read-only private setup shell preview for future club/tactic selection, and keep rematch controls out of the product route.
+- `/head-to-head-lobby` now provides a product-facing head-to-head lobby route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, lock setup once both managers are assigned, kick off once locked, complete once in match, render a read-only post-match report preview after completion, render a read-only private setup shell with local selection-state preview labels and opponent pre-lock redaction for future club/tactic selection, and keep rematch controls out of the product route.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18S Private Setup Shell / Club-Tactic Selection Preview
+## Latest Slice: P18T Private Setup Selection State Contract
 
-- Added pure browser helper `createHeadToHeadPrivateSetupShell` to derive a read-only private setup preview from public replay-session lobby summaries.
-- Rendered a product-route private setup shell after a lobby is selected, with home/away cards, manager labels, Inter/Milan 2002 sample club shells, state-aware readiness copy, and explicit no-hidden-state-yet notes.
+- Added pure browser helper `createHeadToHeadPrivateSetupSelectionState` to model local side club/tactic/readiness draft previews without persistence or product mutations.
+- Added side-scoped sample setup drafts for Internazionale 2002 and Milan 2002 plus safe tactic shell labels and readiness intent copy.
+- Redacted opponent pre-lock setup detail from the product shell while keeping local side preview labels visible.
+- Extended the private setup shell and `/head-to-head-lobby` with read-only selection status, selection club, tactic shell, readiness intent, and privacy rows.
 - Preserved the existing create -> join -> lock -> kickoff -> complete -> report-preview loop without changing server-owned transition rules.
-- Kept product route guardrails: no rematch/restart/new-match controls, no `LobbyMutationControls`, and no generic `applyReplaySessionLobbyTransitionFromWeb` import.
-- Added `docs/60-production-private-setup-shell-contract.md` and `docs/plans/2026-05-27-private-setup-shell.md`.
-- Added MISSION 157 for private setup shell preview coverage.
+- Kept product route guardrails: no setup mutation controls, no rematch/restart/new-match controls, no `LobbyMutationControls`, and no generic `applyReplaySessionLobbyTransitionFromWeb` import.
+- Added `docs/61-production-private-setup-selection-state-contract.md` and `docs/plans/2026-05-27-private-setup-selection-state.md`.
+- Added MISSION 158 for private setup selection-state coverage.
 
 ## Latest Validation
 
-For P18S, run and verify:
+For P18T, run and verify:
 
 ```bash
-npx vitest run tests/web/headToHeadPrivateSetupShell.test.ts tests/web/headToHeadLobbyEntry.test.ts
+npx vitest run tests/web/headToHeadPrivateSetupSelectionState.test.ts tests/web/headToHeadPrivateSetupShell.test.ts tests/web/headToHeadLobbyEntry.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -141,31 +143,31 @@ npm run build
 git diff --check
 ```
 
-Observed validation after P18S:
+Observed validation after P18T:
 
-- Focused private setup shell + product route tests passed.
-- `npm run test:missions`: ALL 157 MISSIONS PASSED.
-- `npm test`: 51 files passed, 220 tests passed.
+- Focused private setup selection state + shell + product route tests passed.
+- `npm run test:missions`: ALL 158 MISSIONS PASSED.
+- `npm test`: 52 files passed, 225 tests passed.
 - `npx tsc --noEmit`: passed.
 - `npm run build`: passed.
 - `git diff --check`: passed.
-- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route completed create -> join -> lock -> kickoff -> complete -> report preview, private setup shell rendered across lobby states, no rematch/restart/new-match buttons appeared, `/lobby-transition-harness` still showed invalid direct-kickoff rejection and advanced setup -> locked -> in_match, `/lobby-fixtures` remained button-free, and browser console was clean.
+- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route completed create -> join -> lock -> kickoff -> complete -> report preview, private setup selection rows rendered, opponent pre-lock setup details were hidden until lock, no setup mutation/rematch/restart/new-match buttons appeared, `/lobby-transition-harness` still showed invalid direct-kickoff rejection and advanced setup -> locked -> in_match, `/lobby-fixtures` remained button-free, and browser console was clean.
 
-Expected mission count after P18S: ALL 157 MISSIONS PASSED.
+Expected mission count after P18T: ALL 158 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work after P18S: **P18T Private Setup Selection State Contract**.
+Recommended next work after P18T: **P18U Setup Selection Browser Draft Controls**.
 
 Why this is next:
 
-P18S safely names the private club/tactic setup boundary without storing hidden competitive state. The next valuable slice should add the first pure, server-safe selection-state contract for future hidden setup choices while still avoiding persistence/accounts/websockets and preserving simultaneous reveal rules.
+P18T defines a pure, privacy-safe selection-state contract and surfaces read-only labels. The next valuable slice can add local-only draft controls for the current manager side while still avoiding server persistence and opponent reveal.
 
 Suggested goals:
 
-1. Define a pure private setup selection state for side, sample club, tactic shell, and readiness intent without exposing opponent detail.
-2. Keep state local/pure or repository-shaped behind tests before adding product route mutation.
-3. Preserve existing lock/kickoff/completion transition rules and no rematch/full-report scope.
+1. Add local-only browser controls for sample club/tactic/readiness draft state.
+2. Keep drafts in component state only and avoid repository/API persistence.
+3. Preserve opponent pre-lock redaction and existing lock/kickoff/completion transition rules.
 4. Browser-smoke the full product loop plus `/lobby-transition-harness` and `/lobby-fixtures`.
 
 ## Important User Preferences

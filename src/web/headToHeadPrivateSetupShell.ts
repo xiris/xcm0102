@@ -1,4 +1,5 @@
 import type { MatchSide } from '../api/replaySessionRepository';
+import { createHeadToHeadPrivateSetupSelectionState, type HeadToHeadPrivateSetupDraft, type HeadToHeadPrivateSetupSelectionSideCard } from './headToHeadPrivateSetupSelectionState';
 import type { ReplaySessionLobbySummary } from './replaySessionLobbyStatusViewModel';
 
 export type HeadToHeadPrivateSetupShellSideCard = {
@@ -8,6 +9,16 @@ export type HeadToHeadPrivateSetupShellSideCard = {
   clubLabel: string;
   privacyLabel: string;
   readinessLabel: string;
+  selectionStatusLabel: string;
+  selectionClubLabel: string;
+  selectionTacticLabel: string;
+  selectionReadinessLabel: string;
+  selectionPrivacyNote: string;
+};
+
+export type HeadToHeadPrivateSetupShellOptions = {
+  localSide?: MatchSide;
+  drafts?: HeadToHeadPrivateSetupDraft[];
 };
 
 export type HeadToHeadPrivateSetupShellViewModel = {
@@ -28,14 +39,23 @@ const sideTitles: Record<MatchSide, string> = {
   away: 'Away private setup'
 };
 
-export function createHeadToHeadPrivateSetupShell(summary: ReplaySessionLobbySummary | null): HeadToHeadPrivateSetupShellViewModel | null {
+export function createHeadToHeadPrivateSetupShell(
+  summary: ReplaySessionLobbySummary | null,
+  options: HeadToHeadPrivateSetupShellOptions = {}
+): HeadToHeadPrivateSetupShellViewModel | null {
   if (summary === null) return null;
+
+  const selectionState = createHeadToHeadPrivateSetupSelectionState({
+    summary,
+    localSide: options.localSide ?? 'home',
+    drafts: options.drafts ?? []
+  });
 
   return {
     title: 'Private setup preview',
     stateLabel: formatStateLabel(summary.lobbyState),
     helperText: 'Preview-only setup spaces for future club, lineup, and tactic selection. No hidden choices are stored yet.',
-    sideCards: (['home', 'away'] as const).map((side) => createSideCard(summary, side)),
+    sideCards: (['home', 'away'] as const).map((side) => createSideCard(summary, side, selectionState?.sideCards.find((card) => card.side === side))),
     notes: [
       'The shell is derived from the public lobby summary only; no private tactic, lineup, bench, or set-piece payload exists yet.',
       'Setup lock, kickoff, and completion remain server-owned transitions.'
@@ -43,7 +63,11 @@ export function createHeadToHeadPrivateSetupShell(summary: ReplaySessionLobbySum
   };
 }
 
-function createSideCard(summary: ReplaySessionLobbySummary, side: MatchSide): HeadToHeadPrivateSetupShellSideCard {
+function createSideCard(
+  summary: ReplaySessionLobbySummary,
+  side: MatchSide,
+  selectionCard: HeadToHeadPrivateSetupSelectionSideCard | undefined
+): HeadToHeadPrivateSetupShellSideCard {
   const owner = summary.ownership.sides[side];
   const stateCopy = createStateCopy(summary, side, owner !== undefined);
 
@@ -53,7 +77,12 @@ function createSideCard(summary: ReplaySessionLobbySummary, side: MatchSide): He
     managerLabel: owner?.displayName ?? 'Unassigned',
     clubLabel: fixtureClubs[side],
     privacyLabel: stateCopy.privacyLabel,
-    readinessLabel: stateCopy.readinessLabel
+    readinessLabel: stateCopy.readinessLabel,
+    selectionStatusLabel: selectionCard?.publicStatus ?? 'Selection unavailable',
+    selectionClubLabel: selectionCard?.clubLabel ?? 'Hidden until assigned',
+    selectionTacticLabel: selectionCard?.tacticShellLabel ?? 'Hidden until assigned',
+    selectionReadinessLabel: selectionCard?.readinessIntentLabel ?? 'Unavailable',
+    selectionPrivacyNote: selectionCard?.privacyNote ?? 'A manager must join before this private setup space can be represented.'
   };
 }
 

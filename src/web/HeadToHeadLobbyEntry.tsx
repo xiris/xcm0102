@@ -288,6 +288,26 @@ export function HeadToHeadLobbyEntry() {
                   <dt>Sample club shell</dt>
                   <dd>{card.clubLabel}</dd>
                 </div>
+                <div>
+                  <dt>Selection status</dt>
+                  <dd>{card.selectionStatusLabel}</dd>
+                </div>
+                <div>
+                  <dt>Selection club</dt>
+                  <dd>{card.selectionClubLabel}</dd>
+                </div>
+                <div>
+                  <dt>Tactic shell</dt>
+                  <dd>{card.selectionTacticLabel}</dd>
+                </div>
+                <div>
+                  <dt>Readiness intent</dt>
+                  <dd>{card.selectionReadinessLabel}</dd>
+                </div>
+                <div>
+                  <dt>Privacy</dt>
+                  <dd>{card.selectionPrivacyNote}</dd>
+                </div>
               </dl>
             </article>
           ))}
