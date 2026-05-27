@@ -665,6 +665,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 165: manager cockpit layout stabilization',
     args: ['vitest', 'run', 'tests/web/headToHeadManagerCockpitLayout.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 166: product entry selector and cockpit focus',
+    args: ['vitest', 'run', 'tests/web/productEntryModeSelector.test.ts', 'tests/web/rootLayout.test.ts', 'tests/web/headToHeadManagerCockpitLayout.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

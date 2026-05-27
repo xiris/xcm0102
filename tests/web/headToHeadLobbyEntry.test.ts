@@ -43,6 +43,10 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('createHeadToHeadLobbyReadModel');
     expect(componentSource).toContain('createHeadToHeadLobbyActionCopy');
     expect(componentSource).toContain('createHeadToHeadManagerCockpitLayout');
+    expect(componentSource).toContain('activeStationId');
+    expect(componentSource).toContain('setActiveStationId');
+    expect(componentSource).toContain('cockpit-station-active');
+    expect(componentSource).toContain('hidden={activeStationId !==');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupShell');
     expect(componentSource).toContain('privateSetupShell');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupDraftControls');

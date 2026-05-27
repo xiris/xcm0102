@@ -37,6 +37,7 @@ export function HeadToHeadLobbyEntry() {
   const [errorCopy, setErrorCopy] = useState<string | null>(null);
   const [pendingLabel, setPendingLabel] = useState<string | null>(null);
   const [localSetupSide, setLocalSetupSide] = useState<MatchSide>('home');
+  const [activeStationId, setActiveStationId] = useState('lobby-desk');
   const [privateSetupDrafts, setPrivateSetupDrafts] = useState<HeadToHeadPrivateSetupDraft[]>([]);
   const lobbyStatus = useMemo(() => {
     if (!summary) return null;
@@ -254,9 +255,18 @@ export function HeadToHeadLobbyEntry() {
         <p>Product lobby entry</p>
         <h1>Manager cockpit</h1>
         <p>{actionCopy.stageLabel}: create a setup lobby for a home manager, join an away manager, privately save setup, lock setup, kick off, then complete the match.</p>
-        <nav className="cockpit-tabs" aria-label="Manager cockpit sections">
+        <nav className="cockpit-tabs cockpit-station-selector" aria-label="Manager cockpit sections">
           {cockpitLayout.stations.map((station) => (
-            <a key={station.id} href={`#${station.id}`} title={station.helperText}>{station.label}</a>
+            <button
+              key={station.id}
+              type="button"
+              className={activeStationId === station.id ? 'cockpit-tab-active' : undefined}
+              aria-pressed={activeStationId === station.id}
+              title={station.helperText}
+              onClick={() => setActiveStationId(station.id)}
+            >
+              {station.label}
+            </button>
           ))}
         </nav>
       </section>
@@ -279,7 +289,7 @@ export function HeadToHeadLobbyEntry() {
         </aside>
 
         <div className="cockpit-workspace" aria-label="Station workspace">
-          <section id="lobby-desk" className="panel-grid cockpit-panel cockpit-panel-lobby" aria-label="Lobby desk">
+          <section id="lobby-desk" className={`panel-grid cockpit-panel cockpit-panel-lobby ${activeStationId === 'lobby-desk' ? 'cockpit-station-active' : 'cockpit-station-inactive'}`} hidden={activeStationId !== 'lobby-desk'} aria-label="Lobby desk">
         <article className="info-list">
           <div className="sectionheader">
             <p>CREATE</p>
@@ -327,7 +337,7 @@ export function HeadToHeadLobbyEntry() {
         </article>
       </section>
 
-      <section id="match-controls" className="panel-grid cockpit-panel cockpit-panel-match" aria-label="Match controls">
+      <section id="match-controls" className={`panel-grid cockpit-panel cockpit-panel-match ${activeStationId === 'match-controls' ? 'cockpit-station-active' : 'cockpit-station-inactive'}`} hidden={activeStationId !== 'match-controls'} aria-label="Match controls">
         <article className="info-list">
           <div className="sectionheader">
             <p>LOCK</p>
@@ -365,7 +375,7 @@ export function HeadToHeadLobbyEntry() {
       </section>
 
       {privateSetupShell ? (
-        <section id="team-setup" className="panel-grid cockpit-panel cockpit-panel-setup" aria-label="Private setup preview">
+        <section id="team-setup" className={`panel-grid cockpit-panel cockpit-panel-setup ${activeStationId === 'team-setup' ? 'cockpit-station-active' : 'cockpit-station-inactive'}`} hidden={activeStationId !== 'team-setup'} aria-label="Private setup preview">
           <article className="info-list">
             <div className="sectionheader">
               <p>{privateSetupShell.stateLabel}</p>
@@ -545,7 +555,7 @@ export function HeadToHeadLobbyEntry() {
       ) : null}
 
       {resultReportPreview ? (
-        <section id="report-room" className="panel-grid cockpit-panel cockpit-panel-report" aria-label="Post-match report preview">
+        <section id="report-room" className={`panel-grid cockpit-panel cockpit-panel-report ${activeStationId === 'report-room' ? 'cockpit-station-active' : 'cockpit-station-inactive'}`} hidden={activeStationId !== 'report-room'} aria-label="Post-match report preview">
           <article className="info-list">
             <div className="sectionheader">
               <p>{resultReportPreview.stateLabel}</p>

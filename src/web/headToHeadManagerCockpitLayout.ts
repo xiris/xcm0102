@@ -9,6 +9,7 @@ export type HeadToHeadManagerCockpitStation = {
   id: 'lobby-desk' | 'team-setup' | 'match-controls' | 'report-room';
   label: 'Lobby desk' | 'Team setup' | 'Match controls' | 'Report room';
   helperText: string;
+  defaultActive: boolean;
 };
 
 export type HeadToHeadManagerCockpitLayout = {
@@ -47,10 +48,10 @@ export function createHeadToHeadManagerCockpitLayout({
       { label: 'Status feed', value: errorCopy ?? statusCopy }
     ],
     stations: [
-      { id: 'lobby-desk', label: 'Lobby desk', helperText: 'Create, load, or join the match room.' },
-      { id: 'team-setup', label: 'Team setup', helperText: 'Save hidden club and tactic setup drafts.' },
-      { id: 'match-controls', label: 'Match controls', helperText: 'Lock setup, kick off, and close the result.' },
-      { id: 'report-room', label: 'Report room', helperText: 'Review the authoritative post-match report.' }
+      { id: 'lobby-desk', label: 'Lobby desk', helperText: 'Create, load, or join the match room.', defaultActive: true },
+      { id: 'team-setup', label: 'Team setup', helperText: 'Save hidden club and tactic setup drafts.', defaultActive: false },
+      { id: 'match-controls', label: 'Match controls', helperText: 'Lock setup, kick off, and close the result.', defaultActive: false },
+      { id: 'report-room', label: 'Report room', helperText: 'Review the authoritative post-match report.', defaultActive: false }
     ]
   };
 }

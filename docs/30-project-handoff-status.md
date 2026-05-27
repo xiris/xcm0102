@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P19A Manager Cockpit Layout Stabilization.
+- Latest completed local work before the next lobby/multiplayer slice: P19B Product Entry Mode Selector / Cockpit Focus.
 
 ## Product Direction
 
@@ -104,7 +104,8 @@ Completed:
 - Replay sessions now support server-owned lobby-state transitions (`setup` → `locked` → `in_match` → `complete`) with audit entries and completed-session command guards.
 - Replay sessions now store side-scoped hidden private setup drafts for assigned head-to-head setup sides, preserve them through storage export/hydration, redact them from public summaries before setup lock, and reveal both sides together after lock.
 - Next app routes and the browser replay-session client now expose a guarded private setup draft submission transport boundary, and `/head-to-head-lobby` intentionally wires that boundary through a `Save setup draft` product control while preserving pre-lock redaction.
-- `/head-to-head-lobby` now begins the manager cockpit interface direction with section anchors for Lobby desk, Team setup, Match controls, and Report room plus a two-column session rail/station workspace layout instead of treating the experience as only a raw form stack.
+- `/` is now a product mode selector that sends users to either the head-to-head manager cockpit (`/head-to-head-lobby`) or the preserved single-player simulation lab (`/match-lab`), preventing the legacy lab labels from being mistaken for the redesigned cockpit.
+- `/head-to-head-lobby` now begins the manager cockpit interface direction with section controls for Lobby desk, Team setup, Match controls, and Report room plus a two-column session rail/focused station workspace layout instead of treating the experience as a visible raw form stack.
 - Match Lab now renders a read-only replay-session lobby status panel from the summary route after session creation, manager-command sync, and authoritative resume.
 - The lobby status panel shows server-derived lobby state, mode, side owners, command counts, visible event count, seed, and optional latest signature without adding mutating browser controls.
 - The lobby status panel now includes read-only home/away side readiness cards with manager assignment, command counts, and lobby-state-specific readiness copy.
@@ -117,25 +118,25 @@ Completed:
 - A read-only `/lobby-fixtures` gallery now renders every route-shaped lobby action-preview state through the same lobby status card contract for browser smoke before mutation controls are introduced.
 - Match Lab now renders guarded visible lobby mutation controls from the lobby action availability model and refreshes the server summary after successful transitions.
 - `/lobby-transition-harness` now creates server-backed head-to-head setup replay sessions, visibly exercises setup lock and kickoff transitions, and displays exact invalid direct-kickoff rejection copy while `/lobby-fixtures` remains read-only.
-- `/head-to-head-lobby` now provides a product-facing head-to-head manager cockpit route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, save side-scoped hidden private setup drafts, lock setup once both managers are assigned, kick off once locked, complete once in match, render a read-only post-match report preview after completion, render a private setup shell with draft controls, home/away perspective switching, readiness-boundary copy, selection-state preview labels, opponent pre-lock redaction, a session rail with phase/invite/manager/next-action/status feed, and a station workspace, and keep rematch controls out of the product route.
+- `/head-to-head-lobby` now provides a product-facing head-to-head manager cockpit route: create a setup lobby from a named home manager, inspect an existing session ID, join exactly one away manager, save side-scoped hidden private setup drafts, lock setup once both managers are assigned, kick off once locked, complete once in match, render a read-only post-match report preview after completion, render a private setup shell with draft controls, home/away perspective switching, readiness-boundary copy, selection-state preview labels, opponent pre-lock redaction, a session rail with phase/invite/manager/next-action/status feed, and a focused station workspace, and keep rematch controls out of the product route.
 - Match Lab layout sections and stat grouping are tested through a pure view-model contract.
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P19A Manager Cockpit Layout Stabilization
+## Latest Slice: P19B Product Entry Mode Selector / Cockpit Focus
 
-- Added `docs/69-manager-cockpit-layout-stabilization-contract.md` and `docs/plans/2026-05-27-manager-cockpit-layout-stabilization.md`.
-- Added pure `createHeadToHeadManagerCockpitLayout` rail/station view model with tests for empty, setup, complete, and error states.
-- Wired `/head-to-head-lobby` into a two-column cockpit shell with a non-mutating `Session rail` and a `Station workspace` that keeps existing controls in their original stations.
-- Added responsive cockpit rail CSS while preserving existing lobby, private setup, match transition, and report behavior.
-- Added MISSION 165 for manager cockpit layout stabilization coverage.
+- Added `docs/70-product-entry-mode-selector-cockpit-focus-contract.md` and `docs/plans/2026-05-27-product-entry-cockpit-focus.md` after verifying the user-visible mismatch: `/` still showed legacy Match Lab labels while the cockpit lived at `/head-to-head-lobby`.
+- Added pure `createProductEntryModeSelector` and made `/` render a product mode selector for Head-to-head manager cockpit vs Single-player simulation lab.
+- Preserved the old Match Lab under `/match-lab`.
+- Added local-only station focus to `/head-to-head-lobby`: Lobby desk, Team setup, Match controls, and Report room are selectable stations, with inactive station panels hidden instead of visibly stacked.
+- Added MISSION 166 for product entry selector and cockpit focus coverage.
 
 ## Latest Validation
 
-For P19A, run and verify:
+For P19B, run and verify:
 
 ```bash
-npx vitest run tests/web/headToHeadManagerCockpitLayout.test.ts tests/web/headToHeadLobbyEntry.test.ts
+npx vitest run tests/web/productEntryModeSelector.test.ts tests/web/rootLayout.test.ts tests/web/headToHeadManagerCockpitLayout.test.ts tests/web/headToHeadLobbyEntry.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -143,32 +144,32 @@ npm run build
 git diff --check
 ```
 
-Observed validation after P19A:
+Observed validation after P19B:
 
-- Focused manager cockpit layout tests passed.
-- `npm run test:missions`: ALL 165 MISSIONS PASSED.
-- `npm test`: 57 files passed, 257 tests passed.
+- Focused product entry/cockpit focus tests passed.
+- `npm run test:missions`: ALL 166 MISSIONS PASSED.
+- `npm test`: 58 files passed, 260 tests passed.
 - `npx tsc --noEmit`: passed.
 - `npm run build`: passed.
 - `git diff --check`: passed.
-- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route showed the `Session rail` and `Station workspace`, completed create -> join -> save home private setup draft -> verify opponent redaction remained before lock -> switch to away perspective -> edit/save away draft -> lock -> kickoff -> complete -> report preview, save controls became read-only after lock, no rematch/restart/new-match buttons appeared as product controls, `/lobby-transition-harness` still showed invalid direct-kickoff rejection and advanced setup -> locked -> in_match, `/lobby-fixtures` remained button-free/read-only across setup/locked/in-match/complete fixtures, and browser console was clean.
+- Browser smoke passed for `/`, `/match-lab`, `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; root shows the product mode selector and no `Live desk`/`Tactical board` copy, `/match-lab` preserves the old lab, product cockpit station focus hides inactive station stacks, the head-to-head flow completed create -> join -> save home private setup draft -> verify opponent redaction remained before lock -> switch to away perspective -> edit/save away draft -> switch to Match controls -> lock -> kickoff -> complete -> switch to Report room -> report preview, no rematch/restart/new-match buttons appeared, `/lobby-transition-harness` still showed invalid direct-kickoff rejection, `/lobby-fixtures` remained button-free/read-only across setup/locked/in-match/complete fixtures, and browser console was clean.
 
-Expected mission count after P19A: ALL 165 MISSIONS PASSED.
+Expected mission count after P19B: ALL 166 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work after P19A: **P19B Cockpit Station Focus / Setup Workspace Refinement**.
+Recommended next work after P19B: **P19C Team Setup Workspace Depth**.
 
 Why this is next:
 
-P19A establishes the session rail and station workspace, but all station content is still visible at once. The next safe slice can make the cockpit feel more like an application by introducing station focus/tabs while preserving anchor fallback and server semantics.
+P19B fixes product entry confusion and makes the cockpit visibly station-focused. The next safe slice can improve the Team setup station itself: richer club/tactic summary, clearer saved/unsaved state, and better private-vs-opponent redaction affordances without adding a full lineup editor yet.
 
 Suggested goals:
 
-1. Add component-local station focus state for Lobby desk, Team setup, Match controls, and Report room.
-2. Keep all existing controls and IDs browser-smokeable; do not alter server mutation helpers.
-3. Make the active station visually dominant while preserving quick navigation to other stations.
-4. Continue improving private setup scanability without adding real lineup/editor scope yet.
+1. Add a compact Team setup dashboard inside the focused station.
+2. Separate local draft, saved server draft, and opponent redaction into clearer subpanes.
+3. Preserve side-scoped hidden persistence and simultaneous reveal semantics.
+4. Keep browser smoke flow and server mutation helpers unchanged.
 
 ## Important User Preferences
 

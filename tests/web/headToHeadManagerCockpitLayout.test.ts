@@ -42,10 +42,10 @@ describe('createHeadToHeadManagerCockpitLayout', () => {
         { label: 'Status feed', value: 'Create a head-to-head setup lobby or view an existing lobby by session ID.' }
       ],
       stations: [
-        { id: 'lobby-desk', label: 'Lobby desk', helperText: 'Create, load, or join the match room.' },
-        { id: 'team-setup', label: 'Team setup', helperText: 'Save hidden club and tactic setup drafts.' },
-        { id: 'match-controls', label: 'Match controls', helperText: 'Lock setup, kick off, and close the result.' },
-        { id: 'report-room', label: 'Report room', helperText: 'Review the authoritative post-match report.' }
+        { id: 'lobby-desk', label: 'Lobby desk', helperText: 'Create, load, or join the match room.', defaultActive: true },
+        { id: 'team-setup', label: 'Team setup', helperText: 'Save hidden club and tactic setup drafts.', defaultActive: false },
+        { id: 'match-controls', label: 'Match controls', helperText: 'Lock setup, kick off, and close the result.', defaultActive: false },
+        { id: 'report-room', label: 'Report room', helperText: 'Review the authoritative post-match report.', defaultActive: false }
       ]
     });
   });
