@@ -629,6 +629,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 156: product lobby stabilization copy',
     args: ['vitest', 'run', 'tests/web/headToHeadLobbyActionCopy.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts', 'tests/web/headToHeadResultReportPreview.test.ts']
+  },
+  {
+    label: 'MISSION 157: private setup shell preview',
+    args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupShell.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

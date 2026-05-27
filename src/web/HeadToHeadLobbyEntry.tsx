@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { createHeadToHeadLobbyActionCopy } from './headToHeadLobbyActionCopy';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
 import { createHeadToHeadResultReportPreview } from './headToHeadResultReportPreview';
+import { createHeadToHeadPrivateSetupShell } from './headToHeadPrivateSetupShell';
 import { completeHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyCompletionFlow';
 import { joinAwayManagerAndRefreshSummaryFromWeb } from './headToHeadLobbyJoinFlow';
 import { kickOffHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyKickoffFlow';
@@ -34,6 +35,7 @@ export function HeadToHeadLobbyEntry() {
     };
   }, [summary]);
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
+  const privateSetupShell = useMemo(() => createHeadToHeadPrivateSetupShell(summary), [summary]);
   const resultReportPreview = useMemo(() => (summary ? createHeadToHeadResultReportPreview(summary) : null), [summary]);
   const hasLookupSessionId = lookupSessionId.trim().length > 0;
   const actionCopy = useMemo(
@@ -255,6 +257,42 @@ export function HeadToHeadLobbyEntry() {
           </article>
         ) : null}
       </section>
+
+      {privateSetupShell ? (
+        <section className="panel-grid" aria-label="Private setup preview">
+          <article className="info-list">
+            <div className="sectionheader">
+              <p>{privateSetupShell.stateLabel}</p>
+              <h2>{privateSetupShell.title}</h2>
+              <p>{privateSetupShell.helperText}</p>
+            </div>
+            <ul>
+              {privateSetupShell.notes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
+          </article>
+          {privateSetupShell.sideCards.map((card) => (
+            <article className="info-list" key={card.side}>
+              <div className="sectionheader">
+                <p>{card.privacyLabel}</p>
+                <h2>{card.title}</h2>
+                <p>{card.readinessLabel}</p>
+              </div>
+              <dl>
+                <div>
+                  <dt>Manager</dt>
+                  <dd>{card.managerLabel}</dd>
+                </div>
+                <div>
+                  <dt>Sample club shell</dt>
+                  <dd>{card.clubLabel}</dd>
+                </div>
+              </dl>
+            </article>
+          ))}
+        </section>
+      ) : null}
 
       {resultReportPreview ? (
         <section className="panel-grid" aria-label="Post-match report preview">

@@ -30,11 +30,18 @@ describe('HeadToHeadLobbyEntry', () => {
   it('keeps the product entry route on product-specific lobby flows by avoiding generic transition helpers', () => {
     const pageSource = readProjectFile('app/head-to-head-lobby/page.tsx');
     const componentSource = readProjectFile('src/web/HeadToHeadLobbyEntry.tsx');
+    const shellSource = readProjectFile('src/web/headToHeadPrivateSetupShell.ts');
 
     expect(pageSource).toContain('HeadToHeadLobbyEntry');
     expect(componentSource).toContain('createHeadToHeadLobbyRequest');
     expect(componentSource).toContain('createHeadToHeadLobbyReadModel');
     expect(componentSource).toContain('createHeadToHeadLobbyActionCopy');
+    expect(componentSource).toContain('createHeadToHeadPrivateSetupShell');
+    expect(componentSource).toContain('privateSetupShell');
+    expect(componentSource).toContain('Private setup preview');
+    expect(shellSource).toContain('Internazionale 2002');
+    expect(shellSource).toContain('Milan 2002');
+    expect(shellSource).toContain('No hidden choices are stored yet');
     expect(componentSource).toContain('actionCopy.joinAway.enabled');
     expect(componentSource).toContain('actionCopy.lockSetup.enabled');
     expect(componentSource).toContain('actionCopy.kickOff.enabled');

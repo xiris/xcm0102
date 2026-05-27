@@ -64,6 +64,7 @@ Documentation map:
 - 57-production-product-completion-control-contract.md — product in-match completion control without rematch exposure.
 - 58-production-result-report-preview-contract.md — read-only completed-match result preview on the product lobby route.
 - 59-production-product-lobby-stabilization-contract.md — product route state-copy and no-op action stabilization for the complete head-to-head loop.
+- 60-production-private-setup-shell-contract.md — read-only private setup shell preview for future club/tactic selection without hidden state persistence.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -111,6 +112,7 @@ Documentation map:
 - plans/2026-05-23-product-completion-control.md — implementation plan for in-match product completion control.
 - plans/2026-05-23-result-report-preview.md — implementation plan for completed-match result report preview.
 - plans/2026-05-23-product-lobby-stabilization.md — implementation plan for product route state-copy and no-op action stabilization.
+- plans/2026-05-27-private-setup-shell.md — implementation plan for the read-only private setup shell preview.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 
