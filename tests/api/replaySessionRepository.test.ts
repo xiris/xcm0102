@@ -196,6 +196,139 @@ describe('replay session repository', () => {
     expect(() => repository.appendManagerCommand(created.sessionId, command)).toThrow('Replay session is complete and cannot accept manager commands');
   });
 
+  it('stores side-scoped private setup drafts with audit metadata', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = repository.createSession({
+      seed: 42,
+      baseInput: createSampleMatchInput({ seed: 42 }),
+      initialResult: matchResultFixture(),
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    });
+
+    const withHome = repository.storePrivateSetupDraft(created.sessionId, 'home', {
+      clubId: 'internazionale-2002',
+      tacticShellId: 'balanced-442',
+      readinessIntent: 'editing'
+    });
+    const withAway = repository.storePrivateSetupDraft(created.sessionId, 'away', {
+      clubId: 'milan-2002',
+      tacticShellId: 'compact-451',
+      readinessIntent: 'ready_to_lock'
+    });
+    const replacedHome = repository.storePrivateSetupDraft(created.sessionId, 'home', {
+      clubId: 'internazionale-2002',
+      tacticShellId: 'attacking-4231',
+      readinessIntent: 'ready_to_lock'
+    });
+
+    expect(withHome.privateSetupDrafts.home).toEqual(expect.objectContaining({
+      side: 'home',
+      clubId: 'internazionale-2002',
+      tacticShellId: 'balanced-442',
+      readinessIntent: 'editing',
+      updatedAt: expect.any(String)
+    }));
+    expect(withAway.privateSetupDrafts.away).toEqual(expect.objectContaining({
+      side: 'away',
+      clubId: 'milan-2002',
+      tacticShellId: 'compact-451',
+      readinessIntent: 'ready_to_lock',
+      updatedAt: expect.any(String)
+    }));
+    expect(replacedHome.privateSetupDrafts.home).toEqual(expect.objectContaining({
+      side: 'home',
+      tacticShellId: 'attacking-4231',
+      readinessIntent: 'ready_to_lock'
+    }));
+    expect(replacedHome.privateSetupDrafts.away).toEqual(withAway.privateSetupDrafts.away);
+    expect(replacedHome.auditLog.filter((entry) => entry.type === 'private_setup_draft_stored')).toEqual([
+      expect.objectContaining({ commandSide: 'home' }),
+      expect.objectContaining({ commandSide: 'away' }),
+      expect.objectContaining({ commandSide: 'home' })
+    ]);
+  });
+
+  it('rejects invalid private setup draft storage', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const baseInput = createSampleMatchInput({ seed: 42 });
+    const initialResult = matchResultFixture();
+    const draft = { clubId: 'internazionale-2002', tacticShellId: 'balanced-442', readinessIntent: 'editing' as const };
+    const singleManager = repository.createSession({ seed: 42, baseInput, initialResult });
+    const unassignedAway = repository.createSession({
+      seed: 43,
+      baseInput,
+      initialResult,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    });
+    const locked = repository.createSession({
+      seed: 44,
+      baseInput,
+      initialResult,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'locked',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    });
+
+    expect(() => repository.storePrivateSetupDraft(singleManager.sessionId, 'home', draft)).toThrow('Private setup drafts can only be stored for head-to-head lobbies');
+    expect(() => repository.storePrivateSetupDraft(unassignedAway.sessionId, 'away', draft)).toThrow('Private setup drafts can only be stored for assigned sides');
+    expect(() => repository.storePrivateSetupDraft(locked.sessionId, 'home', draft)).toThrow('Private setup drafts can only be stored while setup is open');
+    expect(repository.getSession(unassignedAway.sessionId).privateSetupDrafts).toEqual({});
+  });
+
+  it('exports and hydrates private setup drafts', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = repository.createSession({
+      seed: 42,
+      baseInput: createSampleMatchInput({ seed: 42 }),
+      initialResult: matchResultFixture(),
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    });
+    repository.storePrivateSetupDraft(created.sessionId, 'home', {
+      clubId: 'internazionale-2002',
+      tacticShellId: 'balanced-442',
+      readinessIntent: 'editing'
+    });
+
+    const records = repository.listStorageRecords();
+    const record = records[0];
+    if (!record) throw new Error('expected exported replay session record');
+    expect(record.privateSetupDrafts.home).toEqual(expect.objectContaining({
+      side: 'home',
+      clubId: 'internazionale-2002',
+      tacticShellId: 'balanced-442',
+      readinessIntent: 'editing'
+    }));
+    delete record.privateSetupDrafts.home;
+    expect(repository.getSession(created.sessionId).privateSetupDrafts.home).toEqual(expect.objectContaining({ clubId: 'internazionale-2002' }));
+
+    const hydrated = createInMemoryReplaySessionRepository();
+    hydrated.hydrateStorageRecords(repository.listStorageRecords());
+    expect(hydrated.getSession(created.sessionId).privateSetupDrafts).toEqual(repository.getSession(created.sessionId).privateSetupDrafts);
+  });
+
   it('stores ownership metadata and side-specific command logs', () => {
     const repository = createInMemoryReplaySessionRepository();
     const initialResult = matchResultFixture();

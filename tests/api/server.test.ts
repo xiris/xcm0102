@@ -314,11 +314,19 @@ describe('production API server', () => {
         teams: { home: 'Internazionale 2002', away: 'Milan 2002' },
         eventCount: expect.any(Number),
         replay: expect.objectContaining({ seed: 71 })
-      })
+      }),
+      privateSetup: {
+        revealState: 'revealed_after_lock',
+        sides: {
+          home: { side: 'home', status: 'missing', detailVisibility: 'revealed', missingLabel: 'No private setup draft stored' },
+          away: { side: 'away', status: 'missing', detailVisibility: 'revealed', missingLabel: 'No private setup draft stored' }
+        }
+      }
     });
     expect(summary.json()).not.toHaveProperty('baseInput');
     expect(summary.json()).not.toHaveProperty('visibleEvents');
     expect(summary.json()).not.toHaveProperty('sideManagerCommands');
+    expect(summary.json()).not.toHaveProperty('privateSetupDrafts');
     expect(summary.json()).not.toHaveProperty('auditLog');
   });
 

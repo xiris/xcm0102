@@ -21,13 +21,29 @@ export type ReplaySessionOwnership = {
 
 export type ReplaySessionSideCommandLogs = Record<MatchSide, ManagerCommand[]>;
 
+export type ReplaySessionPrivateSetupReadinessIntent = 'editing' | 'ready_to_lock';
+
+export type ReplaySessionPrivateSetupDraft = {
+  clubId: string;
+  tacticShellId: string;
+  readinessIntent: ReplaySessionPrivateSetupReadinessIntent;
+};
+
+export type ReplaySessionPrivateSetupDraftRecord = ReplaySessionPrivateSetupDraft & {
+  side: MatchSide;
+  updatedAt: string;
+};
+
+export type ReplaySessionPrivateSetupDrafts = Partial<Record<MatchSide, ReplaySessionPrivateSetupDraftRecord>>;
+
 export type ReplaySessionAuditType =
   | 'session_created'
   | 'manager_command_appended'
   | 'visible_events_replaced'
   | 'authoritative_resume_recorded'
   | 'lobby_state_transitioned'
-  | 'away_manager_joined';
+  | 'away_manager_joined'
+  | 'private_setup_draft_stored';
 
 export type ReplaySessionAuditEntry = {
   type: ReplaySessionAuditType;
@@ -51,6 +67,7 @@ export type ReplaySession = {
   visibleEvents: MatchEvent[];
   managerCommands: ManagerCommand[];
   sideManagerCommands: ReplaySessionSideCommandLogs;
+  privateSetupDrafts: ReplaySessionPrivateSetupDrafts;
   ownership: ReplaySessionOwnership;
   latestAuthoritativeSignature?: string;
   auditLog: ReplaySessionAuditEntry[];
@@ -80,6 +97,7 @@ export type ReplaySessionRepository = {
   createSession(input: CreateReplaySessionInput): ReplaySession;
   getSession(sessionId: string): ReplaySession;
   appendManagerCommand(sessionId: string, command: ManagerCommand, side?: MatchSide): ReplaySession;
+  storePrivateSetupDraft(sessionId: string, side: MatchSide, draft: ReplaySessionPrivateSetupDraft): ReplaySession;
   replaceVisibleEvents(sessionId: string, visibleEvents: MatchEvent[]): ReplaySession;
   joinAwayManager(sessionId: string, owner: ReplaySessionSideOwner): ReplaySession;
   transitionLobbyState(sessionId: string, nextState: ReplaySessionLobbyState): ReplaySession;
@@ -149,6 +167,18 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
     }
   }
 
+  function assertPrivateSetupDraftStorageAllowed(session: ReplaySession, side: MatchSide): void {
+    if (session.ownership.mode !== 'head_to_head') {
+      throw new Error('Private setup drafts can only be stored for head-to-head lobbies');
+    }
+    if (session.ownership.lobbyState !== 'setup') {
+      throw new Error('Private setup drafts can only be stored while setup is open');
+    }
+    if (session.ownership.sides[side] === undefined) {
+      throw new Error('Private setup drafts can only be stored for assigned sides');
+    }
+  }
+
   function sessionToRecord(session: ReplaySession): ReplaySessionStorageRecord {
     return { schemaVersion: 1, ...clone(session) };
   }
@@ -184,6 +214,7 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
         visibleEvents: input.visibleEvents ?? [],
         managerCommands: [],
         sideManagerCommands: emptySideCommands(),
+        privateSetupDrafts: {},
         ownership: input.ownership ?? defaultOwnership(),
         auditLog: [{ type: 'session_created', timestamp, eventCount: input.visibleEvents?.length ?? 0 }],
         createdAt: timestamp,
@@ -208,6 +239,24 @@ export function createInMemoryReplaySessionRepository(): ReplaySessionRepository
         sideManagerCommands,
         auditLog: [...session.auditLog, { type: 'manager_command_appended', timestamp: now(), currentMinute: command.minute, commandId: command.id, commandSide: side }],
         updatedAt: now()
+      });
+    },
+    storePrivateSetupDraft(sessionId, side, draft) {
+      const session = requireSession(sessionId);
+      assertPrivateSetupDraftStorageAllowed(session, side);
+      const timestamp = now();
+      return save({
+        ...session,
+        privateSetupDrafts: {
+          ...session.privateSetupDrafts,
+          [side]: {
+            ...draft,
+            side,
+            updatedAt: timestamp
+          }
+        },
+        auditLog: [...session.auditLog, { type: 'private_setup_draft_stored', timestamp, commandSide: side }],
+        updatedAt: timestamp
       });
     },
     replaceVisibleEvents(sessionId, visibleEvents) {

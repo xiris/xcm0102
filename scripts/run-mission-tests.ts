@@ -649,6 +649,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 161: private setup readiness boundary',
     args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupReadinessBoundary.test.ts', 'tests/web/headToHeadPrivateSetupPerspectiveSwitch.test.ts', 'tests/web/headToHeadPrivateSetupDraftControls.test.ts', 'tests/web/headToHeadPrivateSetupSelectionState.test.ts', 'tests/web/headToHeadPrivateSetupShell.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 162: private setup persistence contract',
+    args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', 'tests/api/replaySessionEndpoint.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

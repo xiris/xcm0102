@@ -4,7 +4,16 @@ import { translateManagerCommandsToMatchCommands } from '../simulation/authorita
 import type { ManagerCommand } from '../simulation/managerCommands';
 import { simulateMatch } from '../simulation/simulateMatch';
 import { buildSimulationMatchInputForApi } from './simulationEndpoint';
-import type { MatchSide, ReplaySessionLobbyState, ReplaySessionOwnership, ReplaySessionRepository, ReplaySessionSideOwner } from './replaySessionRepository';
+import type {
+  MatchSide,
+  ReplaySession,
+  ReplaySessionLobbyState,
+  ReplaySessionOwnership,
+  ReplaySessionPrivateSetupDraft,
+  ReplaySessionPrivateSetupDraftRecord,
+  ReplaySessionRepository,
+  ReplaySessionSideOwner
+} from './replaySessionRepository';
 
 export type ReplaySessionApiResult =
   | { ok: true; status: 200; body: Record<string, unknown> }
@@ -100,7 +109,8 @@ export function getReplaySessionSummaryForApi(payload: unknown, repository: Repl
         stats: session.initialResult.stats,
         eventCount: session.initialResult.events.length,
         replay: session.initialResult.report.replay
-      }
+      },
+      privateSetup: buildPrivateSetupSummary(session)
     };
     if (session.latestAuthoritativeSignature !== undefined) {
       body.latestAuthoritativeSignature = session.latestAuthoritativeSignature;
@@ -148,6 +158,27 @@ export function joinAwayManagerForApi(payload: unknown, repository: ReplaySessio
     };
   } catch (error) {
     return isReplaySessionNotFound(error) ? notFound(error) : badRequest(error instanceof Error ? error.message : 'replay session away manager join failed');
+  }
+}
+
+export function storeReplaySessionPrivateSetupDraftForApi(payload: unknown, repository: ReplaySessionRepository): ReplaySessionApiResult {
+  const parsed = parsePrivateSetupDraftRequest(payload);
+  if (!parsed.ok) return badRequest(parsed.errors.join('; '));
+
+  try {
+    const session = repository.storePrivateSetupDraft(parsed.value.sessionId, parsed.value.side, parsed.value.draft);
+    return {
+      ok: true,
+      status: 200,
+      body: {
+        sessionId: session.sessionId,
+        side: parsed.value.side,
+        stored: true,
+        revealState: privateSetupRevealState(session)
+      }
+    };
+  } catch (error) {
+    return isReplaySessionNotFound(error) ? notFound(error) : badRequest(error instanceof Error ? error.message : 'replay session private setup draft storage failed');
   }
 }
 
@@ -266,6 +297,26 @@ function parseJoinAwayManagerRequest(payload: unknown) {
   return { ok: true as const, value: { sessionId: body.value.sessionId as string, owner } };
 }
 
+function parsePrivateSetupDraftRequest(payload: unknown) {
+  const body = asObject(payload);
+  if (!body.ok) return body;
+  const errors: string[] = [];
+  if (typeof body.value.sessionId !== 'string' || body.value.sessionId.length === 0) errors.push('sessionId must be a non-empty string');
+  if (!isMatchSide(body.value.side)) errors.push('side must be home or away');
+  if (!isPrivateSetupDraftObject(body.value.draft)) {
+    errors.push(...privateSetupDraftErrors(body.value.draft));
+  }
+  if (errors.length > 0) return { ok: false as const, errors };
+  return {
+    ok: true as const,
+    value: {
+      sessionId: body.value.sessionId as string,
+      side: body.value.side as MatchSide,
+      draft: body.value.draft as ReplaySessionPrivateSetupDraft
+    }
+  };
+}
+
 function parseResumeSessionRequest(payload: unknown) {
   const body = asObject(payload);
   if (!body.ok) return body;
@@ -337,6 +388,56 @@ function isManagerCommandLike(value: unknown): value is ManagerCommand {
     && typeof command.eventType === 'string'
     && typeof command.eventDescription === 'string'
     && typeof command.effectSummary === 'string';
+}
+
+function isPrivateSetupDraftObject(value: unknown): value is ReplaySessionPrivateSetupDraft {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const draft = value as Record<string, unknown>;
+  return typeof draft.clubId === 'string'
+    && draft.clubId.length > 0
+    && typeof draft.tacticShellId === 'string'
+    && draft.tacticShellId.length > 0
+    && (draft.readinessIntent === 'editing' || draft.readinessIntent === 'ready_to_lock');
+}
+
+function privateSetupDraftErrors(value: unknown): string[] {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return ['draft must be a private setup draft object'];
+  const draft = value as Record<string, unknown>;
+  const errors: string[] = [];
+  if (typeof draft.clubId !== 'string' || draft.clubId.length === 0) errors.push('draft.clubId must be a non-empty string');
+  if (typeof draft.tacticShellId !== 'string' || draft.tacticShellId.length === 0) errors.push('draft.tacticShellId must be a non-empty string');
+  if (draft.readinessIntent !== 'editing' && draft.readinessIntent !== 'ready_to_lock') errors.push('draft.readinessIntent must be editing or ready_to_lock');
+  return errors;
+}
+
+function privateSetupRevealState(session: ReplaySession): 'hidden_until_lock' | 'revealed_after_lock' {
+  return session.ownership.lobbyState === 'setup' ? 'hidden_until_lock' : 'revealed_after_lock';
+}
+
+function buildPrivateSetupSummary(session: ReplaySession): Record<string, unknown> {
+  const revealState = privateSetupRevealState(session);
+  return {
+    revealState,
+    sides: {
+      home: buildPrivateSetupSideSummary('home', session.privateSetupDrafts.home, revealState),
+      away: buildPrivateSetupSideSummary('away', session.privateSetupDrafts.away, revealState)
+    }
+  };
+}
+
+function buildPrivateSetupSideSummary(
+  side: MatchSide,
+  draft: ReplaySessionPrivateSetupDraftRecord | undefined,
+  revealState: 'hidden_until_lock' | 'revealed_after_lock'
+): Record<string, unknown> {
+  const status = draft === undefined ? 'missing' : 'stored';
+  if (revealState === 'hidden_until_lock') {
+    return { side, status, detailVisibility: 'hidden', redactionLabel: 'Hidden until setup lock' };
+  }
+  if (draft === undefined) {
+    return { side, status, detailVisibility: 'revealed', missingLabel: 'No private setup draft stored' };
+  }
+  return { side, status, detailVisibility: 'revealed', draft };
 }
 
 function badRequest(error: string): ReplaySessionApiResult {

@@ -7,7 +7,7 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Project path: `/Users/christophersilva/Projects/personal/xcm0102`
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
-- Latest completed local work before the next lobby/multiplayer slice: P18W Private Setup Readiness Boundary.
+- Latest completed local work before the next lobby/multiplayer slice: P18X Private Setup Persistence Contract.
 
 ## Product Direction
 
@@ -102,6 +102,7 @@ Completed:
 - Session-owned authoritative resume now applies home commands to the home team and away commands to the away team, preserving side isolation for future head-to-head play.
 - Fastify and Next route boundaries now preserve away-side command appends and expose a public replay-session lobby summary with ownership, lobby state, command counts, visible event count, seed, and latest signature metadata.
 - Replay sessions now support server-owned lobby-state transitions (`setup` → `locked` → `in_match` → `complete`) with audit entries and completed-session command guards.
+- Replay sessions now store side-scoped hidden private setup drafts for assigned head-to-head setup sides, preserve them through storage export/hydration, redact them from public summaries before setup lock, and reveal both sides together after lock.
 - Match Lab now renders a read-only replay-session lobby status panel from the summary route after session creation, manager-command sync, and authoritative resume.
 - The lobby status panel shows server-derived lobby state, mode, side owners, command counts, visible event count, seed, and optional latest signature without adding mutating browser controls.
 - The lobby status panel now includes read-only home/away side readiness cards with manager assignment, command counts, and lobby-state-specific readiness copy.
@@ -119,22 +120,23 @@ Completed:
 - `MatchLab.tsx` now separates setup, team shape, assignments, match console, replay controls, manager commands, projection, diagnostics, and metadata.
 - `app/globals.css` now applies an original dark, dense football-manager console visual foundation without copying CM0102 assets or exact screens.
 
-## Latest Slice: P18W Private Setup Readiness Boundary
+## Latest Slice: P18X Private Setup Persistence Contract
 
-- Added pure browser helper `createHeadToHeadPrivateSetupReadinessBoundary` to make local draft readiness advisory and separate from server-owned setup lock availability.
-- Wired `/head-to-head-lobby` with a read-only `Setup readiness boundary` panel derived from public lobby summary, selected local side, browser-local drafts, and existing product action copy.
-- Added copy stating `Local readiness intent is advisory and never gates server-owned setup lock` and `No private setup readiness is submitted, persisted, or synchronized yet`.
-- Added guard coverage proving `readinessIntent: editing` can coexist with an available product `Lock setup` button when the server summary/action copy allows lock.
-- Preserved component-state-only drafts, local-only perspective state, opponent pre-lock redaction, no API/repository persistence, and no setup submit/save/rematch/restart/new-match controls.
-- Added `docs/64-production-private-setup-readiness-boundary-contract.md` and `docs/plans/2026-05-27-private-setup-readiness-boundary.md`.
-- Added MISSION 161 for private setup readiness-boundary coverage.
+- Added server-authoritative replay-session private setup draft records for assigned head-to-head setup sides.
+- Added repository method `storePrivateSetupDraft(sessionId, side, draft)` with head-to-head, setup-state, and assigned-side guards.
+- Added `private_setup_draft_stored` audit entries and preserved private setup drafts through schema-versioned storage export/hydration.
+- Added API helper `storeReplaySessionPrivateSetupDraftForApi` for request validation, not-found mapping, and guard error mapping without adding browser route/client wiring.
+- Extended public replay-session summaries with `privateSetup` read models that redact draft details before setup lock and reveal both sides simultaneously after locked/in-match/complete states.
+- Preserved `/head-to-head-lobby` local preview-only controls with guard tests proving no setup submit/save client, browser storage, or private setup submit usage was added.
+- Added `docs/65-production-private-setup-persistence-contract.md` and `docs/plans/2026-05-27-private-setup-persistence-contract.md`.
+- Added MISSION 162 for private setup persistence contract coverage.
 
 ## Latest Validation
 
-For P18W, run and verify:
+For P18X, run and verify:
 
 ```bash
-npx vitest run tests/web/headToHeadPrivateSetupReadinessBoundary.test.ts tests/web/headToHeadPrivateSetupPerspectiveSwitch.test.ts tests/web/headToHeadPrivateSetupDraftControls.test.ts tests/web/headToHeadPrivateSetupSelectionState.test.ts tests/web/headToHeadPrivateSetupShell.test.ts tests/web/headToHeadLobbyEntry.test.ts
+npx vitest run tests/api/replaySessionRepository.test.ts tests/api/replaySessionEndpoint.test.ts tests/web/headToHeadLobbyEntry.test.ts
 npm run test:missions
 npm test
 npx tsc --noEmit
@@ -142,32 +144,32 @@ npm run build
 git diff --check
 ```
 
-Observed validation after P18W:
+Observed validation after P18X:
 
-- Focused private setup readiness boundary + perspective switch + draft controls + selection state + shell + product route tests passed.
-- `npm run test:missions`: ALL 161 MISSIONS PASSED.
-- `npm test`: 55 files passed, 241 tests passed.
+- Focused repository/API private setup persistence contract + product route guardrail tests passed.
+- `npm run test:missions`: ALL 162 MISSIONS PASSED.
+- `npm test`: 55 files passed, 248 tests passed.
 - `npx tsc --noEmit`: passed.
 - `npm run build`: passed.
 - `git diff --check`: passed.
-- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route completed create -> join -> verify `Still editing` local readiness did not disable `Lock setup` -> switch local perspective to away -> mark away readiness `Ready to lock` -> verify readiness remained local/non-submitted and home pre-lock detail stayed redacted -> switch home -> lock -> kickoff -> complete -> report preview, draft controls became read-only after lock/in-match/complete, no setup submit/save/rematch/restart/new-match buttons appeared, `/lobby-transition-harness` still showed invalid direct-kickoff rejection and advanced setup -> locked -> in_match, `/lobby-fixtures` remained button-free, and browser console was clean.
+- Browser smoke passed for `/head-to-head-lobby`, `/lobby-transition-harness`, and `/lobby-fixtures`; product route completed create -> join -> verify local draft controls still say local/not submitted and did not expose setup submit/save -> switch local perspective to away -> edit away local draft labels -> verify home pre-lock detail stayed redacted -> switch home -> lock -> kickoff -> complete -> report preview, draft controls became read-only after lock/in-match/complete, no setup submit/save/rematch/restart/new-match buttons appeared, `/lobby-transition-harness` still showed invalid direct-kickoff rejection and advanced setup -> locked -> in_match, `/lobby-fixtures` remained button-free, and browser console was clean.
 
-Expected mission count after P18W: ALL 161 MISSIONS PASSED.
+Expected mission count after P18X: ALL 162 MISSIONS PASSED.
 
 ## Recommended Next Slice
 
-Recommended next work after P18W: **P18X Private Setup Persistence Contract Spike**.
+Recommended next work after P18X: **P18Y Private Setup Submission API Route / Browser Client Contract**.
 
 Why this is next:
 
-P18W stabilizes the boundary that local browser readiness does not submit or gate server setup. The next useful step is to design, but not yet broadly ship, the server-authoritative hidden setup persistence contract.
+P18X proves hidden setup storage, redaction, and simultaneous reveal at repository/API-helper level. The next safe slice should expose a thin route/client boundary while still keeping product browser mutation guarded until copy and ownership semantics are explicit.
 
 Suggested goals:
 
-1. Document the hidden setup persistence/reveal contract before implementation.
-2. Add repository/API contract tests for side-scoped hidden setup drafts without browser storage.
-3. Preserve simultaneous reveal semantics and opponent pre-lock redaction.
-4. Keep browser mutation behind a separate later slice after server contracts are proven.
+1. Add Next route wrapper and browser client helper for private setup draft submission.
+2. Keep product route controls local-only until a dedicated guarded UI submission slice.
+3. Add route/client tests for validation, not-found, setup-state, assigned-side, and redaction/reveal parity.
+4. Preserve no account/permission claims until auth semantics exist.
 
 ## Important User Preferences
 

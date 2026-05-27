@@ -5,6 +5,7 @@ import {
   getReplaySessionSummaryForApi,
   joinAwayManagerForApi,
   resumeReplaySessionForApi,
+  storeReplaySessionPrivateSetupDraftForApi,
   transitionReplaySessionLobbyStateForApi,
   syncReplaySessionVisibleEventsForApi
 } from '../../src/api/replaySessionEndpoint';
@@ -95,6 +96,190 @@ describe('replay session API helpers', () => {
       ok: false,
       status: 404,
       body: { error: 'Replay session not found: rs-missing' }
+    });
+  });
+
+  it('stores private setup drafts through the API helper', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({
+      seed: 84,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    }, repository);
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    expect(storeReplaySessionPrivateSetupDraftForApi({
+      sessionId,
+      side: 'home',
+      draft: { clubId: 'internazionale-2002', tacticShellId: 'balanced-442', readinessIntent: 'editing' }
+    }, repository)).toEqual({
+      ok: true,
+      status: 200,
+      body: { sessionId, side: 'home', stored: true, revealState: 'hidden_until_lock' }
+    });
+    expect(repository.getSession(sessionId).privateSetupDrafts.home).toEqual(expect.objectContaining({
+      side: 'home',
+      clubId: 'internazionale-2002',
+      tacticShellId: 'balanced-442',
+      readinessIntent: 'editing'
+    }));
+  });
+
+  it('rejects invalid private setup draft API requests', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({
+      seed: 85,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: { home: { managerId: 'manager-home', displayName: 'Home Boss' } }
+      }
+    }, repository);
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    expect(storeReplaySessionPrivateSetupDraftForApi({
+      sessionId: '',
+      side: 'home',
+      draft: { clubId: 'internazionale-2002', tacticShellId: 'balanced-442', readinessIntent: 'editing' }
+    }, repository)).toEqual({ ok: false, status: 400, body: { error: 'sessionId must be a non-empty string' } });
+    expect(storeReplaySessionPrivateSetupDraftForApi({
+      sessionId,
+      side: 'neutral',
+      draft: { clubId: 'internazionale-2002', tacticShellId: 'balanced-442', readinessIntent: 'editing' }
+    }, repository)).toEqual({ ok: false, status: 400, body: { error: 'side must be home or away' } });
+    expect(storeReplaySessionPrivateSetupDraftForApi({
+      sessionId,
+      side: 'home',
+      draft: { clubId: '', tacticShellId: '', readinessIntent: 'done' }
+    }, repository)).toEqual({
+      ok: false,
+      status: 400,
+      body: { error: 'draft.clubId must be a non-empty string; draft.tacticShellId must be a non-empty string; draft.readinessIntent must be editing or ready_to_lock' }
+    });
+    expect(storeReplaySessionPrivateSetupDraftForApi({
+      sessionId: 'rs-missing',
+      side: 'home',
+      draft: { clubId: 'internazionale-2002', tacticShellId: 'balanced-442', readinessIntent: 'editing' }
+    }, repository)).toEqual({ ok: false, status: 404, body: { error: 'Replay session not found: rs-missing' } });
+    expect(storeReplaySessionPrivateSetupDraftForApi({
+      sessionId,
+      side: 'away',
+      draft: { clubId: 'milan-2002', tacticShellId: 'compact-451', readinessIntent: 'editing' }
+    }, repository)).toEqual({ ok: false, status: 400, body: { error: 'Private setup drafts can only be stored for assigned sides' } });
+  });
+
+  it('redacts private setup drafts before setup lock and reveals both sides after lock', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({
+      seed: 86,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    }, repository);
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    storeReplaySessionPrivateSetupDraftForApi({
+      sessionId,
+      side: 'home',
+      draft: { clubId: 'internazionale-2002', tacticShellId: 'balanced-442', readinessIntent: 'editing' }
+    }, repository);
+    storeReplaySessionPrivateSetupDraftForApi({
+      sessionId,
+      side: 'away',
+      draft: { clubId: 'milan-2002', tacticShellId: 'compact-451', readinessIntent: 'ready_to_lock' }
+    }, repository);
+
+    const preLock = getReplaySessionSummaryForApi({ sessionId }, repository);
+    expect(preLock.ok).toBe(true);
+    if (!preLock.ok) throw new Error('expected summary to pass');
+    expect(preLock.body.privateSetup).toEqual({
+      revealState: 'hidden_until_lock',
+      sides: {
+        home: { side: 'home', status: 'stored', detailVisibility: 'hidden', redactionLabel: 'Hidden until setup lock' },
+        away: { side: 'away', status: 'stored', detailVisibility: 'hidden', redactionLabel: 'Hidden until setup lock' }
+      }
+    });
+    expect(JSON.stringify(preLock.body.privateSetup)).not.toContain('internazionale-2002');
+    expect(JSON.stringify(preLock.body.privateSetup)).not.toContain('ready_to_lock');
+    expect(JSON.stringify(preLock.body.privateSetup)).not.toContain('updatedAt');
+
+    transitionReplaySessionLobbyStateForApi({ sessionId, lobbyState: 'locked' }, repository);
+    const locked = getReplaySessionSummaryForApi({ sessionId }, repository);
+    expect(locked.ok).toBe(true);
+    if (!locked.ok) throw new Error('expected locked summary to pass');
+    expect(locked.body.privateSetup).toEqual({
+      revealState: 'revealed_after_lock',
+      sides: {
+        home: {
+          side: 'home',
+          status: 'stored',
+          detailVisibility: 'revealed',
+          draft: expect.objectContaining({ side: 'home', clubId: 'internazionale-2002', tacticShellId: 'balanced-442', readinessIntent: 'editing', updatedAt: expect.any(String) })
+        },
+        away: {
+          side: 'away',
+          status: 'stored',
+          detailVisibility: 'revealed',
+          draft: expect.objectContaining({ side: 'away', clubId: 'milan-2002', tacticShellId: 'compact-451', readinessIntent: 'ready_to_lock', updatedAt: expect.any(String) })
+        }
+      }
+    });
+  });
+
+  it('reveals missing private setup placeholders after lock', () => {
+    const repository = createInMemoryReplaySessionRepository();
+    const created = createReplaySessionForApi({
+      seed: 87,
+      currentMinute: 0,
+      ownership: {
+        mode: 'head_to_head',
+        lobbyState: 'setup',
+        sides: {
+          home: { managerId: 'manager-home', displayName: 'Home Boss' },
+          away: { managerId: 'manager-away', displayName: 'Away Boss' }
+        }
+      }
+    }, repository);
+    expect(created.status).toBe(200);
+    if (!created.ok) throw new Error('expected session creation to pass');
+    const sessionId = created.body.sessionId as string;
+
+    storeReplaySessionPrivateSetupDraftForApi({
+      sessionId,
+      side: 'home',
+      draft: { clubId: 'internazionale-2002', tacticShellId: 'balanced-442', readinessIntent: 'editing' }
+    }, repository);
+    transitionReplaySessionLobbyStateForApi({ sessionId, lobbyState: 'locked' }, repository);
+
+    const summary = getReplaySessionSummaryForApi({ sessionId }, repository);
+    expect(summary.ok).toBe(true);
+    if (!summary.ok) throw new Error('expected summary to pass');
+    expect(summary.body.privateSetup).toEqual({
+      revealState: 'revealed_after_lock',
+      sides: {
+        home: expect.objectContaining({ status: 'stored', detailVisibility: 'revealed' }),
+        away: { side: 'away', status: 'missing', detailVisibility: 'revealed', missingLabel: 'No private setup draft stored' }
+      }
     });
   });
 
@@ -521,7 +706,14 @@ describe('replay session API helpers', () => {
           teams: { home: 'Internazionale 2002', away: 'Milan 2002' },
           eventCount: expect.any(Number),
           replay: expect.objectContaining({ seed: 71 })
-        })
+        }),
+        privateSetup: {
+          revealState: 'revealed_after_lock',
+          sides: {
+            home: { side: 'home', status: 'missing', detailVisibility: 'revealed', missingLabel: 'No private setup draft stored' },
+            away: { side: 'away', status: 'missing', detailVisibility: 'revealed', missingLabel: 'No private setup draft stored' }
+          }
+        }
       }
     });
     expect(summary.body).not.toHaveProperty('baseInput');
@@ -529,6 +721,7 @@ describe('replay session API helpers', () => {
     expect(summary.body).not.toHaveProperty('visibleEvents');
     expect(summary.body).not.toHaveProperty('managerCommands');
     expect(summary.body).not.toHaveProperty('sideManagerCommands');
+    expect(summary.body).not.toHaveProperty('privateSetupDrafts');
     expect(summary.body).not.toHaveProperty('auditLog');
   });
 
