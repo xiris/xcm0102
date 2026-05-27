@@ -637,6 +637,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 158: private setup selection state',
     args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupSelectionState.test.ts', 'tests/web/headToHeadPrivateSetupShell.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 159: private setup draft controls',
+    args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupDraftControls.test.ts', 'tests/web/headToHeadPrivateSetupSelectionState.test.ts', 'tests/web/headToHeadPrivateSetupShell.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 

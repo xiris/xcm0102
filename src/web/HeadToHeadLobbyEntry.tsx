@@ -5,6 +5,16 @@ import { createHeadToHeadLobbyActionCopy } from './headToHeadLobbyActionCopy';
 import { createHeadToHeadLobbyReadModel, createHeadToHeadLobbyRequest } from './headToHeadLobbyModel';
 import { createHeadToHeadResultReportPreview } from './headToHeadResultReportPreview';
 import { createHeadToHeadPrivateSetupShell } from './headToHeadPrivateSetupShell';
+import {
+  applyHeadToHeadPrivateSetupDraftControlChange,
+  createHeadToHeadPrivateSetupDraftControls
+} from './headToHeadPrivateSetupDraftControls';
+import type {
+  HeadToHeadPrivateSetupClubId,
+  HeadToHeadPrivateSetupDraft,
+  HeadToHeadPrivateSetupReadinessIntent,
+  HeadToHeadPrivateSetupTacticShellId
+} from './headToHeadPrivateSetupSelectionState';
 import { completeHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyCompletionFlow';
 import { joinAwayManagerAndRefreshSummaryFromWeb } from './headToHeadLobbyJoinFlow';
 import { kickOffHeadToHeadMatchAndRefreshSummaryFromWeb } from './headToHeadLobbyKickoffFlow';
@@ -21,6 +31,7 @@ export function HeadToHeadLobbyEntry() {
   const [statusCopy, setStatusCopy] = useState('Create a head-to-head setup lobby or view an existing lobby by session ID.');
   const [errorCopy, setErrorCopy] = useState<string | null>(null);
   const [pendingLabel, setPendingLabel] = useState<string | null>(null);
+  const [privateSetupDrafts, setPrivateSetupDrafts] = useState<HeadToHeadPrivateSetupDraft[]>([]);
   const lobbyStatus = useMemo(() => {
     if (!summary) return null;
     const status = createReplaySessionLobbyStatusViewModel(summary);
@@ -35,7 +46,14 @@ export function HeadToHeadLobbyEntry() {
     };
   }, [summary]);
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
-  const privateSetupShell = useMemo(() => createHeadToHeadPrivateSetupShell(summary), [summary]);
+  const privateSetupDraftControls = useMemo(
+    () => createHeadToHeadPrivateSetupDraftControls({ summary, localSide: 'home', drafts: privateSetupDrafts }),
+    [summary, privateSetupDrafts]
+  );
+  const privateSetupShell = useMemo(
+    () => createHeadToHeadPrivateSetupShell(summary, { localSide: 'home', drafts: privateSetupDrafts }),
+    [summary, privateSetupDrafts]
+  );
   const resultReportPreview = useMemo(() => (summary ? createHeadToHeadResultReportPreview(summary) : null), [summary]);
   const hasLookupSessionId = lookupSessionId.trim().length > 0;
   const actionCopy = useMemo(
@@ -43,6 +61,16 @@ export function HeadToHeadLobbyEntry() {
     [summary, hasLookupSessionId]
   );
   const completionReady = actionCopy.completeMatch.enabled;
+
+  function updatePrivateSetupDraft(change: {
+    clubId?: HeadToHeadPrivateSetupClubId;
+    tacticShellId?: HeadToHeadPrivateSetupTacticShellId;
+    readinessIntent?: HeadToHeadPrivateSetupReadinessIntent;
+  }) {
+    if (!privateSetupDraftControls) return;
+    const updatedDraft = applyHeadToHeadPrivateSetupDraftControlChange(privateSetupDraftControls.currentDraft, change);
+    setPrivateSetupDrafts((currentDrafts) => [updatedDraft, ...currentDrafts.filter((draft) => draft.side !== updatedDraft.side)]);
+  }
 
   async function createLobby() {
     setPendingLabel('Create lobby');
@@ -272,6 +300,67 @@ export function HeadToHeadLobbyEntry() {
               ))}
             </ul>
           </article>
+          {privateSetupDraftControls ? (
+            <article className="info-list">
+              <div className="sectionheader">
+                <p>{privateSetupDraftControls.enabled ? 'Local browser draft only' : 'Local draft read-only'}</p>
+                <h2>{privateSetupDraftControls.title}</h2>
+                <p>{privateSetupDraftControls.helperText}</p>
+              </div>
+              <dl>
+                <div>
+                  <dt>Local manager</dt>
+                  <dd>{privateSetupDraftControls.managerLabel}</dd>
+                </div>
+                <div>
+                  <dt>Persistence</dt>
+                  <dd>{privateSetupDraftControls.persistenceNotice}</dd>
+                </div>
+                {privateSetupDraftControls.disabledReason ? (
+                  <div>
+                    <dt>Control status</dt>
+                    <dd>{privateSetupDraftControls.disabledReason}</dd>
+                  </div>
+                ) : null}
+              </dl>
+              <label>
+                Draft club
+                <select
+                  value={privateSetupDraftControls.currentDraft.clubId}
+                  disabled={!privateSetupDraftControls.enabled}
+                  onChange={(event) => updatePrivateSetupDraft({ clubId: event.target.value as HeadToHeadPrivateSetupClubId })}
+                >
+                  {privateSetupDraftControls.clubOptions.map((option) => (
+                    <option key={option.id} value={option.id}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Draft tactic shell
+                <select
+                  value={privateSetupDraftControls.currentDraft.tacticShellId}
+                  disabled={!privateSetupDraftControls.enabled}
+                  onChange={(event) => updatePrivateSetupDraft({ tacticShellId: event.target.value as HeadToHeadPrivateSetupTacticShellId })}
+                >
+                  {privateSetupDraftControls.tacticShellOptions.map((option) => (
+                    <option key={option.id} value={option.id}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Draft readiness intent
+                <select
+                  value={privateSetupDraftControls.currentDraft.readinessIntent}
+                  disabled={!privateSetupDraftControls.enabled}
+                  onChange={(event) => updatePrivateSetupDraft({ readinessIntent: event.target.value as HeadToHeadPrivateSetupReadinessIntent })}
+                >
+                  {privateSetupDraftControls.readinessOptions.map((option) => (
+                    <option key={option.id} value={option.id}>{option.label}</option>
+                  ))}
+                </select>
+              </label>
+            </article>
+          ) : null}
           {privateSetupShell.sideCards.map((card) => (
             <article className="info-list" key={card.side}>
               <div className="sectionheader">

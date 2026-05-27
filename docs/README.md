@@ -66,6 +66,7 @@ Documentation map:
 - 59-production-product-lobby-stabilization-contract.md — product route state-copy and no-op action stabilization for the complete head-to-head loop.
 - 60-production-private-setup-shell-contract.md — read-only private setup shell preview for future club/tactic selection without hidden state persistence.
 - 61-production-private-setup-selection-state-contract.md — pure private setup selection-state contract with local detail and opponent redaction.
+- 62-production-private-setup-draft-controls-contract.md — local-only browser draft controls for private setup preview without server persistence.
 - plans/2026-05-16-production-simulation-foundation.md — implementation plan for the first TypeScript production simulation package.
 - plans/2026-05-16-production-api-foundation.md — implementation plan for the first server-authoritative API layer.
 - plans/2026-05-16-production-web-vertical-slice.md — implementation plan for the first browser-visible match lab.
@@ -115,6 +116,7 @@ Documentation map:
 - plans/2026-05-23-product-lobby-stabilization.md — implementation plan for product route state-copy and no-op action stabilization.
 - plans/2026-05-27-private-setup-shell.md — implementation plan for the read-only private setup shell preview.
 - plans/2026-05-27-private-setup-selection-state.md — implementation plan for local private setup selection-state previews and opponent redaction.
+- plans/2026-05-27-private-setup-draft-controls.md — implementation plan for local-only private setup browser draft controls.
 
 Raw downloaded/extracted research material is in docs/research_raw/.
 

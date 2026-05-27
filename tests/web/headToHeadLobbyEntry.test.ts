@@ -39,6 +39,12 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('createHeadToHeadLobbyActionCopy');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupShell');
     expect(componentSource).toContain('privateSetupShell');
+    expect(componentSource).toContain('createHeadToHeadPrivateSetupDraftControls');
+    expect(componentSource).toContain('applyHeadToHeadPrivateSetupDraftControlChange');
+    expect(componentSource).toContain('Local browser draft only');
+    expect(componentSource).toContain('privateSetupDrafts');
+    expect(componentSource).toContain('onChange={(event) => updatePrivateSetupDraft');
+    expect(componentSource).toContain('createHeadToHeadPrivateSetupShell(summary,');
     expect(componentSource).toContain('Private setup preview');
     expect(componentSource).toContain('Selection status');
     expect(componentSource).toContain('Tactic shell');
@@ -59,6 +65,10 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('completeHeadToHeadMatchAndRefreshSummaryFromWeb');
     expect(componentSource).toContain('createHeadToHeadResultReportPreview');
     expect(componentSource).toContain('Post-match report preview');
+    expect(componentSource).not.toContain('Submit setup');
+    expect(componentSource).not.toContain('Save setup');
+    expect(componentSource).not.toContain('localStorage');
+    expect(componentSource).not.toContain('sessionStorage');
     expect(componentSource).not.toContain('Rematch');
     expect(componentSource).not.toContain('LobbyMutationControls');
     expect(componentSource).not.toContain('applyReplaySessionLobbyTransitionFromWeb');
