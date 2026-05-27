@@ -84,6 +84,7 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).not.toContain('Save setup');
     expect(componentSource).not.toContain('storeReplaySessionPrivateSetupDraft');
     expect(componentSource).not.toContain('submitPrivateSetup');
+    expect(componentSource).not.toContain('submitReplaySessionPrivateSetupDraftFromWeb');
     expect(componentSource).not.toContain('localStorage');
     expect(componentSource).not.toContain('sessionStorage');
     expect(componentSource).not.toContain('Rematch');

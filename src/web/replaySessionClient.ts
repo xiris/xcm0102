@@ -1,4 +1,9 @@
-import type { MatchSide, ReplaySessionLobbyState, ReplaySessionOwnership } from '../api/replaySessionRepository';
+import type {
+  MatchSide,
+  ReplaySessionLobbyState,
+  ReplaySessionOwnership,
+  ReplaySessionPrivateSetupDraft
+} from '../api/replaySessionRepository';
 import type { MatchEvent, MatchReport, MatchResult } from '../simulation/domain';
 import type { ManagerCommand } from '../simulation/managerCommands';
 import type { ReplaySessionLobbySummary } from './replaySessionLobbyStatusViewModel';
@@ -74,6 +79,19 @@ export type WebReplaySessionJoinAwayRequest = {
 
 export type WebReplaySessionJoinAwayResult = WebReplaySessionLobbyStateResult;
 
+export type WebReplaySessionPrivateSetupDraftRequest = {
+  sessionId: string;
+  side: MatchSide;
+  draft: ReplaySessionPrivateSetupDraft;
+};
+
+export type WebReplaySessionPrivateSetupDraftResult = {
+  sessionId: string;
+  side: MatchSide;
+  stored: true;
+  revealState: 'hidden_until_lock' | 'revealed_after_lock';
+};
+
 type FetchLike = (input: string, init: RequestInit) => Promise<{
   ok: boolean;
   status?: number;
@@ -115,6 +133,14 @@ export async function transitionReplaySessionLobbyStateFromWeb(request: WebRepla
 export async function joinAwayManagerFromWeb(request: WebReplaySessionJoinAwayRequest, fetcher?: FetchLike): Promise<WebReplaySessionJoinAwayResult> {
   const { sessionId, managerId, displayName } = request;
   return postJson(`/api/replay-sessions/${sessionId}/join-away`, { managerId, displayName }, fetcher) as Promise<WebReplaySessionJoinAwayResult>;
+}
+
+export async function submitReplaySessionPrivateSetupDraftFromWeb(
+  request: WebReplaySessionPrivateSetupDraftRequest,
+  fetcher?: FetchLike
+): Promise<WebReplaySessionPrivateSetupDraftResult> {
+  const { sessionId, side, draft } = request;
+  return postJson(`/api/replay-sessions/${sessionId}/private-setup`, { side, draft }, fetcher) as Promise<WebReplaySessionPrivateSetupDraftResult>;
 }
 
 async function getJson(url: string, fetcher?: FetchLike): Promise<unknown> {

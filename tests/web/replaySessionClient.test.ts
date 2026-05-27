@@ -5,6 +5,7 @@ import {
   getReplaySessionSummaryFromWeb,
   joinAwayManagerFromWeb,
   resumeReplaySessionFromWeb,
+  submitReplaySessionPrivateSetupDraftFromWeb,
   syncReplaySessionVisibleEventsFromWeb,
   transitionReplaySessionLobbyStateFromWeb
 } from '../../src/web/replaySessionClient';
@@ -189,6 +190,53 @@ describe('replay session web client', () => {
       sessionId: 'rs-0001',
       lobbyState
     }, fetchMock)).rejects.toThrow(`Replay session request failed: ${serverError}`);
+  });
+
+  it('submits private setup drafts from the browser client and preserves server errors', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ sessionId: 'rs-0001', side: 'away', stored: true, revealState: 'hidden_until_lock' })
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({ error: 'Private setup drafts can only be stored while setup is open' })
+      });
+
+    const submitted = await submitReplaySessionPrivateSetupDraftFromWeb({
+      sessionId: 'rs-0001',
+      side: 'away',
+      draft: {
+        clubId: 'milan-2002',
+        tacticShellId: 'compact-451',
+        readinessIntent: 'ready_to_lock'
+      }
+    }, fetchMock);
+
+    expect(fetchMock).toHaveBeenNthCalledWith(1, '/api/replay-sessions/rs-0001/private-setup', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        side: 'away',
+        draft: {
+          clubId: 'milan-2002',
+          tacticShellId: 'compact-451',
+          readinessIntent: 'ready_to_lock'
+        }
+      })
+    });
+    expect(submitted).toEqual({ sessionId: 'rs-0001', side: 'away', stored: true, revealState: 'hidden_until_lock' });
+
+    await expect(submitReplaySessionPrivateSetupDraftFromWeb({
+      sessionId: 'rs-0001',
+      side: 'home',
+      draft: {
+        clubId: 'internazionale-2002',
+        tacticShellId: 'balanced-442',
+        readinessIntent: 'editing'
+      }
+    }, fetchMock)).rejects.toThrow('Replay session request failed: Private setup drafts can only be stored while setup is open');
   });
 
   it('throws readable session errors from server payloads', async () => {

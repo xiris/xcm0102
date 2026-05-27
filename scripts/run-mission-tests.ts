@@ -653,6 +653,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 162: private setup persistence contract',
     args: ['vitest', 'run', 'tests/api/replaySessionRepository.test.ts', 'tests/api/replaySessionEndpoint.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 163: private setup submission route client contract',
+    args: ['vitest', 'run', 'tests/api/replaySessionNextRoutes.test.ts', 'tests/web/replaySessionClient.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 
