@@ -33,6 +33,7 @@ describe('HeadToHeadLobbyEntry', () => {
     const shellSource = readProjectFile('src/web/headToHeadPrivateSetupShell.ts');
     const selectionSource = readProjectFile('src/web/headToHeadPrivateSetupSelectionState.ts');
     const perspectiveSource = readProjectFile('src/web/headToHeadPrivateSetupPerspectiveSwitch.ts');
+    const readinessBoundarySource = readProjectFile('src/web/headToHeadPrivateSetupReadinessBoundary.ts');
 
     expect(pageSource).toContain('HeadToHeadLobbyEntry');
     expect(componentSource).toContain('createHeadToHeadLobbyRequest');
@@ -43,6 +44,7 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('createHeadToHeadPrivateSetupDraftControls');
     expect(componentSource).toContain('applyHeadToHeadPrivateSetupDraftControlChange');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupPerspectiveSwitch');
+    expect(componentSource).toContain('createHeadToHeadPrivateSetupReadinessBoundary');
     expect(componentSource).toContain("useState<MatchSide>('home')");
     expect(componentSource).toContain('Local browser draft only');
     expect(perspectiveSource).toContain('Local private setup perspective');
@@ -51,6 +53,11 @@ describe('HeadToHeadLobbyEntry', () => {
     expect(componentSource).toContain('localSetupSide');
     expect(componentSource).toContain('onChange={(event) => updatePrivateSetupDraft');
     expect(componentSource).toContain('onChange={(event) => setLocalSetupSide');
+    expect(componentSource).toContain('lockAvailable: actionCopy.lockSetup.enabled');
+    expect(componentSource).toContain('privateSetupReadinessBoundary.title');
+    expect(readinessBoundarySource).toContain('Setup readiness boundary');
+    expect(readinessBoundarySource).toContain('Local readiness intent is advisory and never gates server-owned setup lock');
+    expect(readinessBoundarySource).toContain('No private setup readiness is submitted, persisted, or synchronized yet');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupDraftControls({ summary, localSide: localSetupSide');
     expect(componentSource).toContain('createHeadToHeadPrivateSetupShell(summary, { localSide: localSetupSide');
     expect(componentSource).toContain('Private setup preview');

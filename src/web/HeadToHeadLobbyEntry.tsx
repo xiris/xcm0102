@@ -11,6 +11,7 @@ import {
   createHeadToHeadPrivateSetupDraftControls
 } from './headToHeadPrivateSetupDraftControls';
 import { createHeadToHeadPrivateSetupPerspectiveSwitch } from './headToHeadPrivateSetupPerspectiveSwitch';
+import { createHeadToHeadPrivateSetupReadinessBoundary } from './headToHeadPrivateSetupReadinessBoundary';
 import type {
   HeadToHeadPrivateSetupClubId,
   HeadToHeadPrivateSetupDraft,
@@ -49,6 +50,11 @@ export function HeadToHeadLobbyEntry() {
     };
   }, [summary]);
   const lobbyReadModel = useMemo(() => (summary ? createHeadToHeadLobbyReadModel(summary) : null), [summary]);
+  const hasLookupSessionId = lookupSessionId.trim().length > 0;
+  const actionCopy = useMemo(
+    () => createHeadToHeadLobbyActionCopy({ summary, hasSessionId: hasLookupSessionId }),
+    [summary, hasLookupSessionId]
+  );
   const privateSetupPerspectiveSwitch = useMemo(
     () => createHeadToHeadPrivateSetupPerspectiveSwitch({ summary, localSide: localSetupSide }),
     [summary, localSetupSide]
@@ -57,16 +63,20 @@ export function HeadToHeadLobbyEntry() {
     () => createHeadToHeadPrivateSetupDraftControls({ summary, localSide: localSetupSide, drafts: privateSetupDrafts }),
     [summary, localSetupSide, privateSetupDrafts]
   );
+  const privateSetupReadinessBoundary = useMemo(
+    () => createHeadToHeadPrivateSetupReadinessBoundary({
+      summary,
+      localSide: localSetupSide,
+      drafts: privateSetupDrafts,
+      lockAvailable: actionCopy.lockSetup.enabled
+    }),
+    [summary, localSetupSide, privateSetupDrafts, actionCopy.lockSetup.enabled]
+  );
   const privateSetupShell = useMemo(
     () => createHeadToHeadPrivateSetupShell(summary, { localSide: localSetupSide, drafts: privateSetupDrafts }),
     [summary, localSetupSide, privateSetupDrafts]
   );
   const resultReportPreview = useMemo(() => (summary ? createHeadToHeadResultReportPreview(summary) : null), [summary]);
-  const hasLookupSessionId = lookupSessionId.trim().length > 0;
-  const actionCopy = useMemo(
-    () => createHeadToHeadLobbyActionCopy({ summary, hasSessionId: hasLookupSessionId }),
-    [summary, hasLookupSessionId]
-  );
   const completionReady = actionCopy.completeMatch.enabled;
 
   function updatePrivateSetupDraft(change: {
@@ -391,6 +401,37 @@ export function HeadToHeadLobbyEntry() {
                   ))}
                 </select>
               </label>
+            </article>
+          ) : null}
+          {privateSetupReadinessBoundary ? (
+            <article className="info-list">
+              <div className="sectionheader">
+                <p>Advisory readiness only</p>
+                <h2>{privateSetupReadinessBoundary.title}</h2>
+                <p>{privateSetupReadinessBoundary.helperText}</p>
+              </div>
+              <dl>
+                <div>
+                  <dt>Local manager</dt>
+                  <dd>{privateSetupReadinessBoundary.managerLabel}</dd>
+                </div>
+                <div>
+                  <dt>Draft readiness</dt>
+                  <dd>{privateSetupReadinessBoundary.draftReadinessLabel}</dd>
+                </div>
+                <div>
+                  <dt>Server lock boundary</dt>
+                  <dd>{privateSetupReadinessBoundary.serverLockLabel}</dd>
+                </div>
+                <div>
+                  <dt>Advisory notice</dt>
+                  <dd>{privateSetupReadinessBoundary.advisoryNotice}</dd>
+                </div>
+                <div>
+                  <dt>Persistence</dt>
+                  <dd>{privateSetupReadinessBoundary.persistenceNotice}</dd>
+                </div>
+              </dl>
             </article>
           ) : null}
           {privateSetupShell.sideCards.map((card) => (

@@ -645,6 +645,10 @@ const missions: Mission[] = [
   {
     label: 'MISSION 160: private setup perspective switch',
     args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupPerspectiveSwitch.test.ts', 'tests/web/headToHeadPrivateSetupDraftControls.test.ts', 'tests/web/headToHeadPrivateSetupSelectionState.test.ts', 'tests/web/headToHeadPrivateSetupShell.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
+  },
+  {
+    label: 'MISSION 161: private setup readiness boundary',
+    args: ['vitest', 'run', 'tests/web/headToHeadPrivateSetupReadinessBoundary.test.ts', 'tests/web/headToHeadPrivateSetupPerspectiveSwitch.test.ts', 'tests/web/headToHeadPrivateSetupDraftControls.test.ts', 'tests/web/headToHeadPrivateSetupSelectionState.test.ts', 'tests/web/headToHeadPrivateSetupShell.test.ts', 'tests/web/headToHeadLobbyEntry.test.ts']
   }
 ];
 
