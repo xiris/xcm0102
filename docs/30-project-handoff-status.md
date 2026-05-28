@@ -8,6 +8,8 @@ This document is the short-context handoff for starting a new chat on the XCM010
 - Branch: `main`
 - Remote: `origin git@github.com:xiris/xcm0102.git`
 - Latest completed local work before the next lobby/multiplayer slice: P19B Product Entry Mode Selector / Cockpit Focus.
+- Latest local commits: `62c7fe6 feat: add product entry selector and cockpit focus`, after `362f7de feat: stabilize manager cockpit layout`.
+- Current local branch is intentionally ahead of `origin/main`; remote push is not documented as performed in this session.
 
 ## Product Direction
 
@@ -179,6 +181,26 @@ Suggested goals:
 - Commit locally when a slice is complete.
 - Remote exists; do not push or change remote configuration unless explicitly asked.
 - Periodically do stabilization/fix passes after several feature-building slices.
+
+## Cross-Laptop Resume Notes
+
+The local repository is clean after the P19B commit and this handoff documentation commit. If continuing from another laptop, that laptop only sees this work after the local commits are pushed to `origin/main` or otherwise transferred.
+
+Because the project convention requires explicit approval before remote mutations, do not assume a push has happened unless `git status --short --branch` on the source laptop no longer reports `ahead` commits.
+
+When the commits are available on the other laptop, resume with:
+
+```bash
+git fetch origin
+git checkout main
+git pull --ff-only origin main
+git status --short --branch
+npm run test:missions
+npm test
+npx tsc --noEmit && npm run build
+```
+
+If the other laptop starts before a push, use the source laptop's `git status --short --branch` and `git log --oneline -5` output to confirm whether the handoff commits are still local-only.
 
 ## How To Resume In A New Chat
 
